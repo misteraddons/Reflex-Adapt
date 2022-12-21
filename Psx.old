@@ -1,0 +1,595 @@
+/*******************************************************************************
+ * This sketch turns a PSX Guncon controller into a USB absolute mouse
+ * or Joystick, using an Arduino Leonardo.
+ *
+ * It uses the PsxNewLib, ArduinoJoystickLibrary
+ * and an edited version of AbsMouse Library.
+ *
+ * For details on PsxNewLib, see
+ * https://github.com/SukkoPera/PsxNewLib
+ *
+ * For details on ArduinoJoystickLibrary, see
+ * https://github.com/MHeironimus/ArduinoJoystickLibrary
+ *
+ * For details on AbsMouse, see
+ * https://github.com/jonathanedgecombe/absmouse
+ *
+ * The guncon needs to "scan" the entire screen before it can properly send
+ * the coorinates. Just point it at the screen and move slowly from side to side
+ * and top to botom. The values will be stored as min and max, and will be used
+ * to calculate the absolute mouse position.
+ * It's recommended to use a full screen white image when doing this.
+ *
+ * When connected it will be in a not enabled state.
+ * It can emulate a Mouse or a Joystick:
+ *
+ * Press Gun Trigger / Circle to enable mouse emulation. Off-screen: bottom-left.
+ * Press Gun A (Left side) / Start to enable joystick emulation. Off-screen: center.
+ * Press Gun B (Right side) / Start to enable joystick emulation. Off-screen: bottom-left.
+ *
+ * To disable, point it off screen and press A + B + Trigger
+ *
+ * Buttons are mapped as follows:
+ * A (Left side) / Start -> Mouse Right / Joystick btn 1
+ * B (Right side) / Cross -> Mouse Middle / Joystick btn 2
+ * Trigger / Circle -> Mouse Left / Joystick btn 0
+*/
+
+#include "src/PsxNewLib/PsxControllerHwSpi.h"
+
+#include "src/ArduinoJoystickLibrary/Joy1.h"
+#include "src/ArduinoJoystickLibrary/Guncon1.h"
+#include "src/ArduinoJoystickLibrary/MouseRelative1.h"
+#include "src/ArduinoJoystickLibrary/Jogcon1.h"
+
+//Guncon config
+//0=Mouse, 1=Joy, 2=Joy OffScreenEdge (MiSTer)
+//#define GUNCON_FORCE_MODE 2
+
+//NeGcon config
+//0=Default, 1=MiSTer Wheel format with paddle
+//#define NEGCON_FORCE_MODE 1
+//If you dont want to force a mode but instead change the default:
+//Don't enable the force mode and edit the isNeGconMiSTer variable below as you desire.
+
+const byte PIN_PS1_ATT = 2;
+const byte PIN_PS2_ATT = 5;
+const byte PIN_PS3_ATT = 10;
+const byte PIN_PS4_ATT = A0;
+const byte PIN_PS5_ATT = A1;
+const byte PIN_PS6_ATT = A2;
+
+const unsigned long POLLING_INTERVAL = 1000U / 400U;//needs more testing
+
+// Send debug messages to serial port
+//#define ENABLE_SERIAL_DEBUG
+
+PsxControllerHwSpi<PIN_PS1_ATT> psx;
+PsxControllerHwSpi<PIN_PS2_ATT> psx2;
+PsxControllerHwSpi<PIN_PS3_ATT> psx3;
+PsxControllerHwSpi<PIN_PS4_ATT> psx4;
+PsxControllerHwSpi<PIN_PS5_ATT> psx5;
+PsxControllerHwSpi<PIN_PS6_ATT> psx6;
+
+uint8_t currentPort = 0;
+
+boolean haveController = false;
+boolean haveController2 = false;
+boolean haveController3 = false;
+boolean haveController4 = false;
+boolean haveController5 = false;
+boolean haveController6 = false;
+
+boolean isNeGcon = false;
+boolean isJogcon = false;
+boolean isGuncon = false;
+
+boolean isNeGconMiSTer = false;
+
+boolean enableMouseMove = false; //used on guncon and jogcon modes
+
+void handleDpad(const bool isjog = false) {
+  int16_t dpad = B0;
+
+  if (currentPort == 0) {
+    bitWrite(dpad, 0, !psx.buttonPressed (PSB_PAD_UP));
+    bitWrite(dpad, 1, !psx.buttonPressed (PSB_PAD_DOWN));
+    bitWrite(dpad, 2, !psx.buttonPressed (PSB_PAD_LEFT));
+    bitWrite(dpad, 3, !psx.buttonPressed (PSB_PAD_RIGHT));  
+  } else if (currentPort == 1) {
+    bitWrite(dpad, 0, !psx2.buttonPressed (PSB_PAD_UP));
+    bitWrite(dpad, 1, !psx2.buttonPressed (PSB_PAD_DOWN));
+    bitWrite(dpad, 2, !psx2.buttonPressed (PSB_PAD_LEFT));
+    bitWrite(dpad, 3, !psx2.buttonPressed (PSB_PAD_RIGHT));      
+  } else if (currentPort == 2) {
+    bitWrite(dpad, 0, !psx3.buttonPressed (PSB_PAD_UP));
+    bitWrite(dpad, 1, !psx3.buttonPressed (PSB_PAD_DOWN));
+    bitWrite(dpad, 2, !psx3.buttonPressed (PSB_PAD_LEFT));
+    bitWrite(dpad, 3, !psx3.buttonPressed (PSB_PAD_RIGHT));      
+  } else if (currentPort == 3) {
+    bitWrite(dpad, 0, !psx4.buttonPressed (PSB_PAD_UP));
+    bitWrite(dpad, 1, !psx4.buttonPressed (PSB_PAD_DOWN));
+    bitWrite(dpad, 2, !psx4.buttonPressed (PSB_PAD_LEFT));
+    bitWrite(dpad, 3, !psx4.buttonPressed (PSB_PAD_RIGHT));      
+  } else if (currentPort == 4) {
+    bitWrite(dpad, 0, !psx5.buttonPressed (PSB_PAD_UP));
+    bitWrite(dpad, 1, !psx5.buttonPressed (PSB_PAD_DOWN));
+    bitWrite(dpad, 2, !psx5.buttonPressed (PSB_PAD_LEFT));
+    bitWrite(dpad, 3, !psx5.buttonPressed (PSB_PAD_RIGHT));      
+  } else if (currentPort == 5) {
+    bitWrite(dpad, 0, !psx6.buttonPressed (PSB_PAD_UP));
+    bitWrite(dpad, 1, !psx6.buttonPressed (PSB_PAD_DOWN));
+    bitWrite(dpad, 2, !psx6.buttonPressed (PSB_PAD_LEFT));
+    bitWrite(dpad, 3, !psx6.buttonPressed (PSB_PAD_RIGHT));      
+  }
+
+  //usbStick[0]->setHatSwitch(0, hatTable[dpad]);
+  if (isjog)
+    ((Jogcon1_*)usbStick[currentPort])->setHatSwitch(hatTable[dpad]);
+  else
+    ((Joy1_*)usbStick[currentPort])->setHatSwitch(hatTable[dpad]);
+}
+
+
+//optional includes
+#ifdef GUNCON_SUPPORT
+  #include "psx_guncon.h"
+#endif
+
+#ifdef JOGCON_SUPPORT
+  #include "psx_jogcon.h"
+#endif
+
+#ifdef NEGCON_SUPPORT
+  #include "psx_negcon.h"
+#endif
+
+void loopDualShock() {
+  byte analogX = ANALOG_IDLE_VALUE;
+  byte analogY = ANALOG_IDLE_VALUE;
+  //word convertedX, convertedY;
+  
+  //PsxControllerProtocol proto = psx.getProtocol();
+  switch (psx.getProtocol()) {
+  case PSPROTO_DIGITAL:
+  case PSPROTO_DUALSHOCK:
+  case PSPROTO_DUALSHOCK2:
+  case PSPROTO_FLIGHTSTICK:
+    handleDpad();
+
+
+    if (currentPort == 0) {
+      //controller buttons
+      ((Joy1_*)usbStick[currentPort])->setButton (0, psx.buttonPressed (PSB_SQUARE));
+      ((Joy1_*)usbStick[currentPort])->setButton (1, psx.buttonPressed (PSB_CROSS));
+      ((Joy1_*)usbStick[currentPort])->setButton (2, psx.buttonPressed (PSB_CIRCLE));
+      ((Joy1_*)usbStick[currentPort])->setButton (3, psx.buttonPressed (PSB_TRIANGLE));
+      ((Joy1_*)usbStick[currentPort])->setButton (4, psx.buttonPressed (PSB_L1));
+      ((Joy1_*)usbStick[currentPort])->setButton (5, psx.buttonPressed (PSB_R1));
+      ((Joy1_*)usbStick[currentPort])->setButton (6, psx.buttonPressed (PSB_L2));
+      ((Joy1_*)usbStick[currentPort])->setButton (7, psx.buttonPressed (PSB_R2));
+      ((Joy1_*)usbStick[currentPort])->setButton (8, psx.buttonPressed (PSB_SELECT));
+      ((Joy1_*)usbStick[currentPort])->setButton (9, psx.buttonPressed (PSB_START));
+      ((Joy1_*)usbStick[currentPort])->setButton (10, psx.buttonPressed (PSB_L3));
+      ((Joy1_*)usbStick[currentPort])->setButton (11, psx.buttonPressed (PSB_R3));
+  
+      //analog sticks
+      if (psx.getLeftAnalog(analogX, analogY)) {
+        ((Joy1_*)usbStick[currentPort])->setAnalog0(analogX); //x
+        ((Joy1_*)usbStick[currentPort])->setAnalog1(analogY); //y
+      } else {
+        ((Joy1_*)usbStick[currentPort])->setAnalog0(ANALOG_IDLE_VALUE);
+        ((Joy1_*)usbStick[currentPort])->setAnalog1(ANALOG_IDLE_VALUE);
+      }
+  
+      if (psx.getRightAnalog(analogX, analogY)) {
+        ((Joy1_*)usbStick[currentPort])->setAnalog2(analogX); //rx
+        ((Joy1_*)usbStick[currentPort])->setAnalog3(analogY); //ry
+      } else {
+        ((Joy1_*)usbStick[currentPort])->setAnalog2(ANALOG_IDLE_VALUE);
+        ((Joy1_*)usbStick[currentPort])->setAnalog3(ANALOG_IDLE_VALUE);
+      }
+
+
+    
+    } else if (currentPort == 1) {
+      //controller buttons
+      ((Joy1_*)usbStick[currentPort])->setButton (0, psx2.buttonPressed (PSB_SQUARE));
+      ((Joy1_*)usbStick[currentPort])->setButton (1, psx2.buttonPressed (PSB_CROSS));
+      ((Joy1_*)usbStick[currentPort])->setButton (2, psx2.buttonPressed (PSB_CIRCLE));
+      ((Joy1_*)usbStick[currentPort])->setButton (3, psx2.buttonPressed (PSB_TRIANGLE));
+      ((Joy1_*)usbStick[currentPort])->setButton (4, psx2.buttonPressed (PSB_L1));
+      ((Joy1_*)usbStick[currentPort])->setButton (5, psx2.buttonPressed (PSB_R1));
+      ((Joy1_*)usbStick[currentPort])->setButton (6, psx2.buttonPressed (PSB_L2));
+      ((Joy1_*)usbStick[currentPort])->setButton (7, psx2.buttonPressed (PSB_R2));
+      ((Joy1_*)usbStick[currentPort])->setButton (8, psx2.buttonPressed (PSB_SELECT));
+      ((Joy1_*)usbStick[currentPort])->setButton (9, psx2.buttonPressed (PSB_START));
+      ((Joy1_*)usbStick[currentPort])->setButton (10, psx2.buttonPressed (PSB_L3));
+      ((Joy1_*)usbStick[currentPort])->setButton (11, psx2.buttonPressed (PSB_R3));
+  
+      //analog sticks
+      if (psx2.getLeftAnalog(analogX, analogY)) {
+        ((Joy1_*)usbStick[currentPort])->setAnalog0(analogX); //x
+        ((Joy1_*)usbStick[currentPort])->setAnalog1(analogY); //y
+      } else {
+        ((Joy1_*)usbStick[currentPort])->setAnalog0(ANALOG_IDLE_VALUE);
+        ((Joy1_*)usbStick[currentPort])->setAnalog1(ANALOG_IDLE_VALUE);
+      }
+  
+      if (psx2.getRightAnalog(analogX, analogY)) {
+        ((Joy1_*)usbStick[currentPort])->setAnalog2(analogX); //rx
+        ((Joy1_*)usbStick[currentPort])->setAnalog3(analogY); //ry
+      } else {
+        ((Joy1_*)usbStick[currentPort])->setAnalog2(ANALOG_IDLE_VALUE);
+        ((Joy1_*)usbStick[currentPort])->setAnalog3(ANALOG_IDLE_VALUE);
+      }
+      
+    } else if (currentPort == 2) {
+      //controller buttons
+      ((Joy1_*)usbStick[currentPort])->setButton (0, psx3.buttonPressed (PSB_SQUARE));
+      ((Joy1_*)usbStick[currentPort])->setButton (1, psx3.buttonPressed (PSB_CROSS));
+      ((Joy1_*)usbStick[currentPort])->setButton (2, psx3.buttonPressed (PSB_CIRCLE));
+      ((Joy1_*)usbStick[currentPort])->setButton (3, psx3.buttonPressed (PSB_TRIANGLE));
+      ((Joy1_*)usbStick[currentPort])->setButton (4, psx3.buttonPressed (PSB_L1));
+      ((Joy1_*)usbStick[currentPort])->setButton (5, psx3.buttonPressed (PSB_R1));
+      ((Joy1_*)usbStick[currentPort])->setButton (6, psx3.buttonPressed (PSB_L2));
+      ((Joy1_*)usbStick[currentPort])->setButton (7, psx3.buttonPressed (PSB_R2));
+      ((Joy1_*)usbStick[currentPort])->setButton (8, psx3.buttonPressed (PSB_SELECT));
+      ((Joy1_*)usbStick[currentPort])->setButton (9, psx3.buttonPressed (PSB_START));
+      ((Joy1_*)usbStick[currentPort])->setButton (10, psx3.buttonPressed (PSB_L3));
+      ((Joy1_*)usbStick[currentPort])->setButton (11, psx3.buttonPressed (PSB_R3));
+  
+      //analog sticks
+      if (psx3.getLeftAnalog(analogX, analogY)) {
+        ((Joy1_*)usbStick[currentPort])->setAnalog0(analogX); //x
+        ((Joy1_*)usbStick[currentPort])->setAnalog1(analogY); //y
+      } else {
+        ((Joy1_*)usbStick[currentPort])->setAnalog0(ANALOG_IDLE_VALUE);
+        ((Joy1_*)usbStick[currentPort])->setAnalog1(ANALOG_IDLE_VALUE);
+      }
+  
+      if (psx3.getRightAnalog(analogX, analogY)) {
+        ((Joy1_*)usbStick[currentPort])->setAnalog2(analogX); //rx
+        ((Joy1_*)usbStick[currentPort])->setAnalog3(analogY); //ry
+      } else {
+        ((Joy1_*)usbStick[currentPort])->setAnalog2(ANALOG_IDLE_VALUE);
+        ((Joy1_*)usbStick[currentPort])->setAnalog3(ANALOG_IDLE_VALUE);
+      }
+      
+    } else if (currentPort == 3) {
+      //controller buttons
+      ((Joy1_*)usbStick[currentPort])->setButton (0, psx4.buttonPressed (PSB_SQUARE));
+      ((Joy1_*)usbStick[currentPort])->setButton (1, psx4.buttonPressed (PSB_CROSS));
+      ((Joy1_*)usbStick[currentPort])->setButton (2, psx4.buttonPressed (PSB_CIRCLE));
+      ((Joy1_*)usbStick[currentPort])->setButton (3, psx4.buttonPressed (PSB_TRIANGLE));
+      ((Joy1_*)usbStick[currentPort])->setButton (4, psx4.buttonPressed (PSB_L1));
+      ((Joy1_*)usbStick[currentPort])->setButton (5, psx4.buttonPressed (PSB_R1));
+      ((Joy1_*)usbStick[currentPort])->setButton (6, psx4.buttonPressed (PSB_L2));
+      ((Joy1_*)usbStick[currentPort])->setButton (7, psx4.buttonPressed (PSB_R2));
+      ((Joy1_*)usbStick[currentPort])->setButton (8, psx4.buttonPressed (PSB_SELECT));
+      ((Joy1_*)usbStick[currentPort])->setButton (9, psx4.buttonPressed (PSB_START));
+      ((Joy1_*)usbStick[currentPort])->setButton (10, psx4.buttonPressed (PSB_L3));
+      ((Joy1_*)usbStick[currentPort])->setButton (11, psx4.buttonPressed (PSB_R3));
+  
+      //analog sticks
+      if (psx4.getLeftAnalog(analogX, analogY)) {
+        ((Joy1_*)usbStick[currentPort])->setAnalog0(analogX); //x
+        ((Joy1_*)usbStick[currentPort])->setAnalog1(analogY); //y
+      } else {
+        ((Joy1_*)usbStick[currentPort])->setAnalog0(ANALOG_IDLE_VALUE);
+        ((Joy1_*)usbStick[currentPort])->setAnalog1(ANALOG_IDLE_VALUE);
+      }
+  
+      if (psx4.getRightAnalog(analogX, analogY)) {
+        ((Joy1_*)usbStick[currentPort])->setAnalog2(analogX); //rx
+        ((Joy1_*)usbStick[currentPort])->setAnalog3(analogY); //ry
+      } else {
+        ((Joy1_*)usbStick[currentPort])->setAnalog2(ANALOG_IDLE_VALUE);
+        ((Joy1_*)usbStick[currentPort])->setAnalog3(ANALOG_IDLE_VALUE);
+      }
+
+
+    } else if (currentPort == 4) {
+      //controller buttons
+      ((Joy1_*)usbStick[currentPort])->setButton (0, psx5.buttonPressed (PSB_SQUARE));
+      ((Joy1_*)usbStick[currentPort])->setButton (1, psx5.buttonPressed (PSB_CROSS));
+      ((Joy1_*)usbStick[currentPort])->setButton (2, psx5.buttonPressed (PSB_CIRCLE));
+      ((Joy1_*)usbStick[currentPort])->setButton (3, psx5.buttonPressed (PSB_TRIANGLE));
+      ((Joy1_*)usbStick[currentPort])->setButton (4, psx5.buttonPressed (PSB_L1));
+      ((Joy1_*)usbStick[currentPort])->setButton (5, psx5.buttonPressed (PSB_R1));
+      ((Joy1_*)usbStick[currentPort])->setButton (6, psx5.buttonPressed (PSB_L2));
+      ((Joy1_*)usbStick[currentPort])->setButton (7, psx5.buttonPressed (PSB_R2));
+      ((Joy1_*)usbStick[currentPort])->setButton (8, psx5.buttonPressed (PSB_SELECT));
+      ((Joy1_*)usbStick[currentPort])->setButton (9, psx5.buttonPressed (PSB_START));
+      ((Joy1_*)usbStick[currentPort])->setButton (10, psx5.buttonPressed (PSB_L3));
+      ((Joy1_*)usbStick[currentPort])->setButton (11, psx5.buttonPressed (PSB_R3));
+  
+      //analog sticks
+      if (psx5.getLeftAnalog(analogX, analogY)) {
+        ((Joy1_*)usbStick[currentPort])->setAnalog0(analogX); //x
+        ((Joy1_*)usbStick[currentPort])->setAnalog1(analogY); //y
+      } else {
+        ((Joy1_*)usbStick[currentPort])->setAnalog0(ANALOG_IDLE_VALUE);
+        ((Joy1_*)usbStick[currentPort])->setAnalog1(ANALOG_IDLE_VALUE);
+      }
+  
+      if (psx5.getRightAnalog(analogX, analogY)) {
+        ((Joy1_*)usbStick[currentPort])->setAnalog2(analogX); //rx
+        ((Joy1_*)usbStick[currentPort])->setAnalog3(analogY); //ry
+      } else {
+        ((Joy1_*)usbStick[currentPort])->setAnalog2(ANALOG_IDLE_VALUE);
+        ((Joy1_*)usbStick[currentPort])->setAnalog3(ANALOG_IDLE_VALUE);
+      }
+
+
+    } else if (currentPort == 5) {
+      //controller buttons
+      ((Joy1_*)usbStick[currentPort])->setButton (0, psx6.buttonPressed (PSB_SQUARE));
+      ((Joy1_*)usbStick[currentPort])->setButton (1, psx6.buttonPressed (PSB_CROSS));
+      ((Joy1_*)usbStick[currentPort])->setButton (2, psx6.buttonPressed (PSB_CIRCLE));
+      ((Joy1_*)usbStick[currentPort])->setButton (3, psx6.buttonPressed (PSB_TRIANGLE));
+      ((Joy1_*)usbStick[currentPort])->setButton (4, psx6.buttonPressed (PSB_L1));
+      ((Joy1_*)usbStick[currentPort])->setButton (5, psx6.buttonPressed (PSB_R1));
+      ((Joy1_*)usbStick[currentPort])->setButton (6, psx6.buttonPressed (PSB_L2));
+      ((Joy1_*)usbStick[currentPort])->setButton (7, psx6.buttonPressed (PSB_R2));
+      ((Joy1_*)usbStick[currentPort])->setButton (8, psx6.buttonPressed (PSB_SELECT));
+      ((Joy1_*)usbStick[currentPort])->setButton (9, psx6.buttonPressed (PSB_START));
+      ((Joy1_*)usbStick[currentPort])->setButton (10, psx6.buttonPressed (PSB_L3));
+      ((Joy1_*)usbStick[currentPort])->setButton (11, psx6.buttonPressed (PSB_R3));
+  
+      //analog sticks
+      if (psx6.getLeftAnalog(analogX, analogY)) {
+        ((Joy1_*)usbStick[currentPort])->setAnalog0(analogX); //x
+        ((Joy1_*)usbStick[currentPort])->setAnalog1(analogY); //y
+      } else {
+        ((Joy1_*)usbStick[currentPort])->setAnalog0(ANALOG_IDLE_VALUE);
+        ((Joy1_*)usbStick[currentPort])->setAnalog1(ANALOG_IDLE_VALUE);
+      }
+  
+      if (psx6.getRightAnalog(analogX, analogY)) {
+        ((Joy1_*)usbStick[currentPort])->setAnalog2(analogX); //rx
+        ((Joy1_*)usbStick[currentPort])->setAnalog3(analogY); //ry
+      } else {
+        ((Joy1_*)usbStick[currentPort])->setAnalog2(ANALOG_IDLE_VALUE);
+        ((Joy1_*)usbStick[currentPort])->setAnalog3(ANALOG_IDLE_VALUE);
+      }
+      
+    }
+
+    usbStick[currentPort]->sendState();
+    
+    break;
+  default:
+    break;
+  }
+  
+}
+
+void psxSetup() {
+  pinMode(PIN_PS1_ATT, OUTPUT);
+  /*
+  pinMode(PIN_PS2_ATT, OUTPUT);
+  pinMode(PIN_PS3_ATT, OUTPUT);
+  pinMode(PIN_PS4_ATT, OUTPUT);
+  pinMode(PIN_PS5_ATT, OUTPUT);
+  pinMode(PIN_PS6_ATT, OUTPUT);
+  */
+
+  digitalWrite(PIN_PS1_ATT, HIGH);
+  /*
+  digitalWrite(PIN_PS2_ATT, HIGH);
+  digitalWrite(PIN_PS3_ATT, HIGH);
+  digitalWrite(PIN_PS4_ATT, HIGH);
+  digitalWrite(PIN_PS5_ATT, HIGH);
+  digitalWrite(PIN_PS6_ATT, HIGH);
+  */
+  
+  if (psx.begin ()) {
+    delay(200);
+    haveController = true;
+    const PsxControllerProtocol proto = psx.getProtocol();
+
+    if (proto == PSPROTO_GUNCON) {
+      isGuncon = true;
+    } else if (proto == PSPROTO_NEGCON) {
+      isNeGcon = true;
+
+      //Configure NeGcon mode
+      #if defined(NEGCON_FORCE_MODE) && NEGCON_FORCE_MODE >= 0 && NEGCON_FORCE_MODE < 2
+        #if NEGCON_FORCE_MODE == 1
+          isNeGconMiSTer = true;
+        #endif
+      #else //NEGCON_FORCE_MODE
+        if (psx.buttonPressed(PSB_CIRCLE)) //NeGcon A / Volume B
+          isNeGconMiSTer = !isNeGconMiSTer;
+      #endif //NEGCON_FORCE_MODE
+    } else { //jogcon can't be detected during boot as it needs to be in analog mode
+      if (psx.buttonPressed(PSB_SELECT)) { //dualshock used in guncon mode to help map axis on emulators.
+        isGuncon = true;
+      } else if (psx.buttonPressed(PSB_L1)) {
+        isJogcon = true;
+      } else if (psx.buttonPressed(PSB_L2)) {
+        isJogcon = true;
+        enableMouseMove = true;
+      }
+    }
+  }
+
+  if (isNeGcon) {
+    #ifdef NEGCON_SUPPORT
+      negconSetup();
+    #endif
+  } else if (isJogcon) {
+    #ifdef JOGCON_SUPPORT
+      jogconSetup();
+    #endif
+  } else {
+    if (isGuncon) {
+      #ifdef GUNCON_SUPPORT
+        gunconSetup();
+      #endif
+    } else {
+      totalUsb = 6;
+      for (uint8_t i = 0; i < totalUsb; i++) {
+        usbStick[i] = new Joy1_("RZordPsDS1", JOYSTICK_DEFAULT_REPORT_ID + i, JOYSTICK_TYPE_GAMEPAD, totalUsb,
+          true,//includeXAxis,
+          true,//includeYAxis,
+          false,//includeZAxis,
+          true,//includeRxAxis,
+          true,//includeRyAxis,
+          false,//includeThrottle,
+          false,//includeBrake,
+          false);//includeSteering
+      }
+    }
+
+    for (uint8_t i = 0; i < totalUsb; i++) {
+      usbStick[i]->resetState();
+      usbStick[i]->sendState();
+    }
+  }
+
+  dstart(115200);
+  debugln(F("Ready!"));
+  
+  /*
+  haveController2 = psx2.begin ();
+  haveController3 = psx3.begin ();
+  haveController4 = psx4.begin ();
+  haveController5 = psx5.begin ();
+  haveController6 = psx6.begin ();
+  */
+}
+
+inline bool __attribute__((always_inline))
+psxLoop() {
+  static unsigned long last = 0;
+
+  if(isJogcon) {
+    #ifdef JOGCON_SUPPORT
+      if (!haveController) {
+        init_jogcon();
+      } else {
+        if(!psx.read()){
+          haveController = false;
+        } else {
+          handleJogconData();
+        }
+      }
+    #endif
+    return haveController;
+  }
+
+  if (millis() - last >= POLLING_INTERVAL) {
+    last = millis();
+
+    boolean isReadSuccess = false;
+    for (currentPort = 0; currentPort < totalUsb; currentPort++) {
+      if (currentPort == 0) {
+    
+        if (!haveController) {
+            if (psx.begin())
+              haveController = true;
+        } else {
+          noInterrupts();
+          isReadSuccess = psx.read();
+          interrupts();
+          if (!isReadSuccess)
+            haveController = false;
+          else
+            loopDualShock();
+        }
+
+
+      } else if (currentPort == 1) {
+
+        if (!haveController2) {
+            if (psx2.begin())
+              haveController2 = true;
+        } else {
+          noInterrupts();
+          isReadSuccess = psx2.read();
+          interrupts();
+          if (!isReadSuccess)
+            haveController2 = false;
+          else
+            loopDualShock();
+        }
+
+
+      } else if (currentPort == 2) {
+
+        if (!haveController3) {
+            if (psx3.begin())
+              haveController3 = true;
+        } else {
+          noInterrupts();
+          isReadSuccess = psx3.read();
+          interrupts();
+          if (!isReadSuccess)
+            haveController3 = false;
+          else
+            loopDualShock();
+        }
+
+
+
+      } else if (currentPort == 3) {
+
+        if (!haveController4) {
+            if (psx4.begin())
+              haveController4 = true;
+        } else {
+          noInterrupts();
+          isReadSuccess = psx4.read();
+          interrupts();
+          if (!isReadSuccess)
+            haveController4 = false;
+          else
+            loopDualShock();
+        }
+
+
+
+
+      } else if (currentPort == 4) {
+
+        if (!haveController5) {
+            if (psx5.begin())
+              haveController5 = true;
+        } else {
+          noInterrupts();
+          isReadSuccess = psx5.read();
+          interrupts();
+          if (!isReadSuccess)
+            haveController5 = false;
+          else
+            loopDualShock();
+        }
+
+
+
+
+      } else if (currentPort == 5) {
+
+        if (!haveController6) {
+            if (psx6.begin())
+              haveController6 = true;
+        } else {
+          noInterrupts();
+          isReadSuccess = psx6.read();
+          interrupts();
+          if (!isReadSuccess)
+            haveController6 = false;
+          else
+            loopDualShock();
+        }
+
+
+ 
+      }
+    }
+
+  }
+  return haveController || haveController2 || haveController3 || haveController4 || haveController5 || haveController6;
+}
