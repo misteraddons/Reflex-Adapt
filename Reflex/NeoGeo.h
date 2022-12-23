@@ -3,8 +3,7 @@
 */
 
 #include "src/ArduinoJoystickLibrary/Joy1.h"
-
-#include "src/Bugtton/Bugtton.h"
+#include "src/ZordButton/ZordButton.h"
 
 //Neogeo pins
 //https://old.pinouts.ru/Game/NeoGeoJoystick_pinout.shtml
@@ -29,8 +28,14 @@ static const uint8_t buttonPins[NEOGEO_TOTAL_PINS] = {
   NEOGEOPIN_UP, NEOGEOPIN_DOWN, NEOGEOPIN_LEFT, NEOGEOPIN_RIGHT,
   NEOGEOPIN_A, NEOGEOPIN_B, NEOGEOPIN_C, NEOGEOPIN_D, 
   NEOGEOPIN_SELECT, NEOGEOPIN_START };
+
+static const uint8_t outputMask[NEOGEO_TOTAL_PINS] = {
+  (0x1), (0x1 << 1), (0x1 << 2), (0x1 << 3), 
+  (0x1 << 1), (0x1 << 2), (0x1 << 0), (0x1 << 3), 
+  (0x1 << 8), (0x1 << 9) };
   
-static Bugtton* buttons;
+//static Bugtton* buttons;
+static ArcadePad* buttons;
 
 
 #ifdef ENABLE_REFLEX_PAD
@@ -68,8 +73,10 @@ static Bugtton* buttons;
 
 void neogeoSetup() {
 
-  buttons = new Bugtton(NEOGEO_TOTAL_PINS, buttonPins, NEOGEO_DEBOUNCE);
+  buttons = new ArcadePad(NEOGEO_TOTAL_PINS, buttonPins, NEOGEO_DEBOUNCE);
 
+  buttons->begin();
+  
   //Create usb controllers
   usbStick[0] = new Joy1_("RZordNeoGeo", JOYSTICK_DEFAULT_REPORT_ID, JOYSTICK_TYPE_GAMEPAD, totalUsb);
   
@@ -84,8 +91,6 @@ void neogeoSetup() {
 
 inline bool __attribute__((always_inline))
 neogeoLoop() {
-  static uint8_t dpadState = B00001111;
-  static uint16_t buttonData = 0;
   #ifdef ENABLE_REFLEX_PAD
   static bool firstTime = true;
   if(firstTime) {
@@ -95,57 +100,34 @@ neogeoLoop() {
   #endif
 
   //update debounce lib
-  buttons->update();
+  const bool stateChanged = buttons->update();
 
-  bool stateChanged = false;
-  
-  for(uint8_t i = 0; i < NEOGEO_TOTAL_PINS; i++) {
-    bool isPressed;
-    if(buttons->fell(i)) { //button changed to pressed
-      isPressed = true;
-    } else if(buttons->rose(i)) { //button changed to released
-      isPressed = false;
-    } else { //not changed
-      continue;
-    }
-
-    //if reached here then at least a button had changed state
-    stateChanged = true;
-
-    if (i < 4) { //dpad
-      bitWrite(dpadState, i, !isPressed);
-    } else {
-      uint8_t outputButtonIndex = 0;
-      switch(i){
-        case 4: //A
-          outputButtonIndex = 1;
-          break;
-        case 5: //B
-          outputButtonIndex = 2;
-          break;
-        case 6: //C
-          outputButtonIndex = 0;
-          break;
-        case 7: //D
-          outputButtonIndex = 3;
-          break;
-        case 8: //SELECT
-          outputButtonIndex = 8;
-          break;
-        case 9: //START
-          outputButtonIndex = 9;
-          break;
+  if(stateChanged) {
+    uint8_t dpadState = 0xF0;
+    uint16_t buttonData = 0x0;
+    
+    for(uint8_t i = 0; i < NEOGEO_TOTAL_PINS; i++) {
+      const bool isPressed = buttons->state(i) == LOW;
+      if(isPressed) {
+        if(i < 4) { //Dpad
+          dpadState |= outputMask[i];
+        } else { //Buttons
+          buttonData |= outputMask[i];
+        }
       }
-      bitWrite(buttonData, outputButtonIndex, isPressed);
-      //((Joy1_*)usbStick[0])->setButton(outputButtonIndex, isPressed);
+      
+      #ifdef ENABLE_REFLEX_PAD
+        const Pad pad = padNeoGeo[i];
+        PrintPadChar(0, 35, pad.col, pad.row, pad.padvalue, isPressed, pad.on, pad.off);
+      #endif
     }
-  }
 
-  if (stateChanged) {
+    dpadState = ~dpadState; //Dpad hatTable uses active low logic
+    
     ((Joy1_*)usbStick[0])->setButtons(buttonData);
     ((Joy1_*)usbStick[0])->setHatSwitch(hatTable[dpadState]);
     usbStick[0]->sendState();
   }
-  
+
   return stateChanged; //false
 }
