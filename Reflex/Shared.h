@@ -41,6 +41,9 @@ enum DeviceEnum {
 #ifdef ENABLE_REFLEX_3DO
   RZORD_3DO,  //7
 #endif
+#ifdef ENABLE_REFLEX_JAGUAR
+  RZORD_JAGUAR,  //8
+#endif
   RZORD_LAST //this must be the last enum value
 };
 
@@ -127,7 +130,7 @@ enum DeviceEnum {
     };
 
     struct Pad {
-      uint16_t padvalue;
+      uint32_t padvalue;
       uint8_t row;
       uint8_t col;
       char on;
@@ -156,8 +159,8 @@ enum DeviceEnum {
       display.print(value);
     }
   
-    void PrintPadChar(const uint8_t padIndex, const uint8_t startCol, const uint8_t col, const uint8_t row, const uint16_t bitMask, const bool isPressed, const char valueOn, const char valueOff, const bool force = false) {
-      static uint16_t state[] = {0,0};
+    void PrintPadChar(const uint8_t padIndex, const uint8_t startCol, const uint8_t col, const uint8_t row, const uint32_t bitMask, const bool isPressed, const char valueOn, const char valueOff, const bool force = false) {
+      static uint32_t state[] = {0,0};
       const bool oledIsOn = state[padIndex] & bitMask;
     
       if(isPressed == oledIsOn && !force)

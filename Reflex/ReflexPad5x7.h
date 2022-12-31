@@ -33,7 +33,7 @@
 #define REFLEXPAD5x7_H
 
 #define REFLEXPAD5x7_H_WIDTH 5
-#define REFLEXPAD5x7_H_WIDTH 7
+#define REFLEXPAD5x7_H_HEIGHT 7
 
 GLCDFONTDECL(ReflexPad5x7) = {
     0x0, 0x0, // size of zero indicates fixed width font,

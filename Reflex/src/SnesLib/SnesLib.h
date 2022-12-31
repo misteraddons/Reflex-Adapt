@@ -239,7 +239,7 @@ class SnesPort {
 
     inline void __attribute__((always_inline))
     setControllerValues(const unsigned int id, const unsigned int data, const unsigned int extented) {
-        if (id == 0xF & extented == 0x1) { //no controller connected
+        if (id == 0xF && extented == 0x1) { //no controller connected
           //sc.currentState.id = 0x0;
         } else {
           SnesController& sc = getSnesController(joyCount++);

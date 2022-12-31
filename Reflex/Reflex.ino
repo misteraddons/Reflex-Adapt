@@ -26,11 +26,12 @@
 
 //#define ENABLE_REFLEX_SATURN
 //#define ENABLE_REFLEX_SNES
-#define ENABLE_REFLEX_PSX
+//#define ENABLE_REFLEX_PSX
 //#define ENABLE_REFLEX_PSX_JOG //this is for jogcon forced specific mode. jogcon can still be used with ENABLE_REFLEX_PSX
 //#define ENABLE_REFLEX_PCE
 //#define ENABLE_REFLEX_NEOGEO
 //#define ENABLE_REFLEX_3DO
+#define ENABLE_REFLEX_JAGUAR
 
 // Sega MegaDrive/Saturn config
 
@@ -69,6 +70,9 @@
 
 //NeoGeo config (REQUIRED!)
 #define NEOGEO_DEBOUNCE 2 //debounce time in milliseconds
+
+//Jaguar config
+#define JAG_DEBOUNCE 8 //debounce time in milliseconds. Optional
 
 /******************************************************************************/
 
@@ -115,6 +119,9 @@
 #endif
 #ifdef ENABLE_REFLEX_3DO
   #include "Threedo.h"
+#endif
+#ifdef ENABLE_REFLEX_JAGUAR
+  #include "Jaguar.h"
 #endif
 
 #include "src/DigitalIO/DigitalIO.h"
@@ -212,6 +219,12 @@ void setLedColors(const uint8_t r, const uint8_t g, const uint8_t b) {
         display.print(F("3DO"));
         break;
 #endif
+#ifdef ENABLE_REFLEX_JAGUAR
+      case RZORD_JAGUAR:
+        display.setCol(7*6);
+        display.print(F("JAGUAR"));
+        break;
+#endif
 
       default:
         break;
@@ -258,6 +271,10 @@ void setLedColors(const uint8_t r, const uint8_t g, const uint8_t b) {
         break;
       case RZORD_3DO:
         controllerCount = 2;
+        setLedColors(0, pw, pw);
+        break;
+      case RZORD_JAGUAR:
+        controllerCount = 1;
         setLedColors(0, pw, pw);
         break;
       default:
@@ -484,6 +501,11 @@ void setup() {
         threedoSetup();
         break;
 #endif
+#ifdef ENABLE_REFLEX_JAGUAR
+      case RZORD_JAGUAR:
+        jaguarSetup();
+        break;
+#endif
       default:
         break;
     }
@@ -568,6 +590,11 @@ void loop() {
 #ifdef ENABLE_REFLEX_3DO
         case RZORD_3DO:
         stateChanged = threedoLoop();
+        break;
+#endif
+#ifdef ENABLE_REFLEX_JAGUAR
+        case RZORD_JAGUAR:
+        stateChanged = jaguarLoop();
         break;
 #endif
 
