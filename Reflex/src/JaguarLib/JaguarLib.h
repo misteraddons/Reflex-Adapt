@@ -102,7 +102,7 @@ class JagController {
   bool deviceJustChanged() const { return currentState.id != lastState.id; }
   bool stateChanged() const { return currentState != lastState; }
   uint32_t digitalRaw() const { return currentState.digital; }
-  uint8_t hat() const { return currentState.digital & 0xF; } //todo fix
+  uint8_t hat() const { return currentState.digital & 0xF; }
   
   bool digitalPressed(const JagDigital_Enum s) const { return (currentState.digital & s) == 0; }
   bool digitalChanged (const JagDigital_Enum s) const { return ((lastState.digital ^ currentState.digital) & s) > 0; }
@@ -119,12 +119,12 @@ class JagController {
 template <uint8_t PIN_J3_J4, uint8_t PIN_J2_J5, uint8_t PIN_J1_J6, uint8_t PIN_J0_J7, uint8_t PIN_B0_B2, uint8_t PIN_B1_B3, uint8_t PIN_J11_J15, uint8_t PIN_J10_J14, uint8_t PIN_J9_J13, uint8_t PIN_J8_J12>
 class JagPort {
   private:
-    //4 bi-directional pins
+    //4 output pins pins (row selection)
     DigitalPin<PIN_J3_J4> jag_J3_J4;
     DigitalPin<PIN_J2_J5> jag_J2_J5;
     DigitalPin<PIN_J1_J6> jag_J1_J6;
     DigitalPin<PIN_J0_J7> jag_J0_J7;
-    //6 input pins
+    //6 input pins (column data)
     DigitalPin<PIN_B0_B2> jag_B0_B2;
     DigitalPin<PIN_B1_B3> jag_B1_B3;
     DigitalPin<PIN_J11_J15> jag_J11_J15;
@@ -149,9 +149,19 @@ class JagPort {
 
 
     inline void __attribute__((always_inline))
-    setRow(uint8_t row) {
-      setNoRow();
-      delayMicroseconds(12);
+    setRow(const uint8_t row) {
+      static uint8_t lastRow = 0;
+      
+      //setNoRow();
+      //delayMicroseconds(12);
+
+      //Clear last used row. Need to change how this works if/when using multitap.
+      switch (lastRow) {
+        case 0: jag_J0_J7.write(HIGH); break;
+        case 1: jag_J1_J6.write(HIGH); break;
+        case 2: jag_J2_J5.write(HIGH); break;
+        case 3: jag_J3_J4.write(HIGH); break;
+      }
 
       switch (row) {
         //pad 1
@@ -241,7 +251,8 @@ class JagPort {
           break;
         */
       }
-      delayMicroseconds(12);
+      delayMicroseconds(8); //Seems to work with 4us but let's be safe
+      lastRow = row;
     }
 
     void readJagPort() {
@@ -258,12 +269,14 @@ class JagPort {
       }
 
       //Leave it in default state
-      setNoRow();
+      //setNoRow();
+      //setRow(0);
+      //It will be in the last selected row
 
       const uint8_t joyIndex = joyCount++;
       JagController& sc = getJagController(joyIndex);
 
-      //C2 and C3. Default value is not connected or standard pad
+      //C2 and C3. If both HIGH then standard pad or nothing connected
       if(((nibbles[2] & B00100000) == B00100000) && ((nibbles[3] & B00100000) == B00100000))
         sc.currentState.id = JAG_DEVICE_PAD;
       else 
@@ -329,7 +342,7 @@ class JagPort {
         debounce();
       #endif
 
-      //if device changed without connect/disconnect. eg: 3d pad analog <> digital
+      //if device changed without connect/disconnect.
       for (uint8_t i = 0; i < joyCount; ++i) {
         JagController& sc = getJagController(i);
         if (sc.currentState.id != sc.lastState.id) {
