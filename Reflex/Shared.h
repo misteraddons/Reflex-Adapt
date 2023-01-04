@@ -44,6 +44,15 @@ enum DeviceEnum {
 #ifdef ENABLE_REFLEX_JAGUAR
   RZORD_JAGUAR,  //8
 #endif
+#ifdef ENABLE_REFLEX_N64
+  RZORD_N64,  //9
+#endif
+#ifdef ENABLE_REFLEX_GAMECUBE
+  RZORD_GAMECUBE,  //10
+#endif
+#ifdef ENABLE_REFLEX_WII
+  RZORD_WII,  //11
+#endif
   RZORD_LAST //this must be the last enum value
 };
 

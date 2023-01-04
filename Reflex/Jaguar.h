@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Jaguar controllers to USB using an Arduino Leonardo.
  *
- * Works digital pad.
+ * Works with digital pad.
  *
  * For details on Joystick Library, see
  * https://github.com/MHeironimus/ArduinoJoystickLibrary

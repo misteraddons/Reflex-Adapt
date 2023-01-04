@@ -32,6 +32,9 @@
 //#define ENABLE_REFLEX_NEOGEO
 //#define ENABLE_REFLEX_3DO
 #define ENABLE_REFLEX_JAGUAR
+#define ENABLE_REFLEX_N64
+#define ENABLE_REFLEX_GAMECUBE
+#define ENABLE_REFLEX_WII
 
 // Sega MegaDrive/Saturn config
 
@@ -72,7 +75,20 @@
 #define NEOGEO_DEBOUNCE 2 //debounce time in milliseconds
 
 //Jaguar config
-#define JAG_DEBOUNCE 8 //debounce time in milliseconds. Optional
+//#define JAG_DEBOUNCE 8 //debounce time in milliseconds. Optional
+
+//N64 config
+//Analog range
+//Comment out to use raw values.
+//Set as zero to use automatic map. Will calibrate and scale to full range.
+//Set a positive value to use it as the maximum value. It will be scaled to full range.
+#define N64_ANALOG_MAX 65
+
+//GameCube config
+//#define GAMECUBE_ANALOG_MAX 0 //still need to implement...
+
+//Wii config
+//#define WII_ANALOG_MAX 0 //still need to implement...
 
 /******************************************************************************/
 
@@ -122,6 +138,15 @@
 #endif
 #ifdef ENABLE_REFLEX_JAGUAR
   #include "Jaguar.h"
+#endif
+#ifdef ENABLE_REFLEX_N64
+  #include "N64.h"
+#endif
+#ifdef ENABLE_REFLEX_GAMECUBE
+  #include "GameCube.h"
+#endif
+#ifdef ENABLE_REFLEX_WII
+  #include "Wii.h"
 #endif
 
 #include "src/DigitalIO/DigitalIO.h"
@@ -225,6 +250,24 @@ void setLedColors(const uint8_t r, const uint8_t g, const uint8_t b) {
         display.print(F("JAGUAR"));
         break;
 #endif
+#ifdef ENABLE_REFLEX_N64
+      case RZORD_N64:
+        display.setCol(9*6);
+        display.print(F("N64"));
+        break;
+#endif
+#ifdef ENABLE_REFLEX_GAMECUBE
+      case RZORD_GAMECUBE:
+        display.setCol(6*6);
+        display.print(F("GAMECUBE"));
+        break;
+#endif
+#ifdef ENABLE_REFLEX_WII
+      case RZORD_WII:
+        display.setCol(9*6);
+        display.print(F("WII"));
+        break;
+#endif
 
       default:
         break;
@@ -274,6 +317,10 @@ void setLedColors(const uint8_t r, const uint8_t g, const uint8_t b) {
         setLedColors(0, pw, pw);
         break;
       case RZORD_JAGUAR:
+        controllerCount = 1;
+        setLedColors(0, pw, pw);
+        break;
+      case RZORD_N64:
         controllerCount = 1;
         setLedColors(0, pw, pw);
         break;
@@ -506,6 +553,21 @@ void setup() {
         jaguarSetup();
         break;
 #endif
+#ifdef ENABLE_REFLEX_N64
+      case RZORD_N64:
+        n64Setup();
+        break;
+#endif
+#ifdef ENABLE_REFLEX_GAMECUBE
+      case RZORD_GAMECUBE:
+        gameCubeSetup();
+        break;
+#endif
+#ifdef ENABLE_REFLEX_WII
+      case RZORD_WII:
+        wiiSetup();
+        break;
+#endif
       default:
         break;
     }
@@ -595,6 +657,21 @@ void loop() {
 #ifdef ENABLE_REFLEX_JAGUAR
         case RZORD_JAGUAR:
         stateChanged = jaguarLoop();
+        break;
+#endif
+#ifdef ENABLE_REFLEX_N64
+        case RZORD_N64:
+        stateChanged = n64Loop();
+        break;
+#endif
+#ifdef ENABLE_REFLEX_GAMECUBE
+        case RZORD_GAMECUBE:
+        stateChanged = gameCubeLoop();
+        break;
+#endif
+#ifdef ENABLE_REFLEX_WII
+        case RZORD_WII:
+        stateChanged = wiiLoop();
         break;
 #endif
 
