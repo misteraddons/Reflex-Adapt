@@ -24,22 +24,23 @@
 #define ENABLE_REFLEX_LOGO //reflex logo on oled display
 #define ENABLE_REFLEX_PAD //pad on oled display
 
-//#define ENABLE_REFLEX_SATURN
+#define ENABLE_REFLEX_SATURN
 //#define ENABLE_REFLEX_SNES
 //#define ENABLE_REFLEX_PSX
 //#define ENABLE_REFLEX_PSX_JOG //this is for jogcon forced specific mode. jogcon can still be used with ENABLE_REFLEX_PSX
 //#define ENABLE_REFLEX_PCE
 //#define ENABLE_REFLEX_NEOGEO
 //#define ENABLE_REFLEX_3DO
-#define ENABLE_REFLEX_JAGUAR
-#define ENABLE_REFLEX_N64
-#define ENABLE_REFLEX_GAMECUBE
-#define ENABLE_REFLEX_WII
+//#define ENABLE_REFLEX_JAGUAR
+//#define ENABLE_REFLEX_N64
+//#define ENABLE_REFLEX_GAMECUBE
+//#define ENABLE_REFLEX_WII
 
 // Sega MegaDrive/Saturn config
-
+#define SATLIB_ENABLE_8BITDO_HOME_BTN // support for HOME button on 8bidto M30 2.4G.
 // #define SATLIB_ENABLE_MEGATAP //suport for 4p megatap
-#define SATLIB_ENABLE_SATTAP //support for 6p multitap
+// #define SATLIB_ENABLE_SATTAP //support for 6p multitap
+
 
 
 // SNES config

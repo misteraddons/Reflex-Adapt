@@ -67,8 +67,11 @@ SaturnPort<SAT2_D0, SAT2_D1, SAT2_D2, SAT2_D3, SAT2_TH, SAT2_TR, SAT2_TL> saturn
     display.setCursor(padDivision[index].firstCol, 7);
     
     switch(padType) {
-      case SAT_DEVICE_MEGA:
-        display.print(F("GENESIS"));
+      case SAT_DEVICE_MEGA3:
+        display.print(F("GENESIS-3"));
+        break;
+      case SAT_DEVICE_MEGA6:
+        display.print(F("GENESIS-6"));
         break;
       case SAT_DEVICE_PAD:
         display.print(F("SATURN"));
@@ -87,12 +90,10 @@ SaturnPort<SAT2_D0, SAT2_D1, SAT2_D2, SAT2_D3, SAT2_TH, SAT2_TR, SAT2_TL> saturn
     if (index < 2) {
       //const uint8_t startCol = index == 0 ? 0 : 11*6;
       for(uint8_t x = 0; x < 13; x++){
-        if(padType == SAT_DEVICE_MEGA) {
-          if(x == 12) //skip L button
-            continue;
-          //else if(x > 7) //todo fix for 3 and 6 button pad
-          //  continue;
-        }
+        if(padType == SAT_DEVICE_MEGA3 && x == 8)
+          break;
+        if(padType == SAT_DEVICE_MEGA6 && x == 12) //skip L button
+          continue;
         const Pad pad = padSat[x];
         PrintPadChar(index, padDivision[index].firstCol, pad.col, pad.row, pad.padvalue, true, pad.on, pad.off, true);
       }
@@ -268,12 +269,10 @@ saturnLoop() {
                 //const uint8_t startCol = inputPort == 0 ? 0 : 11*6;
                 const SatDeviceType_Enum padType = currentPadType[inputPort];//sc.deviceType();
                 for(uint8_t x = 0; x < 13; x++){
-                  if(padType == SAT_DEVICE_MEGA) {
-                    if(x == 12) //skip L button
-                      continue;
-                    //else if(x > 7) //todo fix for 3 and 6 button pad
-                    //  continue;
-                  }
+                  if(padType == SAT_DEVICE_MEGA3 && x == 8)
+                    break;
+                  if(padType == SAT_DEVICE_MEGA6 && x == 12) //skip L button
+                    continue;
                   const Pad pad = padSat[x];
                   PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, sc.digitalPressed(pad.padvalue), pad.on, pad.off);
                 }
