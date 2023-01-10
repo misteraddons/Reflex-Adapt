@@ -12,14 +12,14 @@
 #include "src/ArduinoJoystickLibrary/Joy1.h"
 
 //Jaguar pins - Port 1
-#define JAGPIN_J3_J4   9 //h1
-#define JAGPIN_J2_J5   8 //h2
+#define JAGPIN_J3_J4   13 //h1  // ORIGINALLY PIN 9
+#define JAGPIN_J2_J5   10 //h2   // ORIGINALLY PIN 8
 #define JAGPIN_J1_J6   7 //h3
 #define JAGPIN_J0_J7   6 //h4
 #define JAGPIN_B0_B2   5 //h5
 #define JAGPIN_B1_B3   4 //h6
-#define JAGPIN_J11_J15 13 //h7
-#define JAGPIN_J10_J14 10 //h8 PS1ACK
+#define JAGPIN_J11_J15 9 //h7  // ORIGINALLY PIN 13
+#define JAGPIN_J10_J14 8 //h8 PS1ACK  // ORIGINALLY PIN 10
 #define JAGPIN_J9_J13  22 //h9 PS1GUN
 #define JAGPIN_J8_J12  14 //12 PS1DATA
 
