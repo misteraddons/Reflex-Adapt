@@ -29,7 +29,7 @@ static const uint8_t buttonPins[NEOGEO_TOTAL_PINS] = {
   NEOGEOPIN_A, NEOGEOPIN_B, NEOGEOPIN_C, NEOGEOPIN_D, 
   NEOGEOPIN_SELECT, NEOGEOPIN_START };
 
-static const uint8_t outputMask[NEOGEO_TOTAL_PINS] = {
+static const uint16_t outputMask[NEOGEO_TOTAL_PINS] = {
   (0x1), (0x1 << 1), (0x1 << 2), (0x1 << 3), 
   (0x1 << 1), (0x1 << 2), (0x1 << 0), (0x1 << 3), 
   (0x1 << 8), (0x1 << 9) };
