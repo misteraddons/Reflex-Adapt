@@ -28,7 +28,7 @@
 //#define ENABLE_REFLEX_SNES
 //#define ENABLE_REFLEX_PSX
 //#define ENABLE_REFLEX_PSX_JOG //this is for jogcon forced specific mode. jogcon can still be used with ENABLE_REFLEX_PSX
-//#define ENABLE_REFLEX_PCE
+#define ENABLE_REFLEX_PCE
 //#define ENABLE_REFLEX_NEOGEO
 //#define ENABLE_REFLEX_3DO
 //#define ENABLE_REFLEX_JAGUAR
@@ -64,13 +64,17 @@
 // Mouse output is used on guncon and jogcon modes.
 // Can be disabled if only using on MiSTer
 // #define ENABLE_PSX_GUNCON_MOUSE
-//#define ENABLE_PSX_JOGCON_MOUSE
+// #define ENABLE_PSX_JOGCON_MOUSE
 
 
 // Oled display can be used for detailed info
 #define ENABLE_PSX_GENERAL_OLED
 #define ENABLE_PSX_GUNCON_OLED
 #define ENABLE_PSX_JOGCON_OLED
+
+
+//PCEngine config
+#define PCE_ENABLE_MULTITAP
 
 //NeoGeo config (REQUIRED!)
 #define NEOGEO_DEBOUNCE 2 //debounce time in milliseconds
