@@ -45,14 +45,14 @@ jobs:
       - name: Build Release
         run: |
           mkdir -p release/firmware
-          cp firmware/*.hex release/firmware/
-          cp release_files/* release/
+          cp -v firmware/*.hex release/firmware/
+          cp -v release_files/* release/
           tar -zxf reflex_updater.tar.gz -O ./x86_64-pc-windows-msvc/reflex_updater.exe > release/reflex.exe
           tar -zxf reflex_updater.tar.gz -O ./x86_64-unknown-linux-musl/reflex_updater > release/reflex-linux-x86_64
           tar -zxf reflex_updater.tar.gz -O ./armv7-unknown-linux-musleabihf/reflex_updater > release/reflex-linux-armv7
           tar -zxf reflex_updater.tar.gz -O ./x86_64-apple-darwin/reflex_updater > release/reflex-macos
           chmod +x release/reflex-macos release/reflex-linux-armv7 release/reflex-linux-x86_64
-          ln -s release release-${{ inputs.tag }}
+          ln -s release reflex-${{ inputs.tag }}
 
       - name: Zip Archive
         run: zip -r reflex-${{ inputs.tag }}.zip reflex-${{ inputs.tag }}/
