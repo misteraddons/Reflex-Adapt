@@ -1,0 +1,25 @@
+name: Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  updater:
+    uses: misteraddons/Reflex-Adapt/.github/workflows/updater.yml@actions
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Arduino CLI
+        uses: arduino/setup-arduino-cli@v1
+      - name: Install arduino platform
+        run: arduino-cli core install arduino:avr
+      - name: Download Updater
+        uses: actions/download-artifact@v3
+        with:
+          name: reflex_updater
+      - name: Build Release
+        run: make release
+      - name: Listing
+        run: ls -lR release/
