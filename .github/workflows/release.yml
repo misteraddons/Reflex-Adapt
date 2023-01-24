@@ -60,7 +60,6 @@ jobs:
       - name: Tar Archive
         run: tar -czvf reflex-${{ inputs.tag }}.tar.gz reflex-${{ inputs.tag }}/
       - name: Release
-        if: ${{ inputs.make_release }}
         uses: softprops/action-gh-release@v1
         with:
           files: |
