@@ -58,7 +58,7 @@ jobs:
       - name: Zip Archive
         run: zip -r reflex-${{ inputs.tag }}.zip reflex-${{ inputs.tag }}/
       - name: Tar Archive
-        run: tar -czvf reflex-${{ inputs.tag }}.tar.gz reflex-${{ inputs.tag }}/
+        run: tar -czvhf reflex-${{ inputs.tag }}.tar.gz reflex-${{ inputs.tag }}/
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
