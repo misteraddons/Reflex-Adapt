@@ -1,0 +1,87 @@
+name: Reflex Updater
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    name: Build
+    strategy:
+      matrix:
+        target: [ aarch64-unknown-linux-musl, armv7-unknown-linux-musleabihf, i686-unknown-linux-musl, x86_64-unknown-linux-musl]
+        host: [ ubuntu-latest ]
+        cross: [ true ]
+        include:
+          - target: x86_64-apple-darwin
+            host: macos-latest
+            cross: false
+          - target: aarch64-apple-darwin
+            host: macos-latest
+            cross: false
+          - target: x86_64-pc-windows-msvc
+            host: windows-latest
+            cross: false
+          - target: i686-pc-windows-msvc
+            host: windows-latest
+            cross: false
+            
+    runs-on: ${{ matrix.host }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - run: cargo install cross --git https://github.com/cross-rs/cross
+        if: ${{ matrix.cross }}
+      - run: cross build --release --target ${{ matrix.target }}
+        if: ${{ matrix.cross }}
+        working-directory: reflex_updater
+      - run: cargo build --release --target ${{ matrix.target }}
+        if: ${{ !matrix.cross }}
+        working-directory: reflex_updater
+      - uses: actions/upload-artifact@v3
+        if: ${{ matrix.host == 'windows-latest' }}
+        working-directory: reflex_updater
+        with:
+          name: ${{ matrix.target }}
+          path: |
+            target/${{ matrix.target }}/release/reflex_updater.exe
+            target/${{ matrix.target }}/release/reflex_updater.pdb
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v3
+        if: ${{ matrix.host != 'windows-latest' }}
+        working-directory: reflex_updater
+        with:
+          name: ${{ matrix.target }}
+          path: target/${{ matrix.target }}/release/reflex_updater
+          if-no-files-found: error
+          
+  archive:
+    name: Archivee
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+    
+      - name: Display structure of downloaded files
+        run: ls -lR
+        working-directory: artifacts
+        
+      - name: Create Archive
+        run: tar -czvf reflex_updater.tar.gz -C artifacts .
+
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: reflex_updater
+          path: reflex_updater.tar.gz
+          if-no-files-found: error
+
+
+
