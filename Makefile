@@ -18,7 +18,7 @@ RELEASE_FILES = release_files/manifest.txt release_files/README.txt
 PRJ_DIR = Reflex
 BUILD_DIR = build
 TARGET_DIR = firmware
-RELEASE_DIR = release
+RELEASE_DIR = release/reflex
 UPDATER = reflex_updater.tar.gz
 
 
