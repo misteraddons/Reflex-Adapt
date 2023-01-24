@@ -13,7 +13,11 @@ jobs:
         uses: arduino/setup-arduino-cli@v1
       - name: Install arduino platform
         run: arduino-cli core install arduino:avr
-      - name: Properties
-        run: arduino-cli compile -b arduino:avr:leonardo Reflex --show-properties
       - name: Build All
         run: make all
+      - name: Create Archive
+        run: zip -j firmware.zip output/*
+      - uses: actions/upload-artifact@v3
+        with:
+          name: firmware.zip
+          path: firmware.zip
