@@ -1,0 +1,13 @@
+# reflex-updater manifest
+
+firmware/SNES.hex,Super Nintendo & Nintendo
+firmware/Saturn.hex,Saturn & Genesis
+firmware/PSX.hex,PlayStation
+firmware/PCEngine.hex,PC Engine
+firmware/Jaguar.hex,Jaguar
+firmware/3DO.hex,3DO
+firmware/NeoGeo.hex,NeoGeo
+firmware/N64.hex,Nintendo 64
+firmware/GameCube.hex,GameCube
+firmware/Wii.hex,Wii
+firmware/Nintendo.hex,Nintendo (NES, SNES, N64, GameCube & Wii)

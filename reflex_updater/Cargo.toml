@@ -1,0 +1,17 @@
+[package]
+name = "reflex_updater"
+version = "0.3.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1"
+console = "0.15"
+dialoguer = "0.10"
+ihex = "3"
+indicatif = "0.17"
+serialport = { version = "4.2", default-features = false }
+
+[profile.release]
+strip = true

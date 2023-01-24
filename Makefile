@@ -12,9 +12,15 @@ GameCube.FLAGS = -DENABLE_REFLEX_GAMECUBE
 Wii.FLAGS = -DENABLE_REFLEX_WII
 Nintendo.FLAGS = -DENABLE_REFLEX_GAMECUBE -DENABLE_REFLEX_SNES -DENABLE_REFLEX_WII -DENABLE_REFLEX_N64
 
+
+RELEASE_FILES = release_files/manifest.txt release_files/README.txt
+
 PRJ_DIR = Reflex
 BUILD_DIR = build
-TARGET_DIR = output
+TARGET_DIR = firmware
+RELEASE_DIR = release
+UPDATER = reflex_updater.tar.gz
+
 
 SRC = $(wildcard $(PRJ_DIR)/*.h $(PRJ_DIR)/*.c $(PRJ_DIR)/*.ino)
 
@@ -40,8 +46,20 @@ $(TARGET_DIR):
 
 $(TARGET_NAMES): %: $(TARGET_DIR)/%.hex
 
+release: $(TARGETS) $(UPDATER)
+	rm -r $(RELEASE_DIR)
+	mkdir -p $(RELEASE_DIR)
+	mkdir -p $(RELEASE_DIR)/firmware
+	cp $(TARGETS) $(RELEASE_DIR)/firmware/
+	cp $(RELEASE_FILES) $(RELEASE_DIR)/
+	tar -zxf $(UPDATER) -O ./x86_64-pc-windows-msvc/reflex_updater.exe > $(RELEASE_DIR)/reflex.exe
+	tar -zxf $(UPDATER) -O ./x86_64-unknown-linux-musl/reflex_updater > $(RELEASE_DIR)/reflex-linux-x86_64
+	tar -zxf $(UPDATER) -O ./armv7-unknown-linux-musleabihf/reflex_updater > $(RELEASE_DIR)/reflex-linux-armv7
+	tar -zxf $(UPDATER) -O ./x86_64-apple-darwin/reflex_updater > $(RELEASE_DIR)/reflex-macos
+	chmod +x $(RELEASE_DIR)/reflex-macos $(RELEASE_DIR)/reflex-linux-armv7 $(RELEASE_DIR)/reflex-linux-x86_64
+
 clean:
 	rm -rf $(TARGET_DIR)
 	rm -rf $(BUILD_DIR)
 
-.PHONY: all clean $(TARGET_NAMES)
+.PHONY: all clean $(TARGET_NAMES) release
