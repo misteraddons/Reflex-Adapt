@@ -38,13 +38,14 @@ jobs:
           name: reflex_updater
       - name: Build Release
         run: make release
+      - run: ln -s release release-${{ inputs.tag }}
       - name: Listing
-        run: ls -lR release/
+        run: ls -lR release-${{ inputs.tag }}/
       - name: Zip Archive
-        run: zip -r reflex-${{ inputs.tag }}.zip reflex/
+        run: zip -r reflex-${{ inputs.tag }}.zip reflex-${{ inputs.tag }}/
         working-directory: release
       - name: Tar Archive
-        run: tar -czvf reflex-${{ inputs.tag }}.tar.gz reflex/
+        run: tar -czvf reflex-${{ inputs.tag }}.tar.gz reflex-${{ inputs.tag }}/
         working-directory: release
       - name: Upload
         uses: actions/upload-artifact@v3
