@@ -6,6 +6,7 @@ on:
 
 jobs:
   build:
+    name: Build Firmware Combinations
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -16,9 +17,7 @@ jobs:
         run: arduino-cli core install arduino:avr
       - name: Build All
         run: make all
-      - name: Create Archive
-        run: zip -j firmware.zip output/*
       - uses: actions/upload-artifact@v3
         with:
           name: firmware
-          path: output/
+          path: firmware/
