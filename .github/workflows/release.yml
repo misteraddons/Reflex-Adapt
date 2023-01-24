@@ -21,10 +21,10 @@ on:
 jobs:
   updater:
     name: Build Updater Tool
-    uses: misteraddons/Reflex-Adapt/.github/workflows/updater.yml
+    uses: misteraddons/Reflex-Adapt/.github/workflows/updater.yml@latest
   firmware:
     name: Build Firmware
-    uses: misteraddons/Reflex-Adapt/.github/workflows/firmware.yml
+    uses: misteraddons/Reflex-Adapt/.github/workflows/firmware.yml@latest
   assemble:
     name: Create Release
     runs-on: ubuntu-latest
