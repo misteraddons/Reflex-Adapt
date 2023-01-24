@@ -12,20 +12,14 @@ jobs:
     name: Build
     strategy:
       matrix:
-        target: [ aarch64-unknown-linux-musl, armv7-unknown-linux-musleabihf, i686-unknown-linux-musl, x86_64-unknown-linux-musl]
+        target: [ armv7-unknown-linux-musleabihf, x86_64-unknown-linux-musl]
         host: [ ubuntu-latest ]
         cross: [ true ]
         include:
           - target: x86_64-apple-darwin
             host: macos-latest
             cross: false
-          - target: aarch64-apple-darwin
-            host: macos-latest
-            cross: false
           - target: x86_64-pc-windows-msvc
-            host: windows-latest
-            cross: false
-          - target: i686-pc-windows-msvc
             host: windows-latest
             cross: false
             

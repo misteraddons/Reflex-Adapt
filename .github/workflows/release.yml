@@ -34,24 +34,24 @@ jobs:
       - name: Listing
         run: ls -lR release/
       - name: Zip Archive
-        run: zip -r reflex-$${{ inputs.tag }}.zip reflex/
+        run: zip -r reflex-${{ inputs.tag }}.zip reflex/
         working-directory: release
       - name: Tar Archive
-        run: tar -czvf reflex-$${{ inputs.tag }}.tar.gz reflex/
+        run: tar -czvf reflex-${{ inputs.tag }}.tar.gz reflex/
         working-directory: release
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
           name: reflex
-          path: release/reflex-$${{ inputs.tag }}.tar.gz
+          path: release/reflex-${{ inputs.tag }}.tar.gz
           if-no-files-found: error
       - name: Release
         if: ${{ inputs.make_release }}
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            release/reflex-$${{ inputs.tag }}.tar.gz
-            release/reflex-$${{ inputs.tag }}.zip
+            release/reflex-${{ inputs.tag }}.tar.gz
+            release/reflex-${{ inputs.tag }}.zip
           tag_name: $${{ inputs.tag }}
 
 
