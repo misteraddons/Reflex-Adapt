@@ -52,8 +52,8 @@ jobs:
           path: reflex_updater/target/${{ matrix.target }}/release/reflex_updater
           if-no-files-found: error
           
-  archive:
-    name: Archive
+  bundle:
+    name: Bundle
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -65,14 +65,11 @@ jobs:
         run: ls -lR
         working-directory: artifacts
         
-      - name: Create Archive
-        run: tar -czvf reflex_updater.tar.gz -C artifacts .
-
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
           name: reflex_updater
-          path: reflex_updater.tar.gz
+          path: artifacts/
           if-no-files-found: error
 
 
