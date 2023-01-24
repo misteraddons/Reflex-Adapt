@@ -1,7 +1,7 @@
 /*******************************************************************************
  * NEC PC Engine controllers to USB using an Arduino Leonardo.
  *
- * Works with 2btn and 6btn digital pad.
+ * Works with 2btn and 6btn digital pad, multitap.
  *
  * For details on Joystick Library, see
  * https://github.com/MHeironimus/ArduinoJoystickLibrary
@@ -54,7 +54,12 @@ PcePort<PCE2_SEL, PCE2_CLR, PCE2_D0, PCE2_D1, PCE2_D2, PCE2_D3> pce2;
     { PCE_6,         2, 9*6, FACEBTN_ON, FACEBTN_OFF }
   };
   
-  void ShowDefaultPadPce(const uint8_t index, const PceDeviceType_Enum padType) {
+  void ShowDefaultPadPce(const uint8_t index, PceDeviceType_Enum padType) {
+    //If multitap support is enabled, force display as 2btn pad
+    #ifdef PCE_ENABLE_MULTITAP
+      if(padType == PCE_DEVICE_NONE)
+        padType = PCE_DEVICE_PAD2;
+    #endif
     //print default joystick state to oled screen
   
     //const uint8_t firstCol = index == 0 ? 0 : 11*6;
@@ -105,13 +110,20 @@ void pceSetup() {
   delayMicroseconds(10);
   
   //Detect multitap on first port
-  //pce1.detectMultitap();
-  const uint8_t tap = 0;//pce1.getMultitapPorts() + pce2.getMultitapPorts();
+  pce1.detectMultitap();
   
+  const uint8_t tap = pce1.getMultitapPorts();//pce1.getMultitapPorts() + pce2.getMultitapPorts();
+ 
   if (tap == 0) //No multitap connected during boot
     totalUsb = 2;
   else //Multitap connected.
-    totalUsb = MAX_USB_STICKS;//min(tap + 1, MAX_USB_STICKS);
+    totalUsb = min(tap + 1, MAX_USB_STICKS);
+
+  /*#ifdef PCE_ENABLE_MULTITAP
+    totalUsb = min(TAP_PCE_PORTS + 1, MAX_USB_STICKS);
+  #else
+    totalUsb = 2;
+  #endif*/
   
   //Create usb controllers
   for (uint8_t i = 0; i < totalUsb; i++) {
@@ -136,8 +148,19 @@ inline bool __attribute__((always_inline))
 pceLoop() {
   static uint8_t lastControllerCount = 0;
   #ifdef ENABLE_REFLEX_PAD
-    static PceDeviceType_Enum lastPadType[] = { PCE_DEVICE_NOTSUPPORTED, PCE_DEVICE_NOTSUPPORTED };
-    PceDeviceType_Enum currentPadType[] = { PCE_DEVICE_NONE, PCE_DEVICE_NONE };
+    static PceDeviceType_Enum lastPadType[] = { PCE_DEVICE_NOTSUPPORTED, PCE_DEVICE_NOTSUPPORTED, PCE_DEVICE_NOTSUPPORTED, PCE_DEVICE_NOTSUPPORTED, PCE_DEVICE_NOTSUPPORTED, PCE_DEVICE_NOTSUPPORTED };
+    PceDeviceType_Enum currentPadType[] = { PCE_DEVICE_NONE, PCE_DEVICE_NONE, PCE_DEVICE_NONE, PCE_DEVICE_NONE, PCE_DEVICE_NONE, PCE_DEVICE_NONE };
+
+    static bool firstTime = true;
+    if(firstTime) {
+      firstTime = false;
+      //Multitap mode!
+      if(totalUsb > 2) {
+        display.setCursor(5*6, oledDisplayFirstRow + 3);
+        display.print(F("MULTI-TAP"));
+      }
+    }
+      
   #endif
   bool stateChanged = false;
   
@@ -159,10 +182,13 @@ pceLoop() {
     const PceController& sc = inputPort == 0 ? pce1.getPceController(i) : pce2.getPceController(i - joyCount1);
 
     #ifdef ENABLE_REFLEX_PAD
-      if(inputPort == 0 && joyCount1 != 0)
-        currentPadType[inputPort] = sc.deviceType();
-      else if(inputPort == 1 && joyCount2 != 0)
-        currentPadType[inputPort] = sc.deviceType();
+      //Only used if not in multitap mode
+      if(totalUsb == 2) {
+        if(inputPort == 0 && joyCount1 != 0)
+          currentPadType[inputPort] = sc.deviceType();
+        else if(inputPort == 1 && joyCount2 != 0)
+          currentPadType[inputPort] = sc.deviceType();
+      }
     #endif
     
     //Only process data if state changed from previous read
@@ -173,7 +199,9 @@ pceLoop() {
       if (sc.deviceJustChanged()) {
         pceResetJoyValues(i);
         #ifdef ENABLE_REFLEX_PAD
-          ShowDefaultPadPce(inputPort, sc.deviceType());
+          //Only used if not in multitap mode
+          if (totalUsb == 2)
+            ShowDefaultPadPce(inputPort, sc.deviceType());
         #endif
       }
       
@@ -207,7 +235,8 @@ pceLoop() {
       usbStick[i]->sendState();
       
       #ifdef ENABLE_REFLEX_PAD
-        if (inputPort < 2) {
+        //Only used if not in multitap mode
+        if (totalUsb == 2 && inputPort < 2) {
           //const uint8_t startCol = inputPort == 0 ? 0 : 11*6;
           const PceDeviceType_Enum padType = sc.deviceType();
           for(uint8_t x = 0; x < 12; x++){
@@ -223,7 +252,8 @@ pceLoop() {
   
   #ifdef ENABLE_REFLEX_PAD
     for (uint8_t i = 0; i < 2; i++) {
-      if(lastPadType[i] != currentPadType[i] && currentPadType[i] == PCE_DEVICE_NONE)
+      //Only used if not in multitap mode
+      if(totalUsb == 2 && lastPadType[i] != currentPadType[i] && currentPadType[i] == PCE_DEVICE_NONE)
         ShowDefaultPadPce(i, PCE_DEVICE_NONE);
       lastPadType[i] = currentPadType[i];
     }

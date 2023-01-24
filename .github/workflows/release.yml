@@ -69,4 +69,3 @@ jobs:
           body: ${{ inputs.release_desc }}
           draft: ${{ inputs.draft_release }}
 
-
