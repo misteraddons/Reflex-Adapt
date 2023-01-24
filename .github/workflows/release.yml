@@ -35,6 +35,7 @@ jobs:
       - name: Download Updater
         uses: actions/download-artifact@v3
         with:
+          path: updater
           name: reflex_updater
       - name: Download Firmware
         uses: actions/download-artifact@v3
@@ -47,10 +48,10 @@ jobs:
           mkdir -p release/firmware
           cp -v firmware/*.hex release/firmware/
           cp -v release_files/* release/
-          tar -zxf reflex_updater.tar.gz -O ./x86_64-pc-windows-msvc/reflex_updater.exe > release/reflex.exe
-          tar -zxf reflex_updater.tar.gz -O ./x86_64-unknown-linux-musl/reflex_updater > release/reflex-linux-x86_64
-          tar -zxf reflex_updater.tar.gz -O ./armv7-unknown-linux-musleabihf/reflex_updater > release/reflex-linux-armv7
-          tar -zxf reflex_updater.tar.gz -O ./x86_64-apple-darwin/reflex_updater > release/reflex-macos
+          cp -v updater/x86_64-pc-windows-msvc/reflex_updater.exe release/reflex.exe
+          cp -v updater/x86_64-unknown-linux-musl/reflex_updater release/reflex-linux-x86_64
+          cp -v updater/armv7-unknown-linux-musleabihf/reflex_updater release/reflex-linux-armv7
+          cp -v updater/x86_64-apple-darwin/reflex_updater release/reflex-macos
           chmod +x release/reflex-macos release/reflex-linux-armv7 release/reflex-linux-x86_64
           ln -s release reflex-${{ inputs.tag }}
 
