@@ -57,17 +57,15 @@ jobs:
 
       - name: Zip Archive
         run: zip -r reflex-${{ inputs.tag }}.zip reflex-${{ inputs.tag }}/
-        working-directory: release
       - name: Tar Archive
         run: tar -czvf reflex-${{ inputs.tag }}.tar.gz reflex-${{ inputs.tag }}/
-        working-directory: release
       - name: Release
         if: ${{ inputs.make_release }}
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            release/reflex-${{ inputs.tag }}.tar.gz
-            release/reflex-${{ inputs.tag }}.zip
+            reflex-${{ inputs.tag }}.tar.gz
+            reflex-${{ inputs.tag }}.zip
           tag_name: ${{ inputs.tag }}
           body: ${{ inputs.release_desc }}
           draft: ${{ inputs.draft_release }}
