@@ -3,6 +3,8 @@ src/Adafruit_NeoPixel/.DS_Store
 src/.DS_Store
 src/FastLED/.DS_Store
 src/SSD1306Ascii/.DS_Store
+build/
+output/
 .DS_Store
 
 

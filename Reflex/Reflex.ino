@@ -24,7 +24,7 @@
 #define ENABLE_REFLEX_LOGO //reflex logo on oled display
 #define ENABLE_REFLEX_PAD //pad on oled display
 
-#define ENABLE_REFLEX_SATURN
+//#define ENABLE_REFLEX_SATURN
 //#define ENABLE_REFLEX_SNES
 //#define ENABLE_REFLEX_PSX
 //#define ENABLE_REFLEX_PSX_JOG //this is for jogcon forced specific mode. jogcon can still be used with ENABLE_REFLEX_PSX
@@ -90,6 +90,11 @@
 
 //Wii config
 //#define WII_ANALOG_MAX 0 //still need to implement...
+
+
+#ifndef REFLEX_NO_DEFAULTS
+#define ENABLE_REFLEX_SATURN
+#endif // REFLEX_NO_DEFAULTS
 
 /******************************************************************************/
 
