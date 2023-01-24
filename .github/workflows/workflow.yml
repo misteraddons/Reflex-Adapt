@@ -13,5 +13,7 @@ jobs:
         uses: arduino/setup-arduino-cli@v1
       - name: Install arduino platform
         run: arduino-cli core install arduino:avr
+      - name: Properties
+        run: arduino-cli compile -b arduino:avr:leonardo Reflex --show-properties
       - name: Build All
         run: make all
