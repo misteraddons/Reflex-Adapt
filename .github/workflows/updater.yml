@@ -45,23 +45,21 @@ jobs:
         working-directory: reflex_updater
       - uses: actions/upload-artifact@v3
         if: ${{ matrix.host == 'windows-latest' }}
-        working-directory: reflex_updater
         with:
           name: ${{ matrix.target }}
           path: |
-            target/${{ matrix.target }}/release/reflex_updater.exe
-            target/${{ matrix.target }}/release/reflex_updater.pdb
+            reflex_updater/target/${{ matrix.target }}/release/reflex_updater.exe
+            reflex_updater/target/${{ matrix.target }}/release/reflex_updater.pdb
           if-no-files-found: error
       - uses: actions/upload-artifact@v3
         if: ${{ matrix.host != 'windows-latest' }}
-        working-directory: reflex_updater
         with:
           name: ${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/reflex_updater
+          path: reflex_updater/target/${{ matrix.target }}/release/reflex_updater
           if-no-files-found: error
           
   archive:
-    name: Archivee
+    name: Archive
     needs: build
     runs-on: ubuntu-latest
     steps:
