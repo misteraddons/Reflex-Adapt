@@ -26,7 +26,7 @@ all: $(TARGETS) $(TARGET_DIR)/sizes.txt
 
 $(TARGET_DIR)/%.hex: $(SRC) | $(TARGET_DIR)
 	@[ "$($*.FLAGS)" ] || ( echo ">> $*.FLAGS is not set"; exit 1 )
-	arduino-cli compile -b arduino:avr:leonardo $(PRJ_DIR) --build-property "build.extra_flags=-DREFLEX_NO_DEFAULTS $($*.FLAGS)" -e --output-dir $(BUILD_DIR)/$*
+	arduino-cli compile -b arduino:avr:leonardo $(PRJ_DIR) --build-property "build.extra_flags={build.usb_flags} -DREFLEX_NO_DEFAULTS $($*.FLAGS)" -e --output-dir $(BUILD_DIR)/$*
 	cp $(BUILD_DIR)/$*/Reflex.ino.elf $(TARGET_DIR)/$*.elf
 	cp $(BUILD_DIR)/$*/Reflex.ino.hex $(TARGET_DIR)/$*.hex
 
