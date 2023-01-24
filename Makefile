@@ -47,7 +47,7 @@ $(TARGET_DIR):
 $(TARGET_NAMES): %: $(TARGET_DIR)/%.hex
 
 release: $(TARGETS) $(UPDATER)
-	rm -r $(RELEASE_DIR)
+	rm -rf $(RELEASE_DIR)
 	mkdir -p $(RELEASE_DIR)
 	mkdir -p $(RELEASE_DIR)/firmware
 	cp $(TARGETS) $(RELEASE_DIR)/firmware/
