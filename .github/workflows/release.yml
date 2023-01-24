@@ -2,24 +2,70 @@ name: Release
 
 on:
   workflow_dispatch:
+    inputs:
+      draft_release:
+        required: true
+        type: boolean
+        description: Create a draft release
+        default: true
+      tag:
+        required: true
+        description: Release tag
+        type: string
+      release_desc:
+        required: false
+        type: string
+        description: Release Description
+      
 
 jobs:
   updater:
-    uses: misteraddons/Reflex-Adapt/.github/workflows/updater.yml@actions
-  build:
+    name: Build Updater Tool
+    uses: misteraddons/Reflex-Adapt/.github/workflows/updater.yml
+  firmware:
+    name: Build Firmware
+    uses: misteraddons/Reflex-Adapt/.github/workflows/firmware.yml
+  assemble:
+    name: Create Release
     runs-on: ubuntu-latest
+    needs: [ updater, firmware ]
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Install Arduino CLI
-        uses: arduino/setup-arduino-cli@v1
-      - name: Install arduino platform
-        run: arduino-cli core install arduino:avr
       - name: Download Updater
         uses: actions/download-artifact@v3
         with:
+          path: updater
           name: reflex_updater
+      - name: Download Firmware
+        uses: actions/download-artifact@v3
+        with:
+          name: firmware
+          path: firmware
+
       - name: Build Release
-        run: make release
-      - name: Listing
-        run: ls -lR release/
+        run: |
+          mkdir -p release/firmware
+          cp -v firmware/*.hex release/firmware/
+          cp -v release_files/* release/
+          cp -v updater/x86_64-pc-windows-msvc/reflex_updater.exe release/reflex.exe
+          cp -v updater/x86_64-unknown-linux-musl/reflex_updater release/reflex-linux-x86_64
+          cp -v updater/armv7-unknown-linux-musleabihf/reflex_updater release/reflex-linux-armv7
+          cp -v updater/x86_64-apple-darwin/reflex_updater release/reflex-macos
+          chmod +x release/reflex-macos release/reflex-linux-armv7 release/reflex-linux-x86_64
+          ln -s release reflex-${{ inputs.tag }}
+
+      - name: Zip Archive
+        run: zip -r reflex-${{ inputs.tag }}.zip reflex-${{ inputs.tag }}/
+      - name: Tar Archive
+        run: tar -czvhf reflex-${{ inputs.tag }}.tar.gz reflex-${{ inputs.tag }}/
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            reflex-${{ inputs.tag }}.tar.gz
+            reflex-${{ inputs.tag }}.zip
+          tag_name: ${{ inputs.tag }}
+          body: ${{ inputs.release_desc }}
+          draft: ${{ inputs.draft_release }}
+

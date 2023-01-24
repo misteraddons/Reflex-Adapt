@@ -1,0 +1,23 @@
+name: Firmware
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build:
+    name: Build Firmware Combinations
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Arduino CLI
+        uses: arduino/setup-arduino-cli@v1
+      - name: Install arduino platform
+        run: arduino-cli core install arduino:avr
+      - name: Build All
+        run: make all
+      - uses: actions/upload-artifact@v3
+        with:
+          name: firmware
+          path: firmware/

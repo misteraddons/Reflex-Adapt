@@ -189,15 +189,15 @@ void handleDpad(const bool isjog = false) {
 
 //optional includes
 #ifdef GUNCON_SUPPORT
-  #include "psx_guncon.h"
+  #include "Psx_guncon.h"
 #endif
 
 #ifdef JOGCON_SUPPORT
-  #include "psx_jogcon.h"
+  #include "Psx_jogcon.h"
 #endif
 
 #ifdef NEGCON_SUPPORT
-  #include "psx_negcon.h"
+  #include "Psx_negcon.h"
 #endif
 
 bool loopDualShock() {
