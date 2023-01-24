@@ -1,4 +1,4 @@
-name: Test run v1
+name: Test run v2
 
 on:
   workflow_dispatch:
@@ -7,7 +7,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Show environment v1
-        run: env
-      - name: Show ref v1
-        run: echo "===============> Version from $GITHUB_REF"
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Arduino CLI
+        uses: arduino/setup-arduino-cli@v1
+      - name: Build All
+        run: make all
