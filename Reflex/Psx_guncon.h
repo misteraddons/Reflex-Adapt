@@ -97,7 +97,10 @@ void releaseAllButtons() { //guncon
 }
 
 void readGuncon() {
-  uint16_t x, y, convertedX, convertedY;
+  uint16_t x, y;
+  #if GUNCON_FORCE_MODE != 3
+    uint16_t convertedX, convertedY;
+  #endif
   const GunconStatus gcStatus = psx->getGunconCoordinates(x, y); //use coords from guncon
 
 /*

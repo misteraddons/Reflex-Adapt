@@ -316,7 +316,7 @@ bool loopDualShock() {
               continue;
             if(proto == PSPROTO_NEGCON && (x == 0 || x == 8 || x == 9))
               continue;
-            PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, psx->buttonPressed(pad.padvalue), pad.on, pad.off);
+            PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, psx->buttonPressed((PsxButton)pad.padvalue), pad.on, pad.off);
           }
         }
       #endif

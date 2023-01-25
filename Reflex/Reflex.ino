@@ -197,14 +197,16 @@
 
 //uint8_t colors[] = {0,0,0};
 uint32_t colors = 0;
-void setLedColors(const uint8_t r, const uint8_t g, const uint8_t b) {
-  #if REFLEX_VERSION != -2
+#if REFLEX_VERSION != -2
+  void setLedColors(const uint8_t r, const uint8_t g, const uint8_t b) {
     colors = pixels.Color(r, g, b);
-  #endif
-  //colors[0] = r;
-  //colors[1] = g;
-  //colors[2] = b;
-}
+    //colors[0] = r;
+    //colors[1] = g;
+    //colors[2] = b;
+  }
+#else
+  #define setLedColors(...)
+#endif
 
 #if REFLEX_VERSION == -2
   void setPixelMode() {
@@ -347,7 +349,7 @@ void setLedColors(const uint8_t r, const uint8_t g, const uint8_t b) {
 #endif
 
 void setNextMode() {
-    deviceMode = deviceMode + 1;
+    deviceMode = (DeviceEnum)(deviceMode + 1);
     if(deviceMode >= RZORD_LAST)
       deviceMode = (DeviceEnum)1;
   /*switch(deviceMode) {
@@ -384,7 +386,9 @@ void setNextMode() {
   }*/
 }
 
-static bool LEDMODE = true;
+#if REFLEX_VERSION != -2
+  static bool LEDMODE = true;
+#endif
 
 #if REFLEX_VERSION == 1
   void showModeUsingTXLed() {
@@ -518,7 +522,7 @@ void setup() {
   #else
   
     //use eeprom
-    deviceMode = EEPROM.read(RZORD_EEPROM_MODE);
+    deviceMode = (DeviceEnum)EEPROM.read(RZORD_EEPROM_MODE);
     if (deviceMode >= RZORD_LAST)
       deviceMode = (DeviceEnum)1;
       
