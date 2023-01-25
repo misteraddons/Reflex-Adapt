@@ -196,7 +196,7 @@ jaguarLoop() {
       #ifdef ENABLE_REFLEX_PAD
         if (inputPort < 2) {
           //const uint8_t startCol = inputPort == 0 ? 0 : 11*6;
-          const JagDeviceType_Enum padType = sc.deviceType();
+          //const JagDeviceType_Enum padType = sc.deviceType();
           for(uint8_t x = 0; x < 21; x++){
             const Pad pad = padJaguar[x];
             PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, sc.digitalPressed((JagDigital_Enum)pad.padvalue), pad.on, pad.off);

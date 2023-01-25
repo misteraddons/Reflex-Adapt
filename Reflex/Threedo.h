@@ -181,10 +181,10 @@ threedoLoop() {
             #ifdef ENABLE_REFLEX_PAD
               if (inputPort < 2) {
                 //const uint8_t startCol = inputPort == 0 ? 0 : 11*6;
-                const ThreedoDeviceType_Enum padType = currentPadType[inputPort];//sc.deviceType();
+                //const ThreedoDeviceType_Enum padType = currentPadType[inputPort];//sc.deviceType();
                 for(uint8_t x = 0; x < 11; x++){
                   const Pad pad = pad3do[x];
-                  PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, sc.digitalPressed(pad.padvalue), pad.on, pad.off);
+                  PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, sc.digitalPressed((ThreedoDigital_Enum)pad.padvalue), pad.on, pad.off);
                 }
               }
             #endif

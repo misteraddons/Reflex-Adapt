@@ -345,7 +345,7 @@ snesLoop() {
             if(padType == SNES_DEVICE_NES && x > 7)
               continue;
             const Pad pad = (padType == SNES_DEVICE_NES && x < 4) ? padSnes[x+12] : padSnes[x]; //NES uses horizontal align
-            PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, sc.digitalPressed(pad.padvalue), pad.on, pad.off);
+            PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, sc.digitalPressed((SnesDigital_Enum)pad.padvalue), pad.on, pad.off);
           }
         }
       #endif

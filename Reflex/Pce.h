@@ -243,7 +243,7 @@ pceLoop() {
             if(padType == PCE_DEVICE_PAD2 && x > 7)
                 continue;
             const Pad pad = padPce[x];
-            PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, sc.digitalPressed(pad.padvalue), pad.on, pad.off);
+            PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, sc.digitalPressed((PceDigital_Enum)pad.padvalue), pad.on, pad.off);
           }
         }
       #endif

@@ -274,7 +274,7 @@ saturnLoop() {
                   if(padType == SAT_DEVICE_MEGA6 && x == 12) //skip L button
                     continue;
                   const Pad pad = padSat[x];
-                  PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, sc.digitalPressed(pad.padvalue), pad.on, pad.off);
+                  PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, sc.digitalPressed((SatDigital_Enum)pad.padvalue), pad.on, pad.off);
                 }
               }
             #endif
