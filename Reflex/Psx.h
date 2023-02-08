@@ -128,7 +128,7 @@ boolean isNeGconMiSTer = false;
     switch(padType) {
       case PSPROTO_DIGITAL:
       case PSPROTO_NEGCON:
-        display.print(F("DIGITAL"));
+        display.print(isNeGcon ? F("NEGCON") : F("DIGITAL"));
         break;
       case PSPROTO_DUALSHOCK:
         display.print(F("DUALSHOCK"));
@@ -285,8 +285,8 @@ bool loopDualShock() {
       //convertedY = convertRange(ANALOG_MIN_VALUE, ANALOG_MAX_VALUE, analogY);
       //usbStick[outputIndex]->setRxAxis(convertedX);
       //usbStick[outputIndex]->setRyAxis(convertedY);
-      ((Joy1_*)usbStick[outputIndex])->setAnalog2(analogX); //rx
-      ((Joy1_*)usbStick[outputIndex])->setAnalog3(analogY); //ry
+      ((Joy1_*)usbStick[outputIndex])->setAnalog2(analogX); //z (right x)
+      ((Joy1_*)usbStick[outputIndex])->setAnalog3(analogY); //rz (right y)
     } else {
       //usbStick[outputIndex]->setRxAxis(16384);
       //usbStick[outputIndex]->setRyAxis(16384);
@@ -427,9 +427,8 @@ void psxSetup() {
         usbStick[i] = new Joy1_("RZordPsDS1", JOYSTICK_DEFAULT_REPORT_ID + i, JOYSTICK_TYPE_GAMEPAD, totalUsb,
           true,//includeXAxis,
           true,//includeYAxis,
-          false,//includeZAxis,
-          true,//includeRxAxis,
-          true,//includeRyAxis,
+          true,//includeZAxis,
+          true,//includeRzAxis,
           false,//includeThrottle,
           false,//includeBrake,
           false);//includeSteering
@@ -579,7 +578,7 @@ psxLoop() {
         psx = psxlist[i];
         if (isNeGcon) {
           #ifdef NEGCON_SUPPORT
-            loopNeGcon();
+            stateChanged |=loopNeGcon();
           #endif
         } else if (isGuncon) {
           #ifdef GUNCON_SUPPORT

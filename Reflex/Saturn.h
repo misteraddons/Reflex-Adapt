@@ -139,8 +139,7 @@ void saturnSetup() {
           true,//includeXAxis,
           true,//includeYAxis,
           false,//includeZAxis,
-          false,//includeRxAxis,
-          false,//includeRyAxis,
+          false,//includeRzAxis,
           true,//includeThrottle,
           true,//includeBrake,
           false);//includeSteering

@@ -109,9 +109,8 @@ void gameCubeSetup() {
     usbStick[i] = new Joy1_("RZordGC", JOYSTICK_DEFAULT_REPORT_ID + i, JOYSTICK_TYPE_GAMEPAD, totalUsb,
           true,//includeXAxis,
           true,//includeYAxis,
-          false,//includeZAxis,
-          true,//includeRxAxis,
-          true,//includeRyAxis,
+          true,//includeZAxis,
+          true,//includeRzAxis,
           false,//includeThrottle,
           false,//includeBrake,
           false);//includeSteering

@@ -28,7 +28,7 @@
 //#define ENABLE_REFLEX_SNES
 //#define ENABLE_REFLEX_PSX
 //#define ENABLE_REFLEX_PSX_JOG //this is for jogcon forced specific mode. jogcon can still be used with ENABLE_REFLEX_PSX
-#define ENABLE_REFLEX_PCE
+//#define ENABLE_REFLEX_PCE
 //#define ENABLE_REFLEX_NEOGEO
 //#define ENABLE_REFLEX_3DO
 //#define ENABLE_REFLEX_JAGUAR

@@ -30,9 +30,8 @@ class Joy1_ : public Joystick_
     Joy1_(const char* serial, const uint8_t reportId, const uint8_t deviceType, const uint8_t totalControllers,
       bool includeXAxis = false,
       bool includeYAxis = false,
-      bool includeZAxis = false,
-      bool includeRxAxis = false,
-      bool includeRyAxis = false,
+      bool includeZAxis = false,  //used as right stick X
+      bool includeRzAxis = false, //used as right stick Y
       bool includeThrottle = false,
       bool includeBrake = false,
       bool includeSteering = false);

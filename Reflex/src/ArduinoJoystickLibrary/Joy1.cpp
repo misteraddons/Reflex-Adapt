@@ -1,7 +1,7 @@
 #include "Joy1.h"
 
 Joy1_::Joy1_(const char* serial, const uint8_t reportId, const uint8_t deviceType, const uint8_t totalControllers,
-  bool includeXAxis, bool includeYAxis, bool includeZAxis, bool includeRxAxis, bool includeRyAxis,
+  bool includeXAxis, bool includeYAxis, bool includeZAxis, bool includeRzAxis,
   bool includeThrottle, bool includeBrake, bool includeSteering) :
   Joystick_(serial, totalControllers)
 {
@@ -13,9 +13,7 @@ Joy1_::Joy1_(const char* serial, const uint8_t reportId, const uint8_t deviceTyp
   const uint8_t axisCount = (includeXAxis == true)
     +  (includeYAxis == true)
     +  (includeZAxis == true)
-    +  (includeRxAxis == true)
-    +  (includeRyAxis == true);
-    //+  (includeRzAxis == true);
+    +  (includeRzAxis == true);
     
   const uint8_t simulationCount = (includeThrottle == true)
     + (includeBrake == true)
@@ -179,28 +177,22 @@ Joy1_::Joy1_(const char* serial, const uint8_t reportId, const uint8_t deviceTyp
       tempHidReportDescriptor[hidReportDescriptorSize++] = 0x32;
     }
     
-    if (includeRxAxis == true) {
-      // USAGE (Rx)
-      //tempHidReportDescriptor[hidReportDescriptorSize++] = 0x09;
-      //tempHidReportDescriptor[hidReportDescriptorSize++] = 0x33;
-      // USAGE (Z) -- Rx Changed to Z
+    if (includeRzAxis == true) {
+      // USAGE (Rz)
       tempHidReportDescriptor[hidReportDescriptorSize++] = 0x09;
-      tempHidReportDescriptor[hidReportDescriptorSize++] = 0x32;
+      tempHidReportDescriptor[hidReportDescriptorSize++] = 0x35;
+    }
+    
+    /*if (includeRxAxis == true) {
+      // USAGE (Rx)
+      tempHidReportDescriptor[hidReportDescriptorSize++] = 0x09;
+      tempHidReportDescriptor[hidReportDescriptorSize++] = 0x33;
     }
     
     if (includeRyAxis == true) {
       // USAGE (Ry)
-      //tempHidReportDescriptor[hidReportDescriptorSize++] = 0x09;
-      //tempHidReportDescriptor[hidReportDescriptorSize++] = 0x34;
-      // USAGE (Rz)  -- Ry Changed to Rz
       tempHidReportDescriptor[hidReportDescriptorSize++] = 0x09;
-      tempHidReportDescriptor[hidReportDescriptorSize++] = 0x35;
-    }
-    
-    /*if (includeRzAxis == true) {
-      // USAGE (Rz)
-      tempHidReportDescriptor[hidReportDescriptorSize++] = 0x09;
-      tempHidReportDescriptor[hidReportDescriptorSize++] = 0x35;
+      tempHidReportDescriptor[hidReportDescriptorSize++] = 0x34;
     }*/
     
     // INPUT (Data,Var,Abs)
@@ -210,7 +202,7 @@ Joy1_::Joy1_(const char* serial, const uint8_t reportId, const uint8_t deviceTyp
     // END_COLLECTION (Physical)
     tempHidReportDescriptor[hidReportDescriptorSize++] = 0xc0;
     
-  } // X, Y, Z, Rx, Ry, and Rz Axis 
+  } // X, Y, Z, Rz, Rx, and Ry  Axis 
   
   if (simulationCount > 0) {
   
