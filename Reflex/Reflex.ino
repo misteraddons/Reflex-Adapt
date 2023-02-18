@@ -87,7 +87,7 @@
 //Comment out to use raw values.
 //Set as zero to use automatic map. Will calibrate and scale to full range.
 //Set a positive value to use it as the maximum value. It will be scaled to full range.
-#define N64_ANALOG_MAX 65
+//#define N64_ANALOG_MAX 65
 
 //GameCube config
 //#define GAMECUBE_ANALOG_MAX 0 //still need to implement...
@@ -97,7 +97,7 @@
 
 
 #ifndef REFLEX_NO_DEFAULTS
-#define ENABLE_REFLEX_SATURN
+#define ENABLE_REFLEX_N64
 #endif // REFLEX_NO_DEFAULTS
 
 /******************************************************************************/
