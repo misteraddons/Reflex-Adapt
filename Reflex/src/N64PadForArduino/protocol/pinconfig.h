@@ -80,15 +80,26 @@
 	//~ #define disableInterrupt() {PCICR &= ~(1 << PCIE0);}
 
 	// Pin 9, PB5, PCINT5 - Tested OK
-	#define PAD_DIR DDRB
-	#define PAD_OUTPORT PORTB
-	#define PAD_INPORT PINB
-	#define PAD_BIT PB5
-	#define N64PAD_USE_PCINT
-	#define N64PAD_INT_VECTOR PCINT0_vect
-	#define prepareInterrupt() {PCMSK0 |= (1 << PCINT5);}
-	#define enableInterrupt() {PCIFR |= (1 << PCIF0); PCICR |= (1 << PCIE0);}
-	#define disableInterrupt() {PCICR &= ~(1 << PCIE0);}
+	// #define PAD_DIR DDRB
+	// #define PAD_OUTPORT PORTB
+	// #define PAD_INPORT PINB
+	// #define PAD_BIT PB5
+	// #define N64PAD_USE_PCINT
+	// #define N64PAD_INT_VECTOR PCINT0_vect
+	// #define prepareInterrupt() {PCMSK0 |= (1 << PCINT5);}
+	// #define enableInterrupt() {PCIFR |= (1 << PCIF0); PCICR |= (1 << PCIE0);}
+	// #define disableInterrupt() {PCICR &= ~(1 << PCIE0);}
+
+	// Pin 1, PD3, INT3 - Tested OK
+	#define PAD_DIR DDRD
+	#define PAD_OUTPORT PORTD
+	#define PAD_INPORT PIND
+	#define PAD_BIT PD3
+	#define N64PAD_USE_INTX
+	#define N64PAD_INT_VECTOR INT3_vect
+	#define prepareInterrupt() {EICRA |= (1 << ISC31); EICRA &= ~(1 << ISC30);}
+	#define enableInterrupt() {EIFR |= (1 << INTF3); EIMSK |= (1 << INT3);}
+	#define disableInterrupt() {EIMSK &= ~(1 << INT3);}
 	
 #elif defined (__AVR_ATmega2560__)
 	// Arduino Mega

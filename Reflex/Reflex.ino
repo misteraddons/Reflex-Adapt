@@ -97,7 +97,8 @@
 
 
 #ifndef REFLEX_NO_DEFAULTS
-#define ENABLE_REFLEX_N64
+#define ENABLE_REFLEX_N64_OLD   //uses old pin adapter! 1p only on first port.
+//#define ENABLE_REFLEX_N64_NEW     //uses new pin adapter! 2p possible.
 #endif // REFLEX_NO_DEFAULTS
 
 /******************************************************************************/
@@ -126,6 +127,10 @@
   #define REFLEX_USE_SINGLE_OLED
 #endif
 
+#if defined(ENABLE_REFLEX_N64_OLD) || defined(ENABLE_REFLEX_N64_NEW)
+  #define ENABLE_REFLEX_N64
+#endif
+
 #include "Shared.h"
 
 #ifdef ENABLE_REFLEX_SATURN
@@ -149,9 +154,15 @@
 #ifdef ENABLE_REFLEX_JAGUAR
   #include "Jaguar.h"
 #endif
-#ifdef ENABLE_REFLEX_N64
-  #include "N64.h"
+#ifdef ENABLE_REFLEX_N64_OLD
+  #include "N64_old.h"
 #endif
+#ifdef ENABLE_REFLEX_N64_NEW
+  #include "N64_new.h"
+#endif
+//#ifdef ENABLE_REFLEX_N64
+//  #include "N64.h"
+//#endif
 #ifdef ENABLE_REFLEX_GAMECUBE
   #include "GameCube.h"
 #endif

@@ -16,7 +16,7 @@
 
 //N64 pins - Port 1
 //Pin defined in N64PadForArduino/protocol/pinconfig.h
-//Currenty using D9/A9/PB5
+//Currenty using D1/PD3/INT3
 
 N64Pad* n64;
 
