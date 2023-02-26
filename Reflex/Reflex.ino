@@ -84,7 +84,7 @@
 
 //N64 config
 //Analog range
-//Comment out to use raw values.
+//Comment out (undefine) to use raw values.
 //Set as zero to use automatic map. Will calibrate and scale to full range.
 //Set a positive value to use it as the maximum value. It will be scaled to full range.
 //#define N64_ANALOG_MAX 65
@@ -98,8 +98,8 @@
 
 
 #ifndef REFLEX_NO_DEFAULTS
-#define ENABLE_REFLEX_N64_OLD   //uses old pin adapter! 1p only on first port.
-//#define ENABLE_REFLEX_N64_NEW     //uses new pin adapter! 2p possible.
+//#define ENABLE_REFLEX_N64_OLD   //uses old pin adapter! 1p only on first port.
+#define ENABLE_REFLEX_N64_NEW     //uses new pin adapter! 2p possible.
 #endif // REFLEX_NO_DEFAULTS
 
 /******************************************************************************/

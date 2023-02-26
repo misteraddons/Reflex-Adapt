@@ -33,10 +33,10 @@ CN64Controller* n64list[] = {
 #ifdef N64_ANALOG_MAX
   #if N64_ANALOG_MAX == 0 //automatic adjustment. value starts at 50
     #define N64_INITIAL_ANALOG_MAX 50
-    static int8_t n64_x_min = -N64_INITIAL_ANALOG_MAX;
-    static int8_t n64_x_max = N64_INITIAL_ANALOG_MAX;
-    static int8_t n64_y_min = -N64_INITIAL_ANALOG_MAX;
-    static int8_t n64_y_max = N64_INITIAL_ANALOG_MAX;
+    static int8_t n64_x_min[] = { -N64_INITIAL_ANALOG_MAX, -N64_INITIAL_ANALOG_MAX };
+    static int8_t n64_x_max[] = { N64_INITIAL_ANALOG_MAX, N64_INITIAL_ANALOG_MAX };
+    static int8_t n64_y_min[] = { -N64_INITIAL_ANALOG_MAX, -N64_INITIAL_ANALOG_MAX };
+    static int8_t n64_y_max[] = { N64_INITIAL_ANALOG_MAX, N64_INITIAL_ANALOG_MAX };
   #else //fixed range
     static const int8_t n64_x_min = -N64_ANALOG_MAX;
     static const int8_t n64_x_max = N64_ANALOG_MAX;
@@ -73,15 +73,15 @@ enum PadButton {
     { (uint32_t)BTN_Z,       3, 4*6, SHOULDERBTN_ON, SHOULDERBTN_OFF },
     { (uint32_t)BTN_B,       2, 6*6, FACEBTN_ON, FACEBTN_OFF }, //3, 9*6
     { (uint32_t)BTN_A,       3, 7*6, FACEBTN_ON, FACEBTN_OFF }, //3, 8*6
-    { (uint32_t)BTN_C_UP,    1, 9*6, UP_ON, UP_OFF },
-    { (uint32_t)BTN_C_DOWN,  3, 9*6, DOWN_ON, DOWN_OFF },
-    { (uint32_t)BTN_C_LEFT,  2, 8*6,   LEFT_ON, LEFT_OFF },
-    { (uint32_t)BTN_C_RIGHT, 2, 10*6, RIGHT_ON, RIGHT_OFF },
+    { (uint32_t)BTN_C_UP,    1, 8*6, UP_ON, UP_OFF },
+    { (uint32_t)BTN_C_DOWN,  3, 8*6, DOWN_ON, DOWN_OFF },
+    { (uint32_t)BTN_C_LEFT,  2, 7*6,   LEFT_ON, LEFT_OFF },
+    { (uint32_t)BTN_C_RIGHT, 2, 9*6, RIGHT_ON, RIGHT_OFF },
     /*{ (uint32_t)N64Pad::BTN_C_UP,         2, 9*6, FACEBTN_ON, FACEBTN_OFF },
     { (uint32_t)N64Pad::BTN_C_DOWN,         2, 8*6, FACEBTN_ON, FACEBTN_OFF },
     { (uint32_t)N64Pad::BTN_C_LEFT,         2, 7*6, FACEBTN_ON, FACEBTN_OFF },
     { (uint32_t)N64Pad::BTN_C_RIGHT,         2, 7*6, FACEBTN_ON, FACEBTN_OFF },*/
-    { (uint32_t)BTN_R,         0, 9*6, SHOULDERBTN_ON, SHOULDERBTN_OFF },
+    { (uint32_t)BTN_R,         0, 8*6, SHOULDERBTN_ON, SHOULDERBTN_OFF },
     { (uint32_t)BTN_L,         0, 1*6, SHOULDERBTN_ON, SHOULDERBTN_OFF }
   };
 
@@ -113,13 +113,15 @@ enum PadButton {
   }
 #endif
 
-void n64ResetAnalogMinMax() {
+void n64ResetAnalogMinMax(const uint8_t index) {
   #ifdef N64_ANALOG_MAX
     #if N64_ANALOG_MAX == 0
-      n64_x_min = -N64_INITIAL_ANALOG_MAX;
-      n64_x_max = N64_INITIAL_ANALOG_MAX;
-      n64_y_min = -N64_INITIAL_ANALOG_MAX;
-      n64_y_max = N64_INITIAL_ANALOG_MAX;
+      if(index < 2) {
+        n64_x_min[index] = -N64_INITIAL_ANALOG_MAX;
+        n64_x_max[index] = N64_INITIAL_ANALOG_MAX;
+        n64_y_min[index] = -N64_INITIAL_ANALOG_MAX;
+        n64_y_max[index] = N64_INITIAL_ANALOG_MAX;
+      }
     #endif
   #endif
 }
@@ -128,11 +130,11 @@ void n64ResetJoyValues(const uint8_t i) {
   if (i >= totalUsb)
     return;
   usbStick[i]->resetState();
-  ((Joy1_*)usbStick[0])->setAnalog0(N64_ANALOG_DEFAULT_CENTER); //x
-  ((Joy1_*)usbStick[0])->setAnalog1(N64_ANALOG_DEFAULT_CENTER); //y
-  ((Joy1_*)usbStick[0])->setAnalog2(N64_ANALOG_DEFAULT_CENTER); //rx
-  ((Joy1_*)usbStick[0])->setAnalog3(N64_ANALOG_DEFAULT_CENTER); //ry
-  n64ResetAnalogMinMax();
+  ((Joy1_*)usbStick[i])->setAnalog0(N64_ANALOG_DEFAULT_CENTER); //x
+  ((Joy1_*)usbStick[i])->setAnalog1(N64_ANALOG_DEFAULT_CENTER); //y
+  ((Joy1_*)usbStick[i])->setAnalog2(N64_ANALOG_DEFAULT_CENTER); //rx
+  ((Joy1_*)usbStick[i])->setAnalog3(N64_ANALOG_DEFAULT_CENTER); //ry
+  n64ResetAnalogMinMax(i);
 }
 
 void n64Setup() {
@@ -238,7 +240,7 @@ n64Loop() {
     } else {
       //controller just removed?
       if(haveController) {
-        n64ResetJoyValues(0);
+        n64ResetJoyValues(i);
         #ifdef ENABLE_REFLEX_PAD
           showDefaultPadN64(i, false);
         #endif
@@ -261,7 +263,7 @@ n64Loop() {
         
         //L+R+START internally resets the analog stick. We also need to reset it's min/max value;
         if (n64data[i].report.low0)
-          n64ResetAnalogMinMax();
+          n64ResetAnalogMinMax(i);
   
         uint16_t buttonData = 0;
         bitWrite(buttonData, 1, n64data[i].report.a);
@@ -291,20 +293,23 @@ n64Loop() {
           
           #if N64_ANALOG_MAX == 0 //automatic range adjust
             //Update min and max values
-            if(n64data[i].report.xAxis < n64_x_min) {
-              n64_x_min = n64data[i].report.xAxis;
-              n64_x_max = -n64data[i].report.xAxis;//mirror
-            } else if(n64data[i].report.xAxis > n64_x_max) {
-              n64_x_min = -n64data[i].report.xAxis;//mirror
-              n64_x_max = n64data[i].report.xAxis;
+            if(n64data[i].report.xAxis < n64_x_min[i]) {
+              n64_x_min[i] = n64data[i].report.xAxis;
+              n64_x_max[i] = -n64data[i].report.xAxis;//mirror
+            } else if(n64data[i].report.xAxis > n64_x_max[i]) {
+              n64_x_min[i] = -n64data[i].report.xAxis;//mirror
+              n64_x_max[i] = n64data[i].report.xAxis;
             }
-            if(n64data[i].report.yAxis < n64_y_min) {
-              n64_y_min = n64data[i].report.yAxis;
-              n64_y_max = -n64data[i].report.yAxis;//mirror
-            } else if(n64data[i].report.yAxis > n64_y_max) {
-              n64_y_min = -n64data[i].report.yAxis; //mirror
-              n64_y_max = n64data[i].report.yAxis;
+            if(n64data[i].report.yAxis < n64_y_min[i]) {
+              n64_y_min[i] = n64data[i].report.yAxis;
+              n64_y_max[i] = -n64data[i].report.yAxis;//mirror
+            } else if(n64data[i].report.yAxis > n64_y_max[i]) {
+              n64_y_min[i] = -n64data[i].report.yAxis; //mirror
+              n64_y_max[i] = n64data[i].report.yAxis;
             }
+            
+            ((Joy1_*)usbStick[i])->setAnalog0(map(n64data[i].report.xAxis, n64_x_min[i], n64_x_max[i], 0, 255)); //x
+            ((Joy1_*)usbStick[i])->setAnalog1(map(n64data[i].report.yAxis, n64_y_max[i], n64_y_min[i], 0, 255)); //y
           #else //map to fixed range
             //limit it's range
             if(n64data[i].report.xAxis < -N64_ANALOG_MAX)
@@ -315,11 +320,14 @@ n64Loop() {
               n64data[i].report.yAxis = -N64_ANALOG_MAX;
             else if(n64data[i].report.yAxis > N64_ANALOG_MAX)
               n64data[i].report.yAxis = N64_ANALOG_MAX;
+              
+            ((Joy1_*)usbStick[i])->setAnalog0(map(n64data[i].report.xAxis, n64_x_min, n64_x_max, 0, 255)); //x
+            ((Joy1_*)usbStick[i])->setAnalog1(map(n64data[i].report.yAxis, n64_y_max, n64_y_min, 0, 255)); //y
           #endif
   
           //use autmatic values from above, or fixed value
-          ((Joy1_*)usbStick[i])->setAnalog0(map(n64data[i].report.xAxis, n64_x_min, n64_x_max, 0, 255)); //x
-          ((Joy1_*)usbStick[i])->setAnalog1(map(n64data[i].report.yAxis, n64_y_max, n64_y_min, 0, 255)); //y
+          //((Joy1_*)usbStick[i])->setAnalog0(map(n64data[i].report.xAxis, n64_x_min, n64_x_max, 0, 255)); //x
+          //((Joy1_*)usbStick[i])->setAnalog1(map(n64data[i].report.yAxis, n64_y_max, n64_y_min, 0, 255)); //y
           
           //#else //map to fixed range
           //  ((Joy1_*)usbStick[0])->setAnalog0(map(n64->x, -N64_ANALOG_MAX, N64_ANALOG_MAX, 0, 255)); //x
