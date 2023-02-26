@@ -36,6 +36,9 @@
 ExtensionPort* wii;
 ClassicController::Shared* wii_classic;
 Nunchuk::Shared* wii_nchuk;
+#ifdef ENABLE_WII_GUITAR
+  GuitarController::Shared* wii_guitar;
+#endif
 
 #define WII_ANALOG_DEFAULT_CENTER 127U
 
@@ -171,6 +174,9 @@ void wiiSetup() {
   wii = new ExtensionPort(Wire);
   wii_classic = new ClassicController::Shared(*wii);
   wii_nchuk = new Nunchuk::Shared(*wii);
+#ifdef ENABLE_WII_GUITAR
+  wii_guitar = new GuitarController::Shared(*wii);
+#endif
 
   wii->begin();
 
@@ -240,7 +246,11 @@ wiiLoop() {
       const ExtensionType conType = wii->getControllerType();
 
       //only handle data from Classic or Nunchuk
-      if(conType == ExtensionType::ClassicController || conType == ExtensionType::Nunchuk) {
+      if(conType == ExtensionType::ClassicController || conType == ExtensionType::Nunchuk
+#ifdef ENABLE_WII_GUITAR
+      || conType == ExtensionType::GuitarController
+#endif
+      ) {
 
         if(conType == ExtensionType::ClassicController) {
           bitWrite(buttonData, 0, wii_classic->buttonY());
@@ -264,7 +274,43 @@ wiiLoop() {
           leftY = wii_classic->leftJoyY();
           rightX = wii_classic->rightJoyX();
           rightY = wii_classic->rightJoyY();
+
+#ifdef ENABLE_WII_GUITAR
+        } else if (conType == ExtensionType::GuitarController) {
+          bitWrite(buttonData, 0, wii_guitar->fretBlue());
+          bitWrite(buttonData, 1, wii_guitar->fretRed());
+          bitWrite(buttonData, 2, wii_guitar->fretGreen());
+          bitWrite(buttonData, 3, wii_guitar->fretYellow());
+          bitWrite(buttonData, 4, wii_guitar->fretOrange());
           
+          bitWrite(buttonData, 8, wii_classic->buttonMinus());
+          bitWrite(buttonData, 9, wii_classic->buttonPlus());
+
+          bitWrite(hatData, 0, !wii_guitar->strumUp());
+          bitWrite(hatData, 1, !wii_guitar->strumDown());
+          bitWrite(hatData, 2, 1);
+          bitWrite(hatData, 3, 1);
+
+          if (wii_guitar->supportsTouchbar()) {
+            //uint8_t tbar = wii_guitar->touchbar();
+            bitWrite(buttonData, 5, wii_guitar->touchBlue());
+            bitWrite(buttonData, 6, wii_guitar->touchRed());
+            bitWrite(buttonData, 7, wii_guitar->touchGreen());
+            bitWrite(buttonData, 10, wii_guitar->touchYellow());
+            bitWrite(buttonData, 11, wii_guitar->touchOrange());
+          }
+
+          //analog stick (0-63)
+          leftX = map(wii_guitar->joyX(), 0, 63, 0, 255);
+          leftY = map(wii_guitar->joyY(), 0, 63, 0, 255);
+
+          //whammy bar (0-31, starting around 15-16)
+          //on my GH:WoR guitar it goes from 15 to 25
+          //rightX = map(wii_guitar->whammyBar(), 0, 31, 0, 255);
+          //rightX = map(wii_guitar->whammyBar(), 15, 31, 0, 255);
+          rightX = map(wii_guitar->whammyBar(), 15, 25, 0, 255);
+#endif //ENABLE_WII_GUITAR
+
         } else { //nunchuk
           bitWrite(buttonData, 0, wii_nchuk->buttonC());
           bitWrite(buttonData, 1, wii_nchuk->buttonZ());
@@ -295,7 +341,7 @@ wiiLoop() {
 
         #ifdef ENABLE_REFLEX_PAD
           //const uint8_t startCol = inputPort == 0 ? 0 : 11*6;
-          const uint8_t nbuttons = (conType == ExtensionType::ClassicController) ? 15 : 2;
+          const uint8_t nbuttons = (conType == ExtensionType::ClassicController || conType == ExtensionType::GuitarController) ? 15 : 2;
           for(uint8_t x = 0; x < nbuttons; x++){
             const Pad pad = padWii[x];
             if(x < 11) //buttons

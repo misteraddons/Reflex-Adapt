@@ -94,6 +94,7 @@
 
 //Wii config
 //#define WII_ANALOG_MAX 0 //still need to implement...
+//#define ENABLE_WII_GUITAR //Enable support for Guitar Hero device
 
 
 #ifndef REFLEX_NO_DEFAULTS
