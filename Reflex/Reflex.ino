@@ -32,7 +32,7 @@
 //#define ENABLE_REFLEX_NEOGEO
 //#define ENABLE_REFLEX_3DO
 //#define ENABLE_REFLEX_JAGUAR
-//#define ENABLE_REFLEX_N64
+#define ENABLE_REFLEX_N64
 //#define ENABLE_REFLEX_GAMECUBE
 //#define ENABLE_REFLEX_WII
 
@@ -87,7 +87,7 @@
 //Comment out (undefine) to use raw values.
 //Set as zero to use automatic map. Will calibrate and scale to full range.
 //Set a positive value to use it as the maximum value. It will be scaled to full range.
-//#define N64_ANALOG_MAX 65
+#define N64_ANALOG_MAX 65
 
 //GameCube config
 //#define GAMECUBE_ANALOG_MAX 0 //still need to implement...
