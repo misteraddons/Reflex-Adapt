@@ -3,6 +3,10 @@ name: Firmware
 on:
   workflow_dispatch:
   workflow_call:
+  push:
+    paths:
+      - Makefile
+      - Reflex/**
 
 jobs:
   build:
