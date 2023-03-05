@@ -394,14 +394,31 @@ void psxSetup() {
           isNeGconMiSTer = !isNeGconMiSTer;
       #endif //NEGCON_FORCE_MODE
     } else { //jogcon can't be detected during boot as it needs to be in analog mode
+
+#ifdef JOGCON_SUPPORT
+    //Try to detect by it's id
+    if(proto == PSPROTO_DIGITAL) {
+      if (psx->enterConfigMode ()) {
+        if (psx->getControllerType () == PSCTRL_JOGCON) {
+          isJogcon = true;
+          if (psx->buttonPressed(PSB_L2))
+            enableMouseMove = true;
+        }
+        psx->exitConfigMode ();
+      }
+    }
+#endif
+
+      
       if (psx->buttonPressed(PSB_SELECT)) { //dualshock used in guncon mode to help map axis on emulators.
         isGuncon = true;
-      } else if (proto == PSPROTO_JOGCON || psx->buttonPressed(PSB_L1)) {
+      }
+      /*else if (proto == PSPROTO_JOGCON || psx->buttonPressed(PSB_L1)) {
         isJogcon = true;
       } else if (psx->buttonPressed(PSB_L2)) {
         isJogcon = true;
         enableMouseMove = true;
-      }
+      }*/
     }
   } else { //no controller connected
     if (proto == PSPROTO_JOGCON)

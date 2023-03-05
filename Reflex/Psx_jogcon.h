@@ -52,13 +52,17 @@ void handleJogconData()
   
   uint8_t jogPosition = 0;
   uint8_t jogRevolutions = 0;
-  JogconState jogStatus = psx->getJogconState(jogPosition, jogRevolutions);
+  JogconDirection jogDirection = JOGCON_DIR_NONE;
+  JogconCommand cmdResult = JOGCON_CMD_NONE;
+  
+  bool gotJogconData = psx->getJogconData(jogPosition, jogRevolutions, jogDirection, cmdResult);
 
   newcnt = (jogRevolutions << 8) | jogPosition;//(data[5] << 8) | data[4];
   newbtn = psx->getButtonWord();//(data[3] << 8) | data[2];
   newbtn = (newbtn & ~3) | ((newbtn&1)<<2);
 
-  if(jogStatus == JOGCON_STATE_OTHER) {//(data[0] == 0xF3)
+  //if(jogStatus == JOGCON_STATE_OTHER) {//(data[0] == 0xF3)
+  if(!gotJogconData) {//(data[0] == 0xF3)
     // Mode switch by pressing "mode" button while holding:
     // L2 - paddle mode (with FF stoppers)
     // R2 - steering mode (FF always enabled)
@@ -152,7 +156,7 @@ void handleJogconData()
     // reset zero position
     init_jogcon();
     
-    jogStatus = psx->getJogconState(jogPosition, jogRevolutions);
+    gotJogconData = psx->getJogconData(jogPosition, jogRevolutions, jogDirection, cmdResult);
 
     prevcnt = 0;
     cleancnt = 0;
@@ -160,7 +164,7 @@ void handleJogconData()
     pdlpos = sp_half;
   } else {
     
-    if(jogStatus != JOGCON_STATE_NONE) {
+    if(jogDirection != JOGCON_DIR_NONE) {
       cleancnt += newcnt - counter;
       if(mode == 0 || mode == 3)//!mode
       {
@@ -193,9 +197,9 @@ void handleJogconData()
     if(mode == 2) ff = 1;
 
     if (ff == 1)
-      psx->setJogconMode(JOGCON_MODE_HOLD, force);
+      psx->setJogconMotorMode(JOGCON_DIR_START, JOGCON_CMD_NONE, force);
     else 
-      psx->setJogconMode(JOGCON_MODE_STOP, 0);
+      psx->setJogconMotorMode(JOGCON_DIR_NONE, JOGCON_CMD_NONE, 0);
 
     int16_t val = ((int16_t)(cleancnt - prevcnt))/sp_step;
     if(val>127) val = 127; else if(val<-127) val = -127;
