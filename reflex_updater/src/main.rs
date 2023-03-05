@@ -85,7 +85,9 @@ fn flash_device<P: AsRef<Path>>(port_name: &str, file_name: P) -> Result<()> {
     let page_addrs = page_map.get_page_addrs();
 
     {
-        let progress = ProgressBar::new(page_addrs.len() as u64).with_style(bar_style.clone()).with_prefix("Flashing");
+        let progress = ProgressBar::new(page_addrs.len() as u64)
+            .with_style(bar_style.clone())
+            .with_prefix("Flashing");
         for k in &page_addrs {
             let file_data = page_map.get_page(*k).unwrap();
             if let Err(e) = port.write_flash(*k, &file_data) {
@@ -98,7 +100,9 @@ fn flash_device<P: AsRef<Path>>(port_name: &str, file_name: P) -> Result<()> {
     }
 
     {
-        let progress = ProgressBar::new(page_addrs.len() as u64).with_style(bar_style.clone()).with_prefix("Verifying");
+        let progress = ProgressBar::new(page_addrs.len() as u64)
+            .with_style(bar_style.clone())
+            .with_prefix("Verifying");
         let mut flash_data = vec![0u8; 128];
         for k in &page_addrs {
             port.read_flash(*k, &mut flash_data)?;
@@ -188,26 +192,32 @@ fn read_manifest() -> Result<Vec<ManifestEntry>> {
     Ok(manifest)
 }
 
-fn main_interactive() -> Result<()> {
+fn main_interactive() -> Result<bool> {
     let manifest = read_manifest().context("Reading manifest file")?;
     let names: Vec<_> = manifest.iter().map(|x| x.desc.clone()).collect();
     let selection = Select::with_theme(&selection_theme())
         .items(&names)
-        .with_prompt("Select Reflex Firmware")
+        .with_prompt("Select Reflex Firmware (ESC or q to cancel)")
         .default(0)
-        .interact()?;
+        .report(false)
+        .interact_opt()?;
 
-    let entry = &manifest[selection];
-
-    println!(
-        "\n\nPress the {} button on your Reflex device.",
-        style("RESET").bold().bright().cyan()
-    );
-    let port_name = wait_for_port(false)?;
-    if let Some(port_name) = port_name {
-        flash_device(&port_name, &entry.path)?;
+    if let Some(selection) = selection {
+        let entry = &manifest[selection];
+        println!("\n> Firmware: {}", style(entry.desc.clone()).bold().green());
+        println!(
+            "\nPress the {} button on your Reflex device.",
+            style("RESET").bold().bright().cyan()
+        );
+        let port_name = wait_for_port(false)?;
+        if let Some(port_name) = port_name {
+            flash_device(&port_name, &entry.path)?;
+        }
+        Ok(true)
+    } else {
+        println!("User cancelled.");
+        Ok(false)
     }
-    Ok(())
 }
 
 fn wait_for_return() {
@@ -217,11 +227,12 @@ fn wait_for_return() {
 
 fn main() -> Result<()> {
     match main_interactive() {
-        Ok(()) => {
+        Ok(true) => {
             println!("\nSuccess. Press RETURN to exit.");
             wait_for_return();
             Ok(())
         }
+        Ok(false) => Ok(()),
         Err(e) => {
             eprintln!(
                 "\nAn unexpected error was encountered:\n{:#}\n\nPress RETURN to exit.",
