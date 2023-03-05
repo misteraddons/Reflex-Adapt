@@ -20,17 +20,11 @@ on:
 
 jobs:
   updater:
-    runs-on: ubuntu-latest
     name: Build Updater Tool
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/workflows/updater.yml
+    uses: misteraddons/Reflex-Adapt/.github/workflows/updater.yml@main
   firmware:
-    runs-on: ubuntu-latest
     name: Build Firmware
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/workflows/firmware.yml
+    uses: misteraddons/Reflex-Adapt/.github/workflows/firmware.yml@main
   assemble:
     name: Create Release
     runs-on: ubuntu-latest
