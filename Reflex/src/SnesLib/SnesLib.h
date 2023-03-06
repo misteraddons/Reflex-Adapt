@@ -252,7 +252,7 @@ class SnesPort {
       } else {
         SnesController& sc = getSnesController(joyCount++);
         //It's a virtual boy? Check if it's not a NES device first...
-        if ((id != 0xF && (data >> 8 & 0xF) != 0xF) && (id & 0x4) == 0x4 && extended == 0xFFFF) {
+        if ((id == 0xF && (data >> 8 & 0xF) != 0xF) || (id & 0x4) == 0x4) {
           sc.currentState.extended = id & 0x3; //Copy A,B bits to extended.
           sc.currentState.id = 0x4; // set VB id with it's constant bit. Discard A,B,Bat
         } else {
