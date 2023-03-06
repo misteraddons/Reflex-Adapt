@@ -127,6 +127,9 @@
       case SNES_DEVICE_NTT:
         display.print(F("NTT"));
         break;
+      case SNES_DEVICE_VB:
+        display.print(F("VBOY"));
+        break;
       default:
         display.print(F("NONE"));
         return;
@@ -315,6 +318,9 @@ snesLoop() {
           bitWrite(buttonData, 20, sc.nttPressed(SNES_NTT_STAR));
           bitWrite(buttonData, 21, sc.nttPressed(SNES_NTT_HASH));
           bitWrite(buttonData, 22, sc.nttPressed(SNES_NTT_EQUAL));
+        } else if(padType == SNES_DEVICE_VB) {
+          bitWrite(buttonData, 6, sc.nttPressed(SNES_NTT_0));
+          bitWrite(buttonData, 7, sc.nttPressed(SNES_NTT_1));
         }
 #endif
       }
