@@ -36,6 +36,30 @@ fn selection_theme() -> ColorfulTheme {
     }
 }
 
+#[rustfmt::skip]
+fn display_splash() {
+    let logo = concat!(
+        r"     ____  ______________    _______  __", "\n",
+        r"    / __ \/ ____/ ____/ /   / ____/ |/ /", "\n",
+        r"   / /_/ / __/ / /_  / /   / __/  |   / ", "\n",
+        r"  / _, _/ /___/ __/ / /___/ /___ /   |  ", "\n",
+        r" /_/ |_/_____/_/   /_____/_____//_/|_|  "
+    );
+
+    let subtitle =
+        r"                       Reflex Adapter!  ";
+    let info = concat!(
+        r"          http://www.misteraddons.com/  "
+    );
+    
+    println!();
+    println!("{}", style(logo).magenta().bold());
+    println!("{}", style(subtitle).cyan().bold());
+    println!();
+    println!("{}", style(info).blue());
+    println!();
+}
+
 fn read_ihex<P: AsRef<Path>>(path: P, page_size: usize) -> Result<PageMap> {
     let ihex_data = std::fs::read_to_string(path)?;
     let mut page_map = PageMap::new(page_size);
@@ -226,6 +250,8 @@ fn wait_for_return() {
 }
 
 fn main() -> Result<()> {
+    display_splash();
+
     match main_interactive() {
         Ok(true) => {
             println!("\nSuccess. Press RETURN to exit.");
