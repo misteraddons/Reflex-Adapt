@@ -1,4 +1,4 @@
-TARGET_NAMES = SNES Saturn PSX PCEngine Jaguar 3DO NeoGeo N64 GameCube Wii Nintendo
+TARGET_NAMES = SNES Saturn PSX PCEngine Jaguar 3DO NeoGeo N64 GameCube Wii Popular
 
 SNES.FLAGS = -DENABLE_REFLEX_SNES
 Saturn.FLAGS = -DENABLE_REFLEX_SATURN
