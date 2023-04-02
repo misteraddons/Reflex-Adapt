@@ -99,7 +99,8 @@
 
 #ifndef REFLEX_NO_DEFAULTS
 //#define ENABLE_REFLEX_N64_OLD   //uses old pin adapter! 1p only on first port.
-#define ENABLE_REFLEX_N64_NEW     //uses new pin adapter! 2p possible.
+//#define ENABLE_REFLEX_N64_NEW     //uses new pin adapter! 2p possible.
+#define ENABLE_REFLEX_GAMECUBE
 #endif // REFLEX_NO_DEFAULTS
 
 /******************************************************************************/
