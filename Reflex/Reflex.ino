@@ -44,7 +44,7 @@
 
 
 // SNES config
-#define SNES_ENABLE_NTTPAD
+#define SNES_ENABLE_VBOY
 #define SNES_ENABLE_MULTITAP
 
 // PS1 Guncon config

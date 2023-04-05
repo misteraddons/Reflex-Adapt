@@ -10,11 +10,7 @@
 
 #include "src/SnesLib/SnesLib.h"
 
-#ifdef SNES_ENABLE_NTTPAD
-  #include "src/ArduinoJoystickLibrary/Joy1.h"
-#else
-  #include "src/ArduinoJoystickLibrary/Joy1.h"
-#endif
+#include "src/ArduinoJoystickLibrary/Joy1.h"
 
 
 //Snes joy 1 pins
@@ -86,6 +82,8 @@
   //SnesPort<SNES2_CLOCK, SNES2_LATCH, SNES6_DATA1> snes6;
 #endif
 
+bool isVirtualBoy = false;
+
 #ifdef ENABLE_REFLEX_PAD
   const Pad padSnes[] = {
     { SNES_B,      3, 8*6, FACEBTN_ON, FACEBTN_OFF },
@@ -107,6 +105,25 @@
     { SNES_SELECT, 2, 4*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
     { SNES_START,  2, 5*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF }
   };
+
+  #ifdef SNES_ENABLE_VBOY
+    const Pad padVB[] = {
+      { SNES_B,      3, 8*6, DOWN_ON, DOWN_OFF }, //VB Right D-pad Down, NES A
+      { SNES_Y,      2, 7*6, LEFT_ON, LEFT_OFF }, //VB Right D-pad Left, NES B
+      { SNES_SELECT, 3, 3*6, FACEBTN_ON, FACEBTN_OFF },
+      { SNES_START,  3, 4*6, FACEBTN_ON, FACEBTN_OFF },
+      { SNES_UP,     1, 1*6, UP_ON, UP_OFF },
+      { SNES_DOWN,   3, 1*6, DOWN_ON, DOWN_OFF },
+      { SNES_LEFT,   2, 0,   LEFT_ON, LEFT_OFF },
+      { SNES_RIGHT,  2, 2*6, RIGHT_ON, RIGHT_OFF },
+      { SNES_A,      2, 9*6, RIGHT_ON, RIGHT_OFF }, //VB Right D-pad Right
+      { SNES_X,      1, 8*6, UP_ON, UP_OFF }, //VB Right D-pad Up
+      { SNES_L,      0, 1*6, SHOULDERBTN_ON, SHOULDERBTN_OFF },
+      { SNES_R,      0, 8*6, SHOULDERBTN_ON, SHOULDERBTN_OFF },
+      { SNES_NTT_0 << 12, 3, 5*6, FACEBTN_ON, FACEBTN_OFF }, //VB B
+      { SNES_NTT_1 << 12, 3, 6*6, FACEBTN_ON, FACEBTN_OFF }  //VB A
+    };
+  #endif
   
   void ShowDefaultPadSnes(const uint8_t index, const SnesDeviceType_Enum padType) {
     //print default joystick state to oled screen
@@ -128,7 +145,7 @@
         display.print(F("NTT"));
         break;
       case SNES_DEVICE_VB:
-        display.print(F("VBOY"));
+        display.print(F("OTHER"));
         break;
       default:
         display.print(PSTR_TO_F(PSTR_NONE));
@@ -145,6 +162,43 @@
       }
     }
   }
+
+  #ifdef SNES_ENABLE_VBOY
+    void ShowDefaultPadVB(const uint8_t index, const SnesDeviceType_Enum padType) {
+      //print default joystick state to oled screen
+    
+      //const uint8_t firstCol = index == 0 ? 0 : 11*6;
+      //const uint8_t lastCol = index == 0 ? 11*6 : 127;
+  
+      display.clear(padDivision[index].firstCol, padDivision[index].lastCol, oledDisplayFirstRow + 1, 7);
+      display.setCursor(padDivision[index].firstCol, 7);
+  
+      switch(padType) {
+        case SNES_DEVICE_NES:
+        case SNES_DEVICE_PAD:
+        case SNES_DEVICE_NTT:
+          display.print(F("OTHER"));
+          break;
+        case SNES_DEVICE_VB:
+          display.print(F("VBOY"));
+          break;
+        default:
+          display.print(PSTR_TO_F(PSTR_NONE));
+          return;
+      }
+    
+      if (index < 2) {
+        //const uint8_t startCol = index == 0 ? 0 : 11*6;
+        for(uint8_t x = 0; x < 14; x++){
+//          if(padType == SNES_DEVICE_NES && x > 7)
+//            continue;
+          const Pad pad = padVB[x];
+          PrintPadChar(index, padDivision[index].firstCol, pad.col, pad.row, pad.padvalue, true, pad.on, pad.off, true);
+        }
+      }
+    }
+  #endif
+
 #endif
 
 
@@ -171,6 +225,17 @@ void snesSetup() {
   if (tap == 0){ //No multitap connected during boot
     totalUsb = 2;
     sleepTime = 50;
+
+    //check if theres a virtualboy controller on first port only
+    #ifdef SNES_ENABLE_VBOY
+      snes1.update();
+      for(uint8_t i = 0; i < snes1.getControllerCount(); i++) {
+        if (i == 0)
+          isVirtualBoy = snes1.getSnesController(i).deviceType() == SNES_DEVICE_VB;
+        snes1.getSnesController(i).reset(true, true);
+      }
+    #endif
+    
   } else { //Multitap connected
     totalUsb = MAX_USB_STICKS; //min(tap, MAX_USB_STICKS);
     sleepTime = 1000; //use longer interval between reads for multitap
@@ -181,11 +246,8 @@ void snesSetup() {
 
   //Create usb controllers
   for (uint8_t i = 0; i < totalUsb; i++) {
-#ifdef SNES_ENABLE_NTTPAD
-  usbStick[i] = new Joy1_("RZordSnesNtt", JOYSTICK_DEFAULT_REPORT_ID + i, JOYSTICK_TYPE_GAMEPAD, totalUsb);
-#else
-  usbStick[i] = new Joy1_("RZordSnes", JOYSTICK_DEFAULT_REPORT_ID + i, JOYSTICK_TYPE_GAMEPAD, totalUsb);
-#endif
+    usbStick[i] = new Joy1_(isVirtualBoy ? "RZordVboy" : "RZordSnesNtt", JOYSTICK_DEFAULT_REPORT_ID + i, JOYSTICK_TYPE_GAMEPAD, totalUsb);
+    //usbStick[i] = new Joy1_(isVirtualBoy ? "RZordVboy" : "RZordSnes", JOYSTICK_DEFAULT_REPORT_ID + i, JOYSTICK_TYPE_GAMEPAD, totalUsb);
   }
 
   //Set usb parameters and reset to default values
@@ -193,6 +255,8 @@ void snesSetup() {
       snesResetJoyValues(i);
       usbStick[i]->sendState();
   }
+
+  delayMicroseconds(sleepTime);
   
   dstart (115200);
 }
@@ -271,19 +335,23 @@ snesLoop() {
         snesResetJoyValues(i);
         #ifdef ENABLE_REFLEX_PAD
           //Only used if not in multitap mode
-          if (totalUsb == 2)
-            ShowDefaultPadSnes(inputPort, sc.deviceType());
+          if (totalUsb == 2) {
+            #ifdef SNES_ENABLE_VBOY
+              if (isVirtualBoy) {
+                ShowDefaultPadVB(inputPort, sc.deviceType());
+              } else
+            #endif
+            {
+              ShowDefaultPadSnes(inputPort, sc.deviceType());
+            }
+          }
         #endif
       }
 
       const SnesDeviceType_Enum padType = sc.deviceType();
 
       uint8_t hatData = sc.hat();
-#ifdef SNES_ENABLE_NTTPAD
-      uint32_t buttonData = 0;
-#else
       uint16_t buttonData = 0;
-#endif
 
       if (padType == SNES_DEVICE_NES) {
         //Remaps as SNES B and A
@@ -301,7 +369,6 @@ snesLoop() {
         bitWrite(buttonData, 4, sc.digitalPressed(SNES_L));
         bitWrite(buttonData, 5, sc.digitalPressed(SNES_R));
 
-#ifdef SNES_ENABLE_NTTPAD
         if(padType == SNES_DEVICE_NTT) {
           bitWrite(buttonData, 6, sc.nttPressed(SNES_NTT_DOT));
           bitWrite(buttonData, 7, sc.nttPressed(SNES_NTT_C));
@@ -322,24 +389,16 @@ snesLoop() {
           bitWrite(buttonData, 6, sc.nttPressed(SNES_NTT_0));
           bitWrite(buttonData, 7, sc.nttPressed(SNES_NTT_1));
         }
-#endif
+
       }
       bitWrite(buttonData, 8, sc.digitalPressed(SNES_SELECT));
       bitWrite(buttonData, 9, sc.digitalPressed(SNES_START));
 
-#ifdef SNES_ENABLE_NTTPAD
-  ((Joy1_*)usbStick[i])->setButtons(buttonData);
-#else
-  ((Joy1_*)usbStick[i])->setButtons(buttonData);
-#endif
-      
+      ((Joy1_*)usbStick[i])->setButtons(buttonData);
 
       //Get angle from hatTable and pass to joystick class
-#ifdef SNES_ENABLE_NTTPAD
-  ((Joy1_*)usbStick[i])->setHatSwitch(hatTable[hatData]);
-#else
-  ((Joy1_*)usbStick[i])->setHatSwitch(hatTable[hatData]);
-#endif
+      ((Joy1_*)usbStick[i])->setHatSwitch(hatTable[hatData]);
+
       
 
       usbStick[i]->sendState();
@@ -347,11 +406,27 @@ snesLoop() {
         //Only used if not in multitap mode
         if (totalUsb == 2 && inputPort < 2) {
           //const uint8_t startCol = inputPort == 0 ? 0 : 11*6;
-          for(uint8_t x = 0; x < 12; x++){
-            if(padType == SNES_DEVICE_NES && x > 7)
-              continue;
-            const Pad pad = (padType == SNES_DEVICE_NES && x < 4) ? padSnes[x+12] : padSnes[x]; //NES uses horizontal align
-            PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, sc.digitalPressed((SnesDigital_Enum)pad.padvalue), pad.on, pad.off);
+
+          #ifdef SNES_ENABLE_VBOY
+            if (isVirtualBoy) {
+              for(uint8_t x = 0; x < 14; x++){
+//                if(padType == SNES_DEVICE_NES && x > 7)
+//                  continue;
+                const Pad pad = padVB[x];
+                if (x < 12)
+                  PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, sc.digitalPressed((SnesDigital_Enum)pad.padvalue), pad.on, pad.off);
+                else
+                  PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, padType == SNES_DEVICE_VB && sc.nttPressed((SnesDigitalNTT_Enum)(pad.padvalue >> 12)), pad.on, pad.off);
+              }
+            } else
+          #endif
+          {
+            for(uint8_t x = 0; x < 12; x++){
+              if(padType == SNES_DEVICE_NES && x > 7)
+                continue;
+              const Pad pad = (padType == SNES_DEVICE_NES && x < 4) ? padSnes[x+12] : padSnes[x]; //NES uses horizontal align
+              PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, sc.digitalPressed((SnesDigital_Enum)pad.padvalue), pad.on, pad.off);
+            }
           }
         }
       #endif
