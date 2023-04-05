@@ -90,7 +90,11 @@
 #define N64_ANALOG_MAX 65
 
 //GameCube config
-//#define GAMECUBE_ANALOG_MAX 0 //still need to implement...
+//Analog range
+//Comment out (undefine) to use raw values.
+//Set a positive value to use it as the maximum value. It will be scaled to full range.
+#define GC_ANALOG_MAX 225
+
 
 //Wii config
 //#define WII_ANALOG_MAX 0 //still need to implement...

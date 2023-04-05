@@ -28,19 +28,9 @@ CGamecubeController* gclist[] = {
 
 #define GC_ANALOG_DEFAULT_CENTER 127U
 
-#ifdef GC_ANALOG_MAX
-  #if GC_ANALOG_MAX == 0 //automatic adjustment. value starts at 50
-    #define GC_INITIAL_ANALOG_MAX 50
-    static int8_t gc_x_min[] = { -GC_INITIAL_ANALOG_MAX, -GC_INITIAL_ANALOG_MAX };
-    static int8_t gc_x_max[] = { GC_INITIAL_ANALOG_MAX, GC_INITIAL_ANALOG_MAX };
-    static int8_t gc_y_min[] = { -GC_INITIAL_ANALOG_MAX, -GC_INITIAL_ANALOG_MAX };
-    static int8_t gc_y_max[] = { GC_INITIAL_ANALOG_MAX, GC_INITIAL_ANALOG_MAX };
-  #else //fixed range
-    static const int8_t gc_x_min = -GC_ANALOG_MAX;
-    static const int8_t gc_x_max = GC_ANALOG_MAX;
-    static const int8_t gc_y_min = -GC_ANALOG_MAX;
-    static const int8_t gc_y_max = GC_ANALOG_MAX;
-  #endif
+#ifdef GC_ANALOG_MAX //fixed range
+  static const uint8_t gc_min = 255-GC_ANALOG_MAX;
+  static const uint8_t gc_max = GC_ANALOG_MAX;
 #endif
 
 #ifdef ENABLE_REFLEX_PAD
@@ -102,18 +92,6 @@ enum GCPadButton {
   }
 #endif
 
-void gameCubeResetAnalogMinMax(const uint8_t index) {
-  #ifdef GC_ANALOG_MAX
-    #if GC_ANALOG_MAX == 0
-      if(index < 2) {
-        gc_x_min[index] = -GC_INITIAL_ANALOG_MAX;
-        gc_x_max[index] = GC_INITIAL_ANALOG_MAX;
-        gc_y_min[index] = -GC_INITIAL_ANALOG_MAX;
-        gc_y_max[index] = GC_INITIAL_ANALOG_MAX;
-      }
-    #endif
-  #endif
-}
 
 void gameCubeResetJoyValues(const uint8_t i) {
   if (i >= totalUsb)
@@ -123,7 +101,6 @@ void gameCubeResetJoyValues(const uint8_t i) {
   ((Joy1_*)usbStick[i])->setAnalog1(GC_ANALOG_DEFAULT_CENTER); //y
   ((Joy1_*)usbStick[i])->setAnalog2(GC_ANALOG_DEFAULT_CENTER); //rx
   ((Joy1_*)usbStick[i])->setAnalog3(GC_ANALOG_DEFAULT_CENTER); //ry
-  gameCubeResetAnalogMinMax(i);
 }
 
 void gameCubeSetup() {
@@ -257,15 +234,11 @@ gameCubeLoop() {
       //controller read sucess
   
       const uint16_t digitalData = (gcdata[i].report.buttons0 << 8) | (gcdata[i].report.buttons1);
-      const bool buttonsChanged = digitalData != oldButtons;
+      const bool buttonsChanged = digitalData != oldButtons[i];
       const bool analogChanged = gcdata[i].report.xAxis != oldX[i] || gcdata[i].report.yAxis != oldY[i] || gcdata[i].report.cxAxis != oldCX[i] || gcdata[i].report.cyAxis != oldCY[i];
 
       if (buttonsChanged || analogChanged) { //state changed?
         stateChanged[i] = true;
-        
-        //L+R+START internally resets the analog stick. We also need to reset it's min/max value;
-        //if (gcdata[i].report.low0)
-        //  gameCubeResetAnalogMinMax(i);
   
         uint16_t buttonData = 0;
         bitWrite(buttonData, 2, gcdata[i].report.a);
@@ -297,49 +270,29 @@ gameCubeLoop() {
   
         //how to handle analog range?
         #ifdef GC_ANALOG_MAX
-          
-          #if GC_ANALOG_MAX == 0 //automatic range adjust
-            //Update min and max values
-            if(gcdata[i].report.xAxis < gc_x_min[i]) {
-              gc_x_min[i] = gcdata[i].report.xAxis;
-              gc_x_max[i] = -gcdata[i].report.xAxis;//mirror
-            } else if(gcdata[i].report.xAxis > gc_x_max[i]) {
-              gc_x_min[i] = -gcdata[i].report.xAxis;//mirror
-              gc_x_max[i] = gcdata[i].report.xAxis;
-            }
-            if(gcdata[i].report.yAxis < gc_y_min[i]) {
-              gc_y_min[i] = gcdata[i].report.yAxis;
-              gc_y_max[i] = -gcdata[i].report.yAxis;//mirror
-            } else if(gcdata[i].report.yAxis > gc_y_max[i]) {
-              gc_y_min[i] = -gcdata[i].report.yAxis; //mirror
-              gc_y_max[i] = gcdata[i].report.yAxis;
-            }
+          //limit it's range
+          if(gcdata[i].report.xAxis < gc_min)
+            gcdata[i].report.xAxis = gc_min;
+          else if(gcdata[i].report.xAxis > gc_max)
+            gcdata[i].report.xAxis = gc_max;
+          if(gcdata[i].report.yAxis < gc_min)
+            gcdata[i].report.yAxis = gc_min;
+          else if(gcdata[i].report.yAxis > gc_max)
+            gcdata[i].report.yAxis = gc_max;
+
+          if(gcdata[i].report.cxAxis < gc_min)
+            gcdata[i].report.cxAxis = gc_min;
+          else if(gcdata[i].report.cxAxis > gc_max)
+            gcdata[i].report.cxAxis = gc_max;
+          if(gcdata[i].report.cyAxis < gc_min)
+            gcdata[i].report.cyAxis = gc_min;
+          else if(gcdata[i].report.cyAxis > gc_max)
+            gcdata[i].report.cyAxis = gc_max;
             
-            ((Joy1_*)usbStick[i])->setAnalog0(map(gcdata[i].report.xAxis, gc_x_min[i], gc_x_max[i], 0, 255)); //x
-            ((Joy1_*)usbStick[i])->setAnalog1(map(gcdata[i].report.yAxis, gc_y_max[i], gc_y_min[i], 0, 255)); //y
-          #else //map to fixed range
-            //limit it's range
-            if(gcdata[i].report.xAxis < -GC_ANALOG_MAX)
-              gcdata[i].report.xAxis = -GC_ANALOG_MAX;
-            else if(gcdata[i].report.xAxis > GC_ANALOG_MAX)
-              gcdata[i].report.xAxis = GC_ANALOG_MAX;
-            if(gcdata[i].report.yAxis < -GC_ANALOG_MAX)
-              gcdata[i].report.yAxis = -GC_ANALOG_MAX;
-            else if(gcdata[i].report.yAxis > GC_ANALOG_MAX)
-              gcdata[i].report.yAxis = GC_ANALOG_MAX;
-              
-            ((Joy1_*)usbStick[i])->setAnalog0(map(gcdata[i].report.xAxis, gc_x_min, gc_x_max, 0, 255)); //x
-            ((Joy1_*)usbStick[i])->setAnalog1(map(gcdata[i].report.yAxis, gc_y_max, gc_y_min, 0, 255)); //y
-          #endif
-  
-          //use autmatic values from above, or fixed value
-          //((Joy1_*)usbStick[i])->setAnalog0(map(gcdata[i].report.xAxis, gc_x_min, gc_x_max, 0, 255)); //x
-          //((Joy1_*)usbStick[i])->setAnalog1(map(gcdata[i].report.yAxis, gc_y_max, gc_y_min, 0, 255)); //y
-          
-          //#else //map to fixed range
-          //  ((Joy1_*)usbStick[0])->setAnalog0(map(n64->x, -GC_ANALOG_MAX, GC_ANALOG_MAX, 0, 255)); //x
-          //  ((Joy1_*)usbStick[0])->setAnalog1(map(n64->y, GC_ANALOG_MAX, -GC_ANALOG_MAX, 0, 255)); //y
-          //#endif
+          ((Joy1_*)usbStick[i])->setAnalog0(map(gcdata[i].report.xAxis, gc_min, gc_max, 0, 255)); //x
+          ((Joy1_*)usbStick[i])->setAnalog1(map(gcdata[i].report.yAxis, gc_max, gc_min, 0, 255)); //y
+          ((Joy1_*)usbStick[i])->setAnalog2(map(gcdata[i].report.cxAxis, gc_min, gc_max, 0, 255)); //cx
+          ((Joy1_*)usbStick[i])->setAnalog3(map(gcdata[i].report.cyAxis, gc_max, gc_min, 0, 255)); //cy
           
         #else //use raw value
           ((Joy1_*)usbStick[i])->setAnalog0( (uint8_t)(gcdata[i].report.xAxis) ); //x
