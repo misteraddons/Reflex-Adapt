@@ -66,10 +66,10 @@ JagPort<JAGPIN_J3_J4, JAGPIN_J2_J5, JAGPIN_J1_J6, JAGPIN_J0_J7, JAGPIN_B0_B2, JA
     
     switch(padType) {
       case JAG_DEVICE_PAD:
-        display.print(F("DIGITAL"));
+        display.print(PSTR_TO_F(PSTR_DIGITAL));
         break;
       default:
-        display.print(F("NONE"));
+        display.print(PSTR_TO_F(PSTR_NONE));
         return;
     }
   

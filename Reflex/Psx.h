@@ -128,7 +128,7 @@ boolean isNeGconMiSTer = false;
     switch(padType) {
       case PSPROTO_DIGITAL:
       case PSPROTO_NEGCON:
-        display.print(isNeGcon ? F("NEGCON") : F("DIGITAL"));
+        display.print(isNeGcon ? F("NEGCON") : PSTR_TO_F(PSTR_DIGITAL));
         break;
       case PSPROTO_DUALSHOCK:
         display.print(F("DUALSHOCK"));
@@ -141,13 +141,13 @@ boolean isNeGconMiSTer = false;
         break;
       //case PSPROTO_NEGCON:
       //  display.print(F("NEGCON-"));
-      //  display.print(isNeGcon ? F("ANALOG") : F("DIGITAL"));
+      //  display.print(isNeGcon ? F("ANALOG") : PSTR_TO_F(PSTR_DIGITAL));
       //  break;
       case PSPROTO_JOGCON:
         display.print(F("JOGCON"));
         break;
       default:
-        display.print(F("NONE"));
+        display.print(PSTR_TO_F(PSTR_NONE));
         return;
     }
   
@@ -526,9 +526,9 @@ psxLoop() {
         //const uint8_t firstCol = i == 0 ? 0 : 12*6;
         display.setCol(padDivision[i].firstCol);
         if (!isEnabled[0] && !isEnabled[1])
-          display.print(F("NONE"));  
+          display.print(PSTR_TO_F(PSTR_NONE));  
         else if (!isEnabled[i])
-          display.print(F("N/A"));
+          display.print(PSTR_TO_F(PSTR_NA));
       }
 /*      
       if(!isEnabled[0] && !isEnabled[1]) {
@@ -536,7 +536,7 @@ psxLoop() {
         for (uint8_t i = 0; i < 2; i++) {
           const uint8_t firstCol = i == 0 ? 0 : 12*6;
           display.setCol(firstCol);
-          display.print(F("NONE"));
+          display.print(PSTR_TO_F(PSTR_NONE));
         }
       }
 
@@ -546,9 +546,9 @@ psxLoop() {
           const uint8_t firstCol = i == 0 ? 0 : 12*6;
           display.setCol(firstCol); //each char is 6 cols
           if(isEnabled[i])
-            display.print(F("NONE"));
+            display.print(PSTR_TO_F(PSTR_NONE));
           else
-            display.print(F("N/A"));
+            display.print(PSTR_TO_F(PSTR_NA));
         }
       }
       */

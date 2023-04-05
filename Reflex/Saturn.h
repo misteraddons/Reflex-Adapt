@@ -65,7 +65,7 @@ SaturnPort<SAT2_D0, SAT2_D1, SAT2_D2, SAT2_D3, SAT2_TH, SAT2_TR, SAT2_TL> saturn
   
     display.clear(padDivision[index].firstCol, padDivision[index].lastCol, oledDisplayFirstRow + 1, 7);
     display.setCursor(padDivision[index].firstCol, 7);
-    
+
     switch(padType) {
       case SAT_DEVICE_MEGA3:
         display.print(F("GENESIS-3"));
@@ -83,7 +83,7 @@ SaturnPort<SAT2_D0, SAT2_D1, SAT2_D2, SAT2_D3, SAT2_TH, SAT2_TR, SAT2_TL> saturn
         display.print(F("SAT-WHEEL"));
         break;
       default:
-        display.print(F("NONE"));
+        display.print(PSTR_TO_F(PSTR_NONE));
         return;
     }
   

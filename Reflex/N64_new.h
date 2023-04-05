@@ -96,10 +96,10 @@ enum PadButton {
     
     switch(haveController) {
       case true:
-        display.print(F("PAD"));
+        display.print(PSTR_TO_F(PSTR_PAD));
         break;
       default:
-        display.print(F("NONE"));
+        display.print(PSTR_TO_F(PSTR_NONE));
         return;
     }
   
@@ -205,9 +205,9 @@ n64Loop() {
       for (uint8_t i = 0; i < 2; i++) {
         display.setCol(padDivision[i].firstCol);
         if (!isEnabled[0] && !isEnabled[1])
-          display.print(F("NONE"));  
+          display.print(PSTR_TO_F(PSTR_NONE));  
         else if (!isEnabled[i])
-          display.print(F("N/A"));
+          display.print(PSTR_TO_F(PSTR_NA));
       }
       #endif
     }

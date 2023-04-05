@@ -131,7 +131,7 @@
         display.print(F("VBOY"));
         break;
       default:
-        display.print(F("NONE"));
+        display.print(PSTR_TO_F(PSTR_NONE));
         return;
     }
   

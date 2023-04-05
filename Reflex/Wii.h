@@ -98,7 +98,7 @@ Nunchuk::Shared* wii_nchuk;
         display.print(F("NOT SUPPORTED"));
         return;
       default:
-        display.print(F("NONE"));
+        display.print(PSTR_TO_F(PSTR_NONE));
         return;
     }
 

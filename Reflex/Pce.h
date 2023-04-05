@@ -76,7 +76,7 @@ PcePort<PCE2_SEL, PCE2_CLR, PCE2_D0, PCE2_D1, PCE2_D2, PCE2_D3> pce2;
         display.print(F("PCE-6"));
         break;
       default:
-        display.print(F("NONE"));
+        display.print(PSTR_TO_F(PSTR_NONE));
         return;
     }
   

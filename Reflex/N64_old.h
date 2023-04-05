@@ -70,10 +70,10 @@ N64Pad* n64;
     
     switch(haveController) {
       case true:
-        display.print(F("PAD"));
+        display.print(PSTR_TO_F(PSTR_PAD));
         break;
       default:
-        display.print(F("NONE"));
+        display.print(PSTR_TO_F(PSTR_NONE));
         return;
     }
   

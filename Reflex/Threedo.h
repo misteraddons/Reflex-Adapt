@@ -55,11 +55,11 @@ ThreedoPort<THREEDOPIN_CLOCK, THREEDOPIN_DOUT, THREEDOPIN_DIN> tdo1;
     switch(padType) { //only show pad type on the first input port
       case THREEDO_DEVICE_PAD:
         if (index == 0)
-          display.print(F("DIGITAL"));
+          display.print(PSTR_TO_F(PSTR_DIGITAL));
         break;
       default:
         if (index == 0)
-          display.print(F("NONE"));
+          display.print(PSTR_TO_F(PSTR_NONE));
         return;
     }
   
