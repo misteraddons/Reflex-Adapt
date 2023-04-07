@@ -110,8 +110,8 @@ bool isVirtualBoy = false;
     const Pad padVB[] = {
       { SNES_B,      3, 8*6, DOWN_ON, DOWN_OFF }, //VB Right D-pad Down, NES A
       { SNES_Y,      2, 7*6, LEFT_ON, LEFT_OFF }, //VB Right D-pad Left, NES B
-      { SNES_SELECT, 3, 3*6, FACEBTN_ON, FACEBTN_OFF },
-      { SNES_START,  3, 4*6, FACEBTN_ON, FACEBTN_OFF },
+      { SNES_SELECT, 3, (3*6)-2, FACEBTN_ON, FACEBTN_OFF },
+      { SNES_START,  3, (4*6)-2, FACEBTN_ON, FACEBTN_OFF },
       { SNES_UP,     1, 1*6, UP_ON, UP_OFF },
       { SNES_DOWN,   3, 1*6, DOWN_ON, DOWN_OFF },
       { SNES_LEFT,   2, 0,   LEFT_ON, LEFT_OFF },
@@ -120,8 +120,8 @@ bool isVirtualBoy = false;
       { SNES_X,      1, 8*6, UP_ON, UP_OFF }, //VB Right D-pad Up
       { SNES_L,      0, 1*6, SHOULDERBTN_ON, SHOULDERBTN_OFF },
       { SNES_R,      0, 8*6, SHOULDERBTN_ON, SHOULDERBTN_OFF },
-      { SNES_NTT_0 << 12, 3, 5*6, FACEBTN_ON, FACEBTN_OFF }, //VB B
-      { SNES_NTT_1 << 12, 3, 6*6, FACEBTN_ON, FACEBTN_OFF }  //VB A
+      { SNES_NTT_0 << 12, 3, (5*6)+2, FACEBTN_ON, FACEBTN_OFF }, //VB B
+      { SNES_NTT_1 << 12, 3, (6*6)+2, FACEBTN_ON, FACEBTN_OFF }  //VB A
     };
   #endif
 
