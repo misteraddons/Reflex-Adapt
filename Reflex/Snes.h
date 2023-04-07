@@ -124,6 +124,26 @@ bool isVirtualBoy = false;
       { SNES_NTT_1 << 12, 3, 6*6, FACEBTN_ON, FACEBTN_OFF }  //VB A
     };
   #endif
+
+  bool ShowSnesPadName(const SnesDeviceType_Enum padType) {
+    switch(padType) {
+      case SNES_DEVICE_NES:
+        display.print(F("NES"));
+        return true;
+      case SNES_DEVICE_PAD:
+        display.print(F("SNES"));
+        return true;
+      case SNES_DEVICE_NTT:
+        display.print(F("NTT"));
+        return true;
+      case SNES_DEVICE_VB:
+        display.print(F("VBOY"));
+        return true;
+      default:
+        display.print(PSTR_TO_F(PSTR_NONE));
+        return false;
+    }
+  }
   
   void ShowDefaultPadSnes(const uint8_t index, const SnesDeviceType_Enum padType) {
     //print default joystick state to oled screen
@@ -134,70 +154,30 @@ bool isVirtualBoy = false;
     display.clear(padDivision[index].firstCol, padDivision[index].lastCol, oledDisplayFirstRow + 1, 7);
     display.setCursor(padDivision[index].firstCol, 7);
 
-    switch(padType) {
-      case SNES_DEVICE_NES:
-        display.print(F("NES"));
-        break;
-      case SNES_DEVICE_PAD:
-        display.print(F("SNES"));
-        break;
-      case SNES_DEVICE_NTT:
-        display.print(F("NTT"));
-        break;
-      case SNES_DEVICE_VB:
-        display.print(F("OTHER"));
-        break;
-      default:
-        display.print(PSTR_TO_F(PSTR_NONE));
-        return;
-    }
+    if(!ShowSnesPadName(padType))
+      return;
   
     if (index < 2) {
       //const uint8_t startCol = index == 0 ? 0 : 11*6;
-      for(uint8_t x = 0; x < 12; x++){
-        if(padType == SNES_DEVICE_NES && x > 7)
-          continue;
-        const Pad pad = (padType == SNES_DEVICE_NES && x < 4) ? padSnes[x+12] : padSnes[x]; //NES uses horizontal align
-        PrintPadChar(index, padDivision[index].firstCol, pad.col, pad.row, pad.padvalue, true, pad.on, pad.off, true);
-      }
-    }
-  }
-
-  #ifdef SNES_ENABLE_VBOY
-    void ShowDefaultPadVB(const uint8_t index, const SnesDeviceType_Enum padType) {
-      //print default joystick state to oled screen
-    
-      //const uint8_t firstCol = index == 0 ? 0 : 11*6;
-      //const uint8_t lastCol = index == 0 ? 11*6 : 127;
-  
-      display.clear(padDivision[index].firstCol, padDivision[index].lastCol, oledDisplayFirstRow + 1, 7);
-      display.setCursor(padDivision[index].firstCol, 7);
-  
-      switch(padType) {
-        case SNES_DEVICE_NES:
-        case SNES_DEVICE_PAD:
-        case SNES_DEVICE_NTT:
-          display.print(F("OTHER"));
-          break;
-        case SNES_DEVICE_VB:
-          display.print(F("VBOY"));
-          break;
-        default:
-          display.print(PSTR_TO_F(PSTR_NONE));
-          return;
-      }
-    
-      if (index < 2) {
-        //const uint8_t startCol = index == 0 ? 0 : 11*6;
+      #ifdef SNES_ENABLE_VBOY
+      if (isVirtualBoy) {
         for(uint8_t x = 0; x < 14; x++){
-//          if(padType == SNES_DEVICE_NES && x > 7)
-//            continue;
           const Pad pad = padVB[x];
           PrintPadChar(index, padDivision[index].firstCol, pad.col, pad.row, pad.padvalue, true, pad.on, pad.off, true);
         }
+      } else 
+      #endif
+      {
+        for(uint8_t x = 0; x < 12; x++){
+          if(padType == SNES_DEVICE_NES && x > 7)
+            continue;
+          const Pad pad = (padType == SNES_DEVICE_NES && x < 4) ? padSnes[x+12] : padSnes[x]; //NES uses horizontal align
+          PrintPadChar(index, padDivision[index].firstCol, pad.col, pad.row, pad.padvalue, true, pad.on, pad.off, true);
+        }        
       }
+
     }
-  #endif
+  }
 
 #endif
 
@@ -335,16 +315,8 @@ snesLoop() {
         snesResetJoyValues(i);
         #ifdef ENABLE_REFLEX_PAD
           //Only used if not in multitap mode
-          if (totalUsb == 2) {
-            #ifdef SNES_ENABLE_VBOY
-              if (isVirtualBoy) {
-                ShowDefaultPadVB(inputPort, sc.deviceType());
-              } else
-            #endif
-            {
-              ShowDefaultPadSnes(inputPort, sc.deviceType());
-            }
-          }
+          if (totalUsb == 2)
+            ShowDefaultPadSnes(inputPort, sc.deviceType());
         #endif
       }
 
@@ -413,10 +385,14 @@ snesLoop() {
 //                if(padType == SNES_DEVICE_NES && x > 7)
 //                  continue;
                 const Pad pad = padVB[x];
-                if (x < 12)
-                  PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, sc.digitalPressed((SnesDigital_Enum)pad.padvalue), pad.on, pad.off);
-                else
+                if (x < 12) {
+                  if (padType == SNES_DEVICE_NES && x > 7)
+                    PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, false, pad.on, pad.off);
+                  else
+                    PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, sc.digitalPressed((SnesDigital_Enum)pad.padvalue), pad.on, pad.off);
+                } else {
                   PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, padType == SNES_DEVICE_VB && sc.nttPressed((SnesDigitalNTT_Enum)(pad.padvalue >> 12)), pad.on, pad.off);
+                }
               }
             } else
           #endif

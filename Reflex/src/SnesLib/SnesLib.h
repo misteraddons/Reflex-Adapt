@@ -143,7 +143,7 @@ class SnesController {
           return SNES_DEVICE_PAD; //SNES
         else
           return SNES_DEVICE_NONE;
-      } else if (currentState.id == 0xF && (currentState.digital >> 8 & 0xF) == 0xF) { //on NES controller ID is 0x0 and the non-existing buttons are pressed
+      } else if (currentState.id == 0xF && ((currentState.digital >> 8) & 0xF) == 0xF) { //on NES controller ID is 0x0 and the non-existing buttons are pressed
         return SNES_DEVICE_NES;
       } else if (currentState.id == 0x2) {
         return SNES_DEVICE_NTT;
@@ -251,13 +251,17 @@ class SnesPort {
         //sc.currentState.id = 0x0;
       } else {
         SnesController& sc = getSnesController(joyCount++);
-        //It's a virtual boy? Check if it's not a NES device first...
-        if ((id == 0xF && (data >> 8 & 0xF) != 0xF) || (id & 0x4) == 0x4) {
-          sc.currentState.extended = id & 0x3; //Copy A,B bits to extended.
-          sc.currentState.id = 0x4; // set VB id with it's constant bit. Discard A,B,Bat
-        } else {
+        if (id == 0xF && ((data >> 8) & 0xF) == 0xF) { //nes
           sc.currentState.id = id;
           sc.currentState.extended = extended;
+        } else {
+          if ((id & 0x4) == 0x4) { //vboy
+            sc.currentState.id = 0x4; // set VB id with it's constant bit. Discard A,B,Bat
+            sc.currentState.extended = id & 0x3; //Copy A,B bits to extended.
+          } else { //snes, ntt, other
+            sc.currentState.id = id;
+            sc.currentState.extended = extended;
+          }
         }
         sc.currentState.digital = data; //common data
       }
