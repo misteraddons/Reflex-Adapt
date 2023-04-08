@@ -323,7 +323,7 @@ snesLoop() {
       const SnesDeviceType_Enum padType = sc.deviceType();
 
       uint8_t hatData = sc.hat();
-      uint16_t buttonData = 0;
+      uint32_t buttonData = 0;
 
       if (padType == SNES_DEVICE_NES) {
         //Remaps as SNES B and A
