@@ -102,8 +102,6 @@
 
 
 #ifndef REFLEX_NO_DEFAULTS
-//#define ENABLE_REFLEX_N64_OLD   //uses old pin adapter! 1p only on first port.
-//#define ENABLE_REFLEX_N64_NEW     //uses new pin adapter! 2p possible.
 #define ENABLE_REFLEX_GAMECUBE
 #endif // REFLEX_NO_DEFAULTS
 
@@ -133,47 +131,37 @@
   #define REFLEX_USE_SINGLE_OLED
 #endif
 
-#if defined(ENABLE_REFLEX_N64_OLD) || defined(ENABLE_REFLEX_N64_NEW)
-  #define ENABLE_REFLEX_N64
-#endif
-
 #include "Shared.h"
 
 #ifdef ENABLE_REFLEX_SATURN
-  #include "Saturn.h"
+  #include "Input_Saturn.h"
 #endif
 #ifdef ENABLE_REFLEX_SNES
-  #include "Snes.h"
+  #include "Input_Snes.h"
 #endif
 #ifdef ENABLE_REFLEX_PSX
-  #include "Psx.h"
+  #include "Input_Psx.h"
 #endif
 #ifdef ENABLE_REFLEX_PCE
-  #include "Pce.h"
+  #include "Input_Pce.h"
 #endif
 #ifdef ENABLE_REFLEX_NEOGEO
-  #include "NeoGeo.h"
+  #include "Input_NeoGeo.h"
 #endif
 #ifdef ENABLE_REFLEX_3DO
-  #include "Threedo.h"
+  #include "Input_3do.h"
 #endif
 #ifdef ENABLE_REFLEX_JAGUAR
-  #include "Jaguar.h"
+  #include "Input_Jaguar.h"
 #endif
-#ifdef ENABLE_REFLEX_N64_OLD
-  #include "N64_old.h"
+#ifdef ENABLE_REFLEX_N64
+  #include "Input_N64.h"
 #endif
-#ifdef ENABLE_REFLEX_N64_NEW
-  #include "N64_new.h"
-#endif
-//#ifdef ENABLE_REFLEX_N64
-//  #include "N64.h"
-//#endif
 #ifdef ENABLE_REFLEX_GAMECUBE
-  #include "GameCube.h"
+  #include "Input_GameCube.h"
 #endif
 #ifdef ENABLE_REFLEX_WII
-  #include "Wii.h"
+  #include "Input_Wii.h"
 #endif
 
 #include "src/DigitalIO/DigitalIO.h"
