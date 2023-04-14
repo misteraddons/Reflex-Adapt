@@ -192,7 +192,10 @@ n64Loop() {
     //nothing detected yet
     if (!isEnabled[0] && !isEnabled[1]) {
       for (uint8_t i = 0; i < 2; i++) {
-        isEnabled[i] = haveController[i] || (haveController[i] = n64list[i]->read());
+        //isEnabled[i] = haveController[i] || (haveController[i] = n64list[i]->read());
+        isEnabled[i] = n64list[i]->read();
+        if (isEnabled[0] || isEnabled[1])
+          delayMicroseconds(sleepTime);
       }
       
       #ifdef ENABLE_REFLEX_PAD
