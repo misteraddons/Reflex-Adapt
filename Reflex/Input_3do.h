@@ -42,7 +42,14 @@ ThreedoPort<THREEDOPIN_CLOCK, THREEDOPIN_DOUT, THREEDOPIN_DIN> tdo1;
     { THREEDO_R,     0, 7*6, SHOULDERBTN_ON, SHOULDERBTN_OFF },
     { THREEDO_L,     0, 1*6, SHOULDERBTN_ON, SHOULDERBTN_OFF }
   };
-  
+
+    void loopPadDisplayChars3do(const uint8_t index, const ThreedoDeviceType_Enum padType, const void* sc, const bool force) {
+      for(uint8_t i = 0; i < (sizeof(pad3do) / sizeof(Pad)); ++i){
+        const Pad pad = pad3do[i];
+        PrintPadChar(index, padDivision[index].firstCol, pad.col, pad.row, pad.padvalue, !sc || static_cast<const ThreedoController*>(sc)->digitalPressed(static_cast<ThreedoDigital_Enum>(pad.padvalue)), pad.on, pad.off, force);
+      }
+    }
+
   void ShowDefaultPad3do(const uint8_t index, const ThreedoDeviceType_Enum padType) {
     //print default joystick state to oled screen
   
@@ -64,11 +71,7 @@ ThreedoPort<THREEDOPIN_CLOCK, THREEDOPIN_DOUT, THREEDOPIN_DIN> tdo1;
     }
   
     if (index < 2) {
-      //const uint8_t startCol = index == 0 ? 0 : 11*6;
-      for(uint8_t x = 0; x < 11; x++){
-        const Pad pad = pad3do[x];
-        PrintPadChar(index, padDivision[index].firstCol, pad.col, pad.row, pad.padvalue, true, pad.on, pad.off, true);
-      }
+      loopPadDisplayChars3do(index, padType, NULL , true);
     }
   }
 #endif
@@ -180,12 +183,8 @@ threedoLoop() {
 
             #ifdef ENABLE_REFLEX_PAD
               if (inputPort < 2) {
-                //const uint8_t startCol = inputPort == 0 ? 0 : 11*6;
-                //const ThreedoDeviceType_Enum padType = currentPadType[inputPort];//sc.deviceType();
-                for(uint8_t x = 0; x < 11; x++){
-                  const Pad pad = pad3do[x];
-                  PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, sc.digitalPressed((ThreedoDigital_Enum)pad.padvalue), pad.on, pad.off);
-                }
+                const ThreedoDeviceType_Enum padType = currentPadType[inputPort];//sc.deviceType();
+                loopPadDisplayChars3do(inputPort, padType, &sc, false);
               }
             #endif
         }

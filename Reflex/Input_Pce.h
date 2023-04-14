@@ -54,6 +54,15 @@ PcePort<PCE2_SEL, PCE2_CLR, PCE2_D0, PCE2_D1, PCE2_D2, PCE2_D3> pce2;
     { PCE_6,         2, 9*6, FACEBTN_ON, FACEBTN_OFF }
   };
   
+  void loopPadDisplayCharsPce(const uint8_t index, const PceDeviceType_Enum padType, const void* sc, const bool force) {
+    for(uint8_t i = 0; i < (sizeof(padPce) / sizeof(Pad)); ++i){
+      if(padType == PCE_DEVICE_PAD2 && i > 7)
+        continue;
+      const Pad pad = padPce[i];
+      PrintPadChar(index, padDivision[index].firstCol, pad.col, pad.row, pad.padvalue, !sc || static_cast<const PceController*>(sc)->digitalPressed(static_cast<PceDigital_Enum>(pad.padvalue)), pad.on, pad.off, force);
+    }
+  }
+  
   void ShowDefaultPadPce(const uint8_t index, PceDeviceType_Enum padType) {
     //If multitap support is enabled, force display as 2btn pad
     #ifdef PCE_ENABLE_MULTITAP
@@ -82,12 +91,13 @@ PcePort<PCE2_SEL, PCE2_CLR, PCE2_D0, PCE2_D1, PCE2_D2, PCE2_D3> pce2;
   
     if (index < 2) {
       //const uint8_t startCol = index == 0 ? 0 : 11*6;
-      for(uint8_t x = 0; x < 12; x++){
-        if(padType == PCE_DEVICE_PAD2 && x > 7)
-          continue;
-        const Pad pad = padPce[x];
-        PrintPadChar(index, padDivision[index].firstCol, pad.col, pad.row, pad.padvalue, true, pad.on, pad.off, true);
-      }
+      loopPadDisplayCharsPce(index, padType, NULL , true);
+//      for(uint8_t x = 0; x < 12; x++){
+//        if(padType == PCE_DEVICE_PAD2 && x > 7)
+//          continue;
+//        const Pad pad = padPce[x];
+//        PrintPadChar(index, padDivision[index].firstCol, pad.col, pad.row, pad.padvalue, true, pad.on, pad.off, true);
+//      }
     }
   }
 #endif
@@ -239,12 +249,13 @@ pceLoop() {
         if (totalUsb == 2 && inputPort < 2) {
           //const uint8_t startCol = inputPort == 0 ? 0 : 11*6;
           const PceDeviceType_Enum padType = sc.deviceType();
-          for(uint8_t x = 0; x < 12; x++){
-            if(padType == PCE_DEVICE_PAD2 && x > 7)
-                continue;
-            const Pad pad = padPce[x];
-            PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, sc.digitalPressed((PceDigital_Enum)pad.padvalue), pad.on, pad.off);
-          }
+          loopPadDisplayCharsPce(inputPort, padType, &sc, false);
+//          for(uint8_t x = 0; x < 12; x++){
+//            if(padType == PCE_DEVICE_PAD2 && x > 7)
+//                continue;
+//            const Pad pad = padPce[x];
+//            PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, sc.digitalPressed((PceDigital_Enum)pad.padvalue), pad.on, pad.off);
+//          }
         }
       #endif
     }

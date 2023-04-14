@@ -109,12 +109,16 @@ boolean isNeGconMiSTer = false;
     { PSB_SQUARE,    2, 7*6, FACEBTN_ON, FACEBTN_OFF }
   };
 
-
-
-
-//uint8_t padDivision[] = { { 0,10*6 }, {11*6, 127 } };
-  //const uint8_t firstCol = index == 0 ? 0 : 11*6;
-  //const uint8_t lastCol = index == 0 ? 10*6 : 127;
+  void loopPadDisplayCharsPsx(const uint8_t index, const PsxControllerProtocol padType, void* p, const bool force) {
+    for(uint8_t i = 0; i < (sizeof(padPsx) / sizeof(Pad)); ++i){
+      if(padType != PSPROTO_DUALSHOCK && padType != PSPROTO_DUALSHOCK2 && (i == 1 || i == 2))
+        continue;
+      if(padType == PSPROTO_NEGCON && (i == 0 || i == 8 || i == 9))
+        continue;
+      const Pad pad = padPsx[i];
+      PrintPadChar(index, padDivision[index].firstCol, pad.col, pad.row, pad.padvalue, !p || static_cast<PsxController*>(p)->buttonPressed(static_cast<PsxButton>(pad.padvalue)), pad.on, pad.off, force);
+    }
+  }
 
   void ShowDefaultPadPsx(const uint8_t index, const PsxControllerProtocol padType) {
     //print default joystick state to oled screen
@@ -152,15 +156,7 @@ boolean isNeGconMiSTer = false;
     }
   
     if (index < 2) {
-      //const uint8_t startCol = index == 0 ? 0 : 11*6;
-      for(uint8_t x = 0; x < 16; x++){
-        if(padType != PSPROTO_DUALSHOCK && padType != PSPROTO_DUALSHOCK2 && (x == 1 || x == 2))
-          continue;
-        if(padType == PSPROTO_NEGCON && (x == 0 || x == 8 || x == 9))
-          continue;
-        const Pad pad = padPsx[x];
-        PrintPadChar(index, padDivision[index].firstCol, pad.col, pad.row, pad.padvalue, false, pad.on, pad.off, true);
-      }
+      loopPadDisplayCharsPsx(index, padType, NULL , true);
     }
   }
 #endif
@@ -309,15 +305,7 @@ bool loopDualShock() {
 
       #ifdef ENABLE_REFLEX_PAD
         if (inputPort < 2) {
-          //const uint8_t startCol = inputPort == 0 ? 0 : 11*6;
-          for(uint8_t x = 0; x < 16; x++){
-            const Pad pad = padPsx[x];
-            if(proto != PSPROTO_DUALSHOCK && proto != PSPROTO_DUALSHOCK2 && (x == 1 || x == 2))
-              continue;
-            if(proto == PSPROTO_NEGCON && (x == 0 || x == 8 || x == 9))
-              continue;
-            PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, psx->buttonPressed((PsxButton)pad.padvalue), pad.on, pad.off);
-          }
+          loopPadDisplayCharsPsx(inputPort, proto, &psx, false);
         }
       #endif
     }

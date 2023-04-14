@@ -56,6 +56,17 @@ SaturnPort<SAT2_D0, SAT2_D1, SAT2_D2, SAT2_D3, SAT2_TH, SAT2_TR, SAT2_TL> saturn
     { SAT_R,         0, 7*6, SHOULDERBTN_ON, SHOULDERBTN_OFF },
     { SAT_L,         0, 1*6, SHOULDERBTN_ON, SHOULDERBTN_OFF }
   };
+
+  void loopPadDisplayCharsSat(const uint8_t index, const SatDeviceType_Enum padType, const void* sc, const bool force) {
+    for(uint8_t i = 0; i < (sizeof(padSat) / sizeof(Pad)); ++i){
+      if(padType == SAT_DEVICE_MEGA3 && i == 8) //mega3 have less buttons
+        break;
+      if(padType == SAT_DEVICE_MEGA6 && i == 12) //skip L button
+        continue;
+      const Pad pad = padSat[i];
+      PrintPadChar(index, padDivision[index].firstCol, pad.col, pad.row, pad.padvalue, !sc || static_cast<const SaturnController*>(sc)->digitalPressed(static_cast<SatDigital_Enum>(pad.padvalue)), pad.on, pad.off, force);
+    }
+  }
   
   void ShowDefaultPadSat(const uint8_t index, const SatDeviceType_Enum padType) {
     //print default joystick state to oled screen
@@ -88,15 +99,7 @@ SaturnPort<SAT2_D0, SAT2_D1, SAT2_D2, SAT2_D3, SAT2_TH, SAT2_TR, SAT2_TL> saturn
     }
   
     if (index < 2) {
-      //const uint8_t startCol = index == 0 ? 0 : 11*6;
-      for(uint8_t x = 0; x < 13; x++){
-        if(padType == SAT_DEVICE_MEGA3 && x == 8)
-          break;
-        if(padType == SAT_DEVICE_MEGA6 && x == 12) //skip L button
-          continue;
-        const Pad pad = padSat[x];
-        PrintPadChar(index, padDivision[index].firstCol, pad.col, pad.row, pad.padvalue, true, pad.on, pad.off, true);
-      }
+      loopPadDisplayCharsSat(index, padType, NULL , true);
     }
   }
 #endif
@@ -265,16 +268,8 @@ saturnLoop() {
             #ifdef ENABLE_REFLEX_PAD
               //Only used if not in multitap mode
               if (totalUsb == 2 && inputPort < 2) {
-                //const uint8_t startCol = inputPort == 0 ? 0 : 11*6;
                 const SatDeviceType_Enum padType = currentPadType[inputPort];//sc.deviceType();
-                for(uint8_t x = 0; x < 13; x++){
-                  if(padType == SAT_DEVICE_MEGA3 && x == 8)
-                    break;
-                  if(padType == SAT_DEVICE_MEGA6 && x == 12) //skip L button
-                    continue;
-                  const Pad pad = padSat[x];
-                  PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, sc.digitalPressed((SatDigital_Enum)pad.padvalue), pad.on, pad.off);
-                }
+                loopPadDisplayCharsSat(inputPort, padType, &sc, false);
               }
             #endif
         }

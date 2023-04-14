@@ -55,6 +55,13 @@ JagPort<JAGPIN_J3_J4, JAGPIN_J2_J5, JAGPIN_J1_J6, JAGPIN_J0_J7, JAGPIN_B0_B2, JA
     { JAG_HASH,      3, 14*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF }
   };
 
+  void loopPadDisplayCharsJaguar(const uint8_t index, const JagDeviceType_Enum padType, const void* sc, const bool force) {
+    for(uint8_t i = 0; i < (sizeof(padJaguar) / sizeof(Pad)); ++i){
+      const Pad pad = padJaguar[i];
+      PrintPadChar(index, padDivision[index].firstCol, pad.col, pad.row, pad.padvalue, !sc || static_cast<const JagController*>(sc)->digitalPressed(static_cast<JagDigital_Enum>(pad.padvalue)), pad.on, pad.off, force);
+    }
+  }
+
   void ShowDefaultPadJaguar(const uint8_t index, const JagDeviceType_Enum padType) {
     //print default joystick state to oled screen
   
@@ -74,11 +81,7 @@ JagPort<JAGPIN_J3_J4, JAGPIN_J2_J5, JAGPIN_J1_J6, JAGPIN_J0_J7, JAGPIN_B0_B2, JA
     }
   
     if (index < 2) {
-      //const uint8_t startCol = index == 0 ? 0 : 11*6;
-      for(uint8_t x = 0; x < 21; x++){
-        const Pad pad = padJaguar[x];
-        PrintPadChar(index, padDivision[index].firstCol, pad.col, pad.row, (JagDigital_Enum)pad.padvalue, true, pad.on, pad.off, true);
-      }
+      loopPadDisplayCharsJaguar(index, padType, NULL , true);
     }
   }
 #endif
@@ -195,12 +198,8 @@ jaguarLoop() {
       
       #ifdef ENABLE_REFLEX_PAD
         if (inputPort < 2) {
-          //const uint8_t startCol = inputPort == 0 ? 0 : 11*6;
-          //const JagDeviceType_Enum padType = sc.deviceType();
-          for(uint8_t x = 0; x < 21; x++){
-            const Pad pad = padJaguar[x];
-            PrintPadChar(inputPort, padDivision[inputPort].firstCol, pad.col, pad.row, pad.padvalue, sc.digitalPressed((JagDigital_Enum)pad.padvalue), pad.on, pad.off);
-          }
+          const JagDeviceType_Enum padType = sc.deviceType();
+          loopPadDisplayCharsJaguar(inputPort, padType, &sc, false);
         }
       #endif
     }
