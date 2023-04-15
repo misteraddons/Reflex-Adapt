@@ -71,8 +71,8 @@ enum PadButton {
     { (uint32_t)BTN_RIGHT,   2, 2*6, RIGHT_ON, RIGHT_OFF },
     { (uint32_t)BTN_START,   2, 4*6, FACEBTN_ON, FACEBTN_OFF },
     { (uint32_t)BTN_Z,       3, 4*6, SHOULDERBTN_ON, SHOULDERBTN_OFF },
-    { (uint32_t)BTN_B,       2, 6*6, FACEBTN_ON, FACEBTN_OFF }, //3, 9*6
-    { (uint32_t)BTN_A,       3, 7*6, FACEBTN_ON, FACEBTN_OFF }, //3, 8*6
+    { (uint32_t)BTN_B,       2, 6*6-2, FACEBTN_ON, FACEBTN_OFF }, //3, 9*6
+    { (uint32_t)BTN_A,       3, 7*6-2, FACEBTN_ON, FACEBTN_OFF }, //3, 8*6
     { (uint32_t)BTN_C_UP,    1, 8*6, UP_ON, UP_OFF },
     { (uint32_t)BTN_C_DOWN,  3, 8*6, DOWN_ON, DOWN_OFF },
     { (uint32_t)BTN_C_LEFT,  2, 7*6,   LEFT_ON, LEFT_OFF },

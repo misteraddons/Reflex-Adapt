@@ -27,32 +27,32 @@ JagPort<JAGPIN_J3_J4, JAGPIN_J2_J5, JAGPIN_J1_J6, JAGPIN_J0_J7, JAGPIN_B0_B2, JA
 
 #ifdef ENABLE_REFLEX_PAD
   const Pad padJaguar[] = {
-    { JAG_PAD_UP,    1, 1*6, UP_ON, UP_OFF },
-    { JAG_PAD_DOWN,  3, 1*6, DOWN_ON, DOWN_OFF },
-    { JAG_PAD_LEFT,  2, 0,   LEFT_ON, LEFT_OFF },
-    { JAG_PAD_RIGHT, 2, 2*6, RIGHT_ON, RIGHT_OFF },
-    { JAG_B,         3, 8*6, FACEBTN_ON, FACEBTN_OFF },
-    { JAG_A,         3, 9*6, FACEBTN_ON, FACEBTN_OFF },
-    { JAG_C,         3, 7*6, FACEBTN_ON, FACEBTN_OFF },
-    { JAG_PAUSE,     2, 4*6, DASHBTN_ON, DASHBTN_OFF },
-    { JAG_OPTION,    2, 5*6, DASHBTN_ON, DASHBTN_OFF },
+    { JAG_PAD_UP,    0, (1+4)*6, UP_ON, UP_OFF },
+    { JAG_PAD_DOWN,  2, (1+4)*6, DOWN_ON, DOWN_OFF },
+    { JAG_PAD_LEFT,  1, (0+4)*6, LEFT_ON, LEFT_OFF },
+    { JAG_PAD_RIGHT, 1, (2+4)*6, RIGHT_ON, RIGHT_OFF },
+    { JAG_B,         (3-2), (8+7)*6, FACEBTN_ON, FACEBTN_OFF },
+    { JAG_A,         (3-3), (9+7)*6, FACEBTN_ON, FACEBTN_OFF },
+    { JAG_C,         (3-1), (7+7)*6, FACEBTN_ON, FACEBTN_OFF },
+    { JAG_PAUSE,     2-2, (4.5+5)*6, DASHBTN_ON, DASHBTN_OFF },
+    { JAG_OPTION,    2-2, (5.5+5)*6, DASHBTN_ON, DASHBTN_OFF },
     //{ JAG_9,         2, 9*6, FACEBTN_ON, FACEBTN_OFF }, //X 9
     //{ JAG_8,         2, 8*6, FACEBTN_ON, FACEBTN_OFF }, //Y 8
     //{ JAG_7,         2, 7*6, FACEBTN_ON, FACEBTN_OFF }, //Z 7
     //{ JAG_6,         0, 8*6, SHOULDERBTN_ON, SHOULDERBTN_OFF }, //6 R
     //{ JAG_4,         0, 1*6, SHOULDERBTN_ON, SHOULDERBTN_OFF }, //4 L
-    { JAG_1,         0, 12*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
-    { JAG_2,         0, 13*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
-    { JAG_3,         0, 14*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
-    { JAG_4,         1, 12*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
-    { JAG_5,         1, 13*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
-    { JAG_6,         1, 14*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
-    { JAG_7,         2, 12*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
-    { JAG_8,         2, 13*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
-    { JAG_9,         2, 14*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
-    { JAG_STAR,      3, 12*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
-    { JAG_0,         3, 13*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
-    { JAG_HASH,      3, 14*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF }
+    { JAG_1,         1, (12-3)*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
+    { JAG_2,         1, (13-3)*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
+    { JAG_3,         1, (14-3)*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
+    { JAG_4,         2, (12-3)*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
+    { JAG_5,         2, (13-3)*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
+    { JAG_6,         2, (14-3)*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
+    { JAG_7,         3, (12-3)*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
+    { JAG_8,         3, (13-3)*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
+    { JAG_9,         3, (14-3)*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
+    { JAG_STAR,      4, (12-3)*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
+    { JAG_0,         4, (13-3)*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
+    { JAG_HASH,      4, (14-3)*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF }
   };
 
   void loopPadDisplayCharsJaguar(const uint8_t index, const JagDeviceType_Enum padType, const void* sc, const bool force) {
