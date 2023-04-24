@@ -116,7 +116,7 @@ boolean isNeGconMiSTer = false;
       if(padType == PSPROTO_NEGCON && (i == 0 || i == 8 || i == 9))
         continue;
       const Pad pad = padPsx[i];
-      PrintPadChar(index, padDivision[index].firstCol, pad.col, pad.row, pad.padvalue, !p || static_cast<PsxController*>(p)->buttonPressed(static_cast<PsxButton>(pad.padvalue)), pad.on, pad.off, force);
+      PrintPadChar(index, padDivision[index].firstCol, pad.col, pad.row, pad.padvalue, p && static_cast<PsxController*>(p)->buttonPressed(static_cast<PsxButton>(pad.padvalue)), pad.on, pad.off, force);
     }
   }
 
@@ -156,7 +156,7 @@ boolean isNeGconMiSTer = false;
     }
   
     if (index < 2) {
-      loopPadDisplayCharsPsx(index, padType, NULL , true);
+      loopPadDisplayCharsPsx(index, padType, NULL, true);
     }
   }
 #endif
@@ -305,7 +305,7 @@ bool loopDualShock() {
 
       #ifdef ENABLE_REFLEX_PAD
         if (inputPort < 2) {
-          loopPadDisplayCharsPsx(inputPort, proto, &psx, false);
+          loopPadDisplayCharsPsx(inputPort, proto, psx, false);
         }
       #endif
     }
