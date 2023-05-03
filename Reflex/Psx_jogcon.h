@@ -49,6 +49,7 @@ void handleJogconData()
   static int32_t pdlpos = sp_half;
   static uint16_t prevcnt = 0;
   static int8_t btntimeout = 0;//for fake spinner mode
+  static JogconDirection lastDirection = JOGCON_DIR_NONE;
   
   uint8_t jogPosition = 0;
   uint8_t jogRevolutions = 0;
@@ -56,6 +57,25 @@ void handleJogconData()
   JogconCommand cmdResult = JOGCON_CMD_NONE;
   
   bool gotJogconData = psx->getJogconData(jogPosition, jogRevolutions, jogDirection, cmdResult);
+
+  JogconCommand nextCmd = JOGCON_CMD_NONE;
+  if(jogDirection == JOGCON_DIR_MAX) { //reached max internal counter
+    nextCmd = JOGCON_CMD_DROP_REVOLUTIONS;
+    jogDirection = lastDirection;
+    if (jogDirection == JOGCON_DIR_CW) {
+      jogPosition = 254;
+      jogRevolutions = 255;
+    } else { //CCW
+      jogPosition = 254;
+      jogRevolutions = 0;
+    }
+    prevcnt = 0;
+    cleancnt = 0;
+    counter = (jogRevolutions << 8) | jogPosition;//(data[5] << 8) | data[4];
+  }
+  
+  if(jogDirection != JOGCON_DIR_NONE)
+    lastDirection = jogDirection;
 
   newcnt = (jogRevolutions << 8) | jogPosition;//(data[5] << 8) | data[4];
   newbtn = psx->getButtonWord();//(data[3] << 8) | data[2];
@@ -197,9 +217,9 @@ void handleJogconData()
     if(mode == 2) ff = 1;
 
     if (ff == 1)
-      psx->setJogconMotorMode(JOGCON_DIR_START, JOGCON_CMD_NONE, force);
+      psx->setJogconMotorMode(JOGCON_DIR_START, nextCmd, force);
     else 
-      psx->setJogconMotorMode(JOGCON_DIR_NONE, JOGCON_CMD_NONE, 0);
+      psx->setJogconMotorMode(JOGCON_DIR_NONE, nextCmd, 0);
 
     int16_t val = ((int16_t)(cleancnt - prevcnt))/sp_step;
     if(val>127) val = 127; else if(val<-127) val = -127;
