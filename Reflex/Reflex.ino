@@ -138,7 +138,8 @@
 //#define SATLIB_ENABLE_SATTAP //support for 6p multitap
   #include "Input_Saturn.h"
 #endif
-#ifdef ENABLE_REFLEX_SATURN
+#ifdef ENABLE_REFLEX_SATURN_FULL
+  #define ENABLE_REFLEX_SATURN
   #define SATLIB_ENABLE_MEGATAP //suport for 4p megatap
   #define SATLIB_ENABLE_SATTAP //support for 6p multitap
   #include "Input_Saturn.h"
@@ -149,7 +150,8 @@
   //#define SNES_ENABLE_MULTITAP
   #include "Input_Snes.h"
 #endif
-#ifdef ENABLE_REFLEX_SNES
+#ifdef ENABLE_REFLEX_SNES_FULL
+  #define ENABLE_REFLEX_SNES
   #define SNES_ENABLE_VBOY
   #define SNES_ENABLE_MULTITAP
   #include "Input_Snes.h"
@@ -213,7 +215,8 @@
   //#define PCE_ENABLE_MULTITAP
   #include "Input_Pce.h"
 #endif
-#ifdef ENABLE_REFLEX_PCE
+#ifdef ENABLE_REFLEX_PCE_FULL
+  #define ENABLE_REFLEX_PCE
   #define PCE_ENABLE_MULTITAP
   #include "Input_Pce.h"
 #endif
