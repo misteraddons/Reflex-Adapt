@@ -28,7 +28,7 @@
 //#define ENABLE_REFLEX_SNES
 //#define ENABLE_REFLEX_PSX
 //#define ENABLE_REFLEX_PSX_JOG //this is for jogcon forced specific mode. jogcon can still be used with ENABLE_REFLEX_PSX
-//#define ENABLE_REFLEX_PCE
+//define ENABLE_REFLEX_PCE
 //#define ENABLE_REFLEX_NEOGEO
 //#define ENABLE_REFLEX_3DO
 //#define ENABLE_REFLEX_JAGUAR
@@ -41,25 +41,23 @@
 // #define SATLIB_ENABLE_MEGATAP //suport for 4p megatap
 // #define SATLIB_ENABLE_SATTAP //support for 6p multitap
 
-
-
 // SNES config
-#define SNES_ENABLE_VBOY
-#define SNES_ENABLE_MULTITAP
+//#define SNES_ENABLE_VBOY
+//#define SNES_ENABLE_MULTITAP
 
 // PS1 Guncon config
 // 0=Mouse, 1=Joy, 2=Joy OffScreenEdge (MiSTer), 3=Guncon Raw (MiSTer)
-#define GUNCON_FORCE_MODE 3
+//#define GUNCON_FORCE_MODE 3
 
 // PS1 NeGcon config
 // 0=Default, 1=MiSTer Wheel format with paddle
-#define NEGCON_FORCE_MODE 1
+//#define NEGCON_FORCE_MODE 1
 
 // It's possible to remove support of some hardware to free program storage space
 // Just comment the desired lines below
-#define GUNCON_SUPPORT
-#define JOGCON_SUPPORT
-#define NEGCON_SUPPORT
+//#define GUNCON_SUPPORT
+//#define JOGCON_SUPPORT
+//#define NEGCON_SUPPORT
 
 // Mouse output is used on guncon and jogcon modes.
 // Can be disabled if only using on MiSTer
@@ -68,9 +66,9 @@
 
 
 // Oled display can be used for detailed info
-#define ENABLE_PSX_GENERAL_OLED
-#define ENABLE_PSX_GUNCON_OLED
-#define ENABLE_PSX_JOGCON_OLED
+//#define ENABLE_PSX_GENERAL_OLED
+//#define ENABLE_PSX_GUNCON_OLED
+//#define ENABLE_PSX_JOGCON_OLED
 
 
 //PCEngine config
@@ -133,19 +131,96 @@
 
 #include "Shared.h"
 
-#ifdef ENABLE_REFLEX_SATURN
+
+#ifdef ENABLE_REFLEX_SATURN_SIMPLE
+//#define SATLIB_ENABLE_MEGATAP //suport for 4p megatap
+//#define SATLIB_ENABLE_SATTAP //support for 6p multitap
   #include "Input_Saturn.h"
 #endif
-#ifdef ENABLE_REFLEX_SNES
+#ifdef ENABLE_REFLEX_SATURN
+  #define SATLIB_ENABLE_MEGATAP //suport for 4p megatap
+  #define SATLIB_ENABLE_SATTAP //support for 6p multitap
+  #include "Input_Saturn.h"
+#endif
+#ifdef ENABLE_REFLEX_SNES_SIMPLE
+  //#define SNES_ENABLE_VBOY
+  //#define SNES_ENABLE_MULTITAP
   #include "Input_Snes.h"
 #endif
-#ifdef ENABLE_REFLEX_PSX
+#ifdef ENABLE_REFLEX_SNES
+  #define SNES_ENABLE_VBOY
+  #define SNES_ENABLE_MULTITAP
+  #include "Input_Snes.h"
+#endif
+#ifdef ENABLE_REFLEX_PSX_PADS
+// PS1 Guncon config
+// 0=Mouse, 1=Joy, 2=Joy OffScreenEdge (MiSTer), 3=Guncon Raw (MiSTer)
+//#define GUNCON_FORCE_MODE 3
+// PS1 NeGcon config
+// 0=Default, 1=MiSTer Wheel format with paddle
+//#define NEGCON_FORCE_MODE 1
+//#define GUNCON_SUPPORT
+//#define JOGCON_SUPPORT
+//#define NEGCON_SUPPORT
+//#define ENABLE_PSX_GUNCON_MOUSE
+//#define ENABLE_PSX_JOGCON_MOUSE
+  #define ENABLE_PSX_GENERAL_OLED
+//#define ENABLE_PSX_GUNCON_OLED
+//#define ENABLE_PSX_JOGCON_OLED
   #include "Input_Psx.h"
 #endif
-#ifdef ENABLE_REFLEX_PCE
+#ifdef ENABLE_REFLEX_PSX_MISTER
+// PS1 Guncon config
+// 0=Mouse, 1=Joy, 2=Joy OffScreenEdge (MiSTer), 3=Guncon Raw (MiSTer)
+  #define GUNCON_FORCE_MODE 3
+// PS1 NeGcon config
+// 0=Default, 1=MiSTer Wheel format with paddle
+  #define NEGCON_FORCE_MODE 1
+  #define GUNCON_SUPPORT
+  #define JOGCON_SUPPORT
+  #define NEGCON_SUPPORT
+  #define ENABLE_PSX_GUNCON_MOUSE
+  #define ENABLE_PSX_JOGCON_MOUSE
+  #define ENABLE_PSX_GENERAL_OLED
+  #define ENABLE_PSX_GUNCON_OLED
+  #define ENABLE_PSX_JOGCON_OLED
+  #include "Input_Psx.h"
+#endif
+#ifdef ENABLE_REFLEX_PSX_PC
+// PS1 Guncon config
+// 0=Mouse, 1=Joy, 2=Joy OffScreenEdge (MiSTer), 3=Guncon Raw (MiSTer)
+  #define GUNCON_FORCE_MODE 0
+// PS1 NeGcon config
+// 0=Default, 1=MiSTer Wheel format with paddle
+  #define NEGCON_FORCE_MODE 0
+  #define GUNCON_SUPPORT
+  #define JOGCON_SUPPORT
+  #define NEGCON_SUPPORT
+  #define ENABLE_PSX_GUNCON_MOUSE
+  #define ENABLE_PSX_JOGCON_MOUSE
+  #define ENABLE_PSX_GENERAL_OLED
+  #define ENABLE_PSX_GUNCON_OLED
+  #define ENABLE_PSX_JOGCON_OLED
+  #include "Input_Psx.h"
+#endif
+#ifdef ENABLE_REFLEX_PCE_SIMPLE
+  //#define PCE_ENABLE_MULTITAP
   #include "Input_Pce.h"
 #endif
-#ifdef ENABLE_REFLEX_NEOGEO
+#ifdef ENABLE_REFLEX_PCE
+  #define PCE_ENABLE_MULTITAP
+  #include "Input_Pce.h"
+#endif
+#ifdef ENABLE_REFLEX_NEOGEO_NO_DEBOUNCE
+  //#define NEOGEO_DEBOUNCE 2 //debounce time in milliseconds
+  #include "Input_NeoGeo.h"
+#endif
+#ifdef ENABLE_REFLEX_NEOGEO_0MS_DEBOUNCE
+  #define NEOGEO_DEBOUNCE 0 //debounce time in milliseconds
+  #include "Input_NeoGeo.h"
+#endif
+#ifdef ENABLE_REFLEX_NEOGEO_DEBOUNCE
+  #define NEOGEO_DEBOUNCE 2 //debounce time in milliseconds
   #include "Input_NeoGeo.h"
 #endif
 #ifdef ENABLE_REFLEX_3DO
