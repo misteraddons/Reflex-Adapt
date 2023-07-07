@@ -50,7 +50,7 @@ jobs:
           asset="${release}.tar.gz"
           gh release download --repo=github.com/indygreg/apple-platform-rs "$tag" --pattern "$asset"
           tar --extract --directory . --strip-components 1 --file "$asset" "${release}"/rcodesign
-          ./rcodesign sign --p12-file certificate.p12 --p12-password '$MACOS_CERTIFICATE_PWD' reflex_updater/target/${{ matrix.target }}/release/reflex_updater
+          ./rcodesign sign --p12-file certificate.p12 --p12-password ${MACOS_CERTIFICATE_PWD} reflex_updater/target/${{ matrix.target }}/release/reflex_updater
       - uses: actions/upload-artifact@v3
         if: ${{ matrix.host == 'windows-latest' }}
         with:
