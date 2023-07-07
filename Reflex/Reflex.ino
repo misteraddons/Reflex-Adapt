@@ -64,12 +64,10 @@
 // #define ENABLE_PSX_GUNCON_MOUSE
 // #define ENABLE_PSX_JOGCON_MOUSE
 
-
 // Oled display can be used for detailed info
 //#define ENABLE_PSX_GENERAL_OLED
 //#define ENABLE_PSX_GUNCON_OLED
 //#define ENABLE_PSX_JOGCON_OLED
-
 
 //PCEngine config
 // #define PCE_ENABLE_MULTITAP
@@ -131,108 +129,19 @@
 
 #include "Shared.h"
 
-
-#ifdef ENABLE_REFLEX_SATURN_SIMPLE
-  #define ENABLE_REFLEX_SATURN
-//#define SATLIB_ENABLE_MEGATAP //suport for 4p megatap
-//#define SATLIB_ENABLE_SATTAP //support for 6p multitap
+#ifdef ENABLE_REFLEX_SATURN
   #include "Input_Saturn.h"
 #endif
-#ifdef ENABLE_REFLEX_SATURN_FULL
-  #define ENABLE_REFLEX_SATURN
-  #define SATLIB_ENABLE_MEGATAP //suport for 4p megatap
-  #define SATLIB_ENABLE_SATTAP //support for 6p multitap
-  #include "Input_Saturn.h"
-#endif
-#ifdef ENABLE_REFLEX_SNES_SIMPLE
-  #define ENABLE_REFLEX_SNES
-  //#define SNES_ENABLE_VBOY
-  //#define SNES_ENABLE_MULTITAP
+#ifdef ENABLE_REFLEX_SNES
   #include "Input_Snes.h"
 #endif
-#ifdef ENABLE_REFLEX_SNES_FULL
-  #define ENABLE_REFLEX_SNES
-  #define SNES_ENABLE_VBOY
-  #define SNES_ENABLE_MULTITAP
-  #include "Input_Snes.h"
-#endif
-#ifdef ENABLE_REFLEX_PSX_PADS
-#define ENABLE_REFLEX_PSX
-// PS1 Guncon config
-// 0=Mouse, 1=Joy, 2=Joy OffScreenEdge (MiSTer), 3=Guncon Raw (MiSTer)
-//#define GUNCON_FORCE_MODE 3
-// PS1 NeGcon config
-// 0=Default, 1=MiSTer Wheel format with paddle
-//#define NEGCON_FORCE_MODE 1
-//#define GUNCON_SUPPORT
-//#define JOGCON_SUPPORT
-//#define NEGCON_SUPPORT
-//#define ENABLE_PSX_GUNCON_MOUSE
-//#define ENABLE_PSX_JOGCON_MOUSE
-  #define ENABLE_PSX_GENERAL_OLED
-//#define ENABLE_PSX_GUNCON_OLED
-//#define ENABLE_PSX_JOGCON_OLED
+#ifdef ENABLE_REFLEX_PSX
   #include "Input_Psx.h"
 #endif
-#ifdef ENABLE_REFLEX_PSX_MISTER
-#define ENABLE_REFLEX_PSX
-// PS1 Guncon config
-// 0=Mouse, 1=Joy, 2=Joy OffScreenEdge (MiSTer), 3=Guncon Raw (MiSTer)
-  #define GUNCON_FORCE_MODE 3
-// PS1 NeGcon config
-// 0=Default, 1=MiSTer Wheel format with paddle
-  #define NEGCON_FORCE_MODE 1
-  #define GUNCON_SUPPORT
-  #define JOGCON_SUPPORT
-  #define NEGCON_SUPPORT
-  #define ENABLE_PSX_GUNCON_MOUSE
-  #define ENABLE_PSX_JOGCON_MOUSE
-  #define ENABLE_PSX_GENERAL_OLED
-  #define ENABLE_PSX_GUNCON_OLED
-  #define ENABLE_PSX_JOGCON_OLED
-  #include "Input_Psx.h"
-#endif
-#ifdef ENABLE_REFLEX_PSX_PC
-#define ENABLE_REFLEX_PSX
-// PS1 Guncon config
-// 0=Mouse, 1=Joy, 2=Joy OffScreenEdge (MiSTer), 3=Guncon Raw (MiSTer)
-  #define GUNCON_FORCE_MODE 0
-// PS1 NeGcon config
-// 0=Default, 1=MiSTer Wheel format with paddle
-  #define NEGCON_FORCE_MODE 0
-  #define GUNCON_SUPPORT
-  #define JOGCON_SUPPORT
-  #define NEGCON_SUPPORT
-  #define ENABLE_PSX_GUNCON_MOUSE
-  #define ENABLE_PSX_JOGCON_MOUSE
-  #define ENABLE_PSX_GENERAL_OLED
-  #define ENABLE_PSX_GUNCON_OLED
-  #define ENABLE_PSX_JOGCON_OLED
-  #include "Input_Psx.h"
-#endif
-#ifdef ENABLE_REFLEX_PCE_SIMPLE
-  #define ENABLE_REFLEX_PCE
-  //#define PCE_ENABLE_MULTITAP
+#ifdef ENABLE_REFLEX_PCE
   #include "Input_Pce.h"
 #endif
-#ifdef ENABLE_REFLEX_PCE_FULL
-  #define ENABLE_REFLEX_PCE
-  #define PCE_ENABLE_MULTITAP
-  #include "Input_Pce.h"
-#endif
-#ifdef ENABLE_REFLEX_NEOGEO_NO_DEBOUNCE
-  #define ENABLE_REFLEX_NEOGEO
-  //#define NEOGEO_DEBOUNCE 2 //debounce time in milliseconds
-  #include "Input_NeoGeo.h"
-#endif
-#ifdef ENABLE_REFLEX_NEOGEO_0MS_DEBOUNCE
-  #define ENABLE_REFLEX_NEOGEO
-  #define NEOGEO_DEBOUNCE 0 //debounce time in milliseconds
-  #include "Input_NeoGeo.h"
-#endif
-#ifdef ENABLE_REFLEX_NEOGEO_DEBOUNCE
-  #define ENABLE_REFLEX_NEOGEO
-  #define NEOGEO_DEBOUNCE 2 //debounce time in milliseconds
+#ifdef ENABLE_REFLEX_NEOGEO
   #include "Input_NeoGeo.h"
 #endif
 #ifdef ENABLE_REFLEX_3DO
@@ -311,16 +220,10 @@ uint32_t colors = 0;
         display.print(F("GENESIS + SATURN"));
         break;
 #endif
-#ifdef ENABLE_REFLEX_SNES_FULL
+#ifdef ENABLE_REFLEX_SNES
       case RZORD_SNES:
         display.setCol(2*6);
         display.print(F("NES + SNES + VBOY"));
-        break;
-#endif
-#ifdef ENABLE_REFLEX_SNES_SIMPLE
-      case RZORD_SNES:
-        display.setCol(6*6);
-        display.print(F("NES + SNES"));
         break;
 #endif
 #ifdef ENABLE_REFLEX_PSX
