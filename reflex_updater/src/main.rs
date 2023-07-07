@@ -47,9 +47,9 @@ fn display_splash() {
     );
 
     let subtitle =
-        r"                       Reflex Adapter!  ";
+        r" Reflex Adapt: Classic Controller to USB!  ";
     let info = concat!(
-        r"          http://www.misteraddons.com/  "
+        r"             http://www.misteraddons.com/  "
     );
     
     println!();

@@ -222,8 +222,14 @@ uint32_t colors = 0;
 #endif
 #ifdef ENABLE_REFLEX_SNES
       case RZORD_SNES:
-        display.setCol(2*6);
-        display.print(F("NES + SNES + VBOY"));
+        #ifdef SNES_ENABLE_VBOY
+          display.setCol(2*6);
+          display.print(F("NES + SNES + VBOY"));
+        #endif
+        #ifndef SNES_ENABLE_VBOY
+          display.setCol(6*6);
+          display.print(F("NES + SNES"));
+        #endif
         break;
 #endif
 #ifdef ENABLE_REFLEX_PSX
