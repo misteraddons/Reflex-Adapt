@@ -8,6 +8,7 @@ env:
   CARGO_TERM_COLOR: always
   MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
   MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+  GH_TOKEN: ${{ github.token }}
 
 jobs:
   build:
