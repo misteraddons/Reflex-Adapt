@@ -42,7 +42,7 @@ jobs:
       - name: Sign
         if: ${{ matrix.host == 'macos-latest' }}
         run: |
-          echo $MACOS_CERTIFICATE | base64 —decode > certificate.p12
+          echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
           cargo install apple-codesign
           rcodesign sign --p12-file certificate.p12 --p12-password $MACOS_CERTIFICATE_PWD reflex_updater/target/${{ matrix.target }}/release/reflex_updater
       - uses: actions/upload-artifact@v3
