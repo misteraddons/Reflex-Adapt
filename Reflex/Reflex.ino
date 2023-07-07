@@ -28,7 +28,7 @@
 //#define ENABLE_REFLEX_SNES
 //#define ENABLE_REFLEX_PSX
 //#define ENABLE_REFLEX_PSX_JOG //this is for jogcon forced specific mode. jogcon can still be used with ENABLE_REFLEX_PSX
-//define ENABLE_REFLEX_PCE
+//#define ENABLE_REFLEX_PCE
 //#define ENABLE_REFLEX_NEOGEO
 //#define ENABLE_REFLEX_3DO
 //#define ENABLE_REFLEX_JAGUAR
@@ -311,10 +311,16 @@ uint32_t colors = 0;
         display.print(F("GENESIS + SATURN"));
         break;
 #endif
-#ifdef ENABLE_REFLEX_SNES
+#ifdef ENABLE_REFLEX_SNES_FULL
       case RZORD_SNES:
         display.setCol(2*6);
         display.print(F("NES + SNES + VBOY"));
+        break;
+#endif
+#ifdef ENABLE_REFLEX_SNES_SIMPLE
+      case RZORD_SNES:
+        display.setCol(6*6);
+        display.print(F("NES + SNES"));
         break;
 #endif
 #ifdef ENABLE_REFLEX_PSX
