@@ -133,6 +133,7 @@
 
 
 #ifdef ENABLE_REFLEX_SATURN_SIMPLE
+  #define ENABLE_REFLEX_SATURN
 //#define SATLIB_ENABLE_MEGATAP //suport for 4p megatap
 //#define SATLIB_ENABLE_SATTAP //support for 6p multitap
   #include "Input_Saturn.h"
@@ -143,6 +144,7 @@
   #include "Input_Saturn.h"
 #endif
 #ifdef ENABLE_REFLEX_SNES_SIMPLE
+  #define ENABLE_REFLEX_SNES
   //#define SNES_ENABLE_VBOY
   //#define SNES_ENABLE_MULTITAP
   #include "Input_Snes.h"
@@ -153,6 +155,7 @@
   #include "Input_Snes.h"
 #endif
 #ifdef ENABLE_REFLEX_PSX_PADS
+#define ENABLE_REFLEX_PSX
 // PS1 Guncon config
 // 0=Mouse, 1=Joy, 2=Joy OffScreenEdge (MiSTer), 3=Guncon Raw (MiSTer)
 //#define GUNCON_FORCE_MODE 3
@@ -170,6 +173,7 @@
   #include "Input_Psx.h"
 #endif
 #ifdef ENABLE_REFLEX_PSX_MISTER
+#define ENABLE_REFLEX_PSX
 // PS1 Guncon config
 // 0=Mouse, 1=Joy, 2=Joy OffScreenEdge (MiSTer), 3=Guncon Raw (MiSTer)
   #define GUNCON_FORCE_MODE 3
@@ -187,6 +191,7 @@
   #include "Input_Psx.h"
 #endif
 #ifdef ENABLE_REFLEX_PSX_PC
+#define ENABLE_REFLEX_PSX
 // PS1 Guncon config
 // 0=Mouse, 1=Joy, 2=Joy OffScreenEdge (MiSTer), 3=Guncon Raw (MiSTer)
   #define GUNCON_FORCE_MODE 0
@@ -204,6 +209,7 @@
   #include "Input_Psx.h"
 #endif
 #ifdef ENABLE_REFLEX_PCE_SIMPLE
+  #define ENABLE_REFLEX_PCE
   //#define PCE_ENABLE_MULTITAP
   #include "Input_Pce.h"
 #endif
@@ -212,14 +218,17 @@
   #include "Input_Pce.h"
 #endif
 #ifdef ENABLE_REFLEX_NEOGEO_NO_DEBOUNCE
+  #define ENABLE_REFLEX_NEOGEO
   //#define NEOGEO_DEBOUNCE 2 //debounce time in milliseconds
   #include "Input_NeoGeo.h"
 #endif
 #ifdef ENABLE_REFLEX_NEOGEO_0MS_DEBOUNCE
+  #define ENABLE_REFLEX_NEOGEO
   #define NEOGEO_DEBOUNCE 0 //debounce time in milliseconds
   #include "Input_NeoGeo.h"
 #endif
 #ifdef ENABLE_REFLEX_NEOGEO_DEBOUNCE
+  #define ENABLE_REFLEX_NEOGEO
   #define NEOGEO_DEBOUNCE 2 //debounce time in milliseconds
   #include "Input_NeoGeo.h"
 #endif
