@@ -1,14 +1,14 @@
 # reflex-updater manifest
 
 firmware/Nintendo.hex,Nintendo: NES, SNES (w/ Multitap), N64, GameCube & Wii
-firmware/Non-Nintendo.hex,Non-Nintendo: PC Engine, NeoGeo, Genesis, Saturn, PlayStation, Jaguar
+firmware/Non-Nintendo.hex,Non-Nintendo: PC Engine, NeoGeo, Genesis, Saturn, PlayStation & Jaguar
 firmware/Multitap.hex,Multitap: Nintendo, Super Nintendo (w/ Multitap), Genesis (w/ Multitap), Saturn (w/ Multitap) & PC Engine (w/ Multitap)
-firmware/Combo1.hex,Combo 1: Nintendo, Super Nintendo, Genesis, Saturn (w/ Multitap), PlayStation (w/ GunCon & JogCon)
-firmware/Combo2.hex,Combo 2: Nintendo, Super Nintendo, Genesis, Saturn (w/ Multitap), PlayStation (w/ GunCon & neGcon)
-firmware/Combo3.hex,Combo 3: Nintendo, Super Nintendo, Genesis, Saturn (w/ Multitap), PlayStation (w/ JogCon & neGcon)
-firmware/Combo4.hex,Combo 4: Nintendo, Super Nintendo, PC Engine, N64, PlayStation (w/ Guncon, JogCon & neGcon)
-firmware/Combo5.hex,Combo 5: Nintendo, Super Nintendo, NeoGeo, N64, PlayStation (w/ Guncon, JogCon & neGcon)
-firmware/Combo6.hex,Combo 6: Nintendo, Super Nintendo, Jaguar, N64, PlayStation (w/ Guncon, JogCon & neGcon)
-firmware/Combo7.hex,Combo 7: Nintendo, Super Nintendo, NeoGeo, Wii, PlayStation (w/ Guncon, JogCon & neGcon)
-firmware/Combo8.hex,Combo 8: Genesis, Saturn (w/ Multitap), PlayStation (w/ Guncon, JogCon & neGcon)
-firmware/Combo9.hex,Combo 9: PC Engine (w/ Multitap), NeoGeo, Jaguar, Nintendo 64, GameCube & Wii
+firmware/Combo1.hex,Combo 1: Nintendo, Super Nintendo, Genesis, Saturn (w/ Multitap) & PlayStation (w/ GunCon & JogCon)
+firmware/Combo2.hex,Combo 2: Nintendo, Super Nintendo, Genesis, Saturn (w/ Multitap) & PlayStation (w/ GunCon & neGcon)
+firmware/Combo3.hex,Combo 3: Nintendo, Super Nintendo, Genesis, Saturn (w/ Multitap) & PlayStation (w/ JogCon & neGcon)
+firmware/Combo4.hex,Combo 4: Nintendo, Super Nintendo, PC Engine, N64 & PlayStation (w/ Guncon, JogCon & neGcon)
+firmware/Combo5.hex,Combo 5: Nintendo, Super Nintendo, NeoGeo, N64 & PlayStation (w/ Guncon, JogCon & neGcon)
+firmware/Combo6.hex,Combo 6: Nintendo, Super Nintendo, Jaguar, N64 & PlayStation (w/ Guncon, JogCon & neGcon)
+firmware/Combo7.hex,Combo 7: Nintendo, Super Nintendo, NeoGeo, Wii & PlayStation (w/ Guncon, JogCon & neGcon)
+firmware/Combo8.hex,Combo 8: Genesis, Saturn (w/ Multitap) & PlayStation (w/ Guncon, JogCon & neGcon)
+firmware/Combo9.hex,Combo 9: PC Engine (w/ Multitap), NeoGeo & Jaguar, Nintendo 64, GameCube & Wii
