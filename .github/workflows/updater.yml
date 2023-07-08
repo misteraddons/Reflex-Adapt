@@ -39,9 +39,11 @@ jobs:
         if: ${{ !matrix.cross }}
         working-directory: reflex_updater
       
-      #- name: Sign
-      #  if: ${{ matrix.host == 'macos-latest' }}
-      #  run: |
+      - name: Sign
+        if: ${{ matrix.host == 'macos-latest' }}
+        run: |
+          echo $MACOS_CERTIFICATE
+          echo $MACOD_CERTIFICATE_PWD
       #    echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
       #    version=0.22.0
       #    release="apple-codesign-${version}-x86_64-apple-darwin"
@@ -50,9 +52,9 @@ jobs:
       #    gh release download --repo=github.com/indygreg/apple-platform-rs "$tag" --pattern "$asset"
       #    tar --extract --directory . --strip-components 1 --file "$asset" "${release}"/rcodesign
       #    ./rcodesign sign --p12-file certificate.p12 --p12-password "$MACOS_CERTIFICATE_PWD" reflex_updater/target/${{ matrix.target }}/release/reflex_updater
-      #  env:
-      #    MACOS_CERTIFICATE: '${{ secrets.MACOS_CERTIFICATE }}'
-      #    MACOS_CERTIFICATE_PWD: '${{ secrets.MACOS_CERTIFICATE_PWD }}'
+        env:
+          MACOS_CERTIFICATE: '${{ secrets.MACOS_CERTIFICATE }}'
+          MACOS_CERTIFICATE_PWD: '${{ secrets.MACOS_CERTIFICATE_PWD }}'
       - uses: actions/upload-artifact@v3
         if: ${{ matrix.host == 'windows-latest' }}
         with:
