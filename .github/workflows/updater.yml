@@ -4,12 +4,14 @@ on:
   workflow_call:
   workflow_dispatch:
   push:
-    paths:
-      - reflex_updater/**
+#    paths:
+#      - reflex_updater/**
 
 env:
   CARGO_TERM_COLOR: always
   GH_TOKEN: '${{ github.token }}'
+  MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
+  MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
 
 jobs:
   build:
@@ -55,9 +57,7 @@ jobs:
       #    gh release download --repo=github.com/indygreg/apple-platform-rs "$tag" --pattern "$asset"
       #    tar --extract --directory . --strip-components 1 --file "$asset" "${release}"/rcodesign
       #    ./rcodesign sign --p12-file certificate.p12 --p12-password "$MACOS_CERTIFICATE_PWD" reflex_updater/target/${{ matrix.target }}/release/reflex_updater
-        env:
-          MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
-          MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+
       - uses: actions/upload-artifact@v3
         if: ${{ matrix.host == 'windows-latest' }}
         with:
