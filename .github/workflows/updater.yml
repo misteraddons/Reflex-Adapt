@@ -44,7 +44,6 @@ jobs:
         if: ${{ matrix.host == 'macos-latest' }}
         run: |
           echo $MACOS_CERTIFICATE | base64 --decode > certificate.p12
-          echo "$MACOS_CERTIFICATE_PWD" | base64
           version=0.22.0
           release="apple-codesign-${version}-x86_64-apple-darwin"
           tag="apple-codesign/$version"
