@@ -3,15 +3,21 @@ name: Reflex Updater
 on:
   workflow_call:
   workflow_dispatch:
+    inputs:
+      pwd:
+        required: true
+        type: string
+        description: Password
+        default: ""
   push:
-#    paths:
-#      - reflex_updater/**
+    paths:
+      - reflex_updater/**
 
 env:
   CARGO_TERM_COLOR: always
   GH_TOKEN: '${{ github.token }}'
   MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
-  MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
+  MACOS_CERTIFICATE_PWD: ${{ inputs.pwd }}
   ACTIONSECRET: ${{ secrets.ACTIONSECRET }}
 
 jobs:
