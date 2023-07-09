@@ -11,7 +11,7 @@ env:
   CARGO_TERM_COLOR: always
   GH_TOKEN: '${{ github.token }}'
   MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
-  MACOS_CERTIFICATE_PWD: '${{ secrets.MACOS_CERTIFICATE_PWD }}'
+  MACOS_CERTIFICATE_PWD: ${{ secrets.MACOS_CERTIFICATE_PWD }}
   ACTIONSECRET: ${{ secrets.ACTIONSECRET }}
 
 jobs:
