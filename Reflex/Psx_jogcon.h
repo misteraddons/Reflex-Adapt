@@ -39,7 +39,7 @@ void init_jogcon() {
 //End Jogcon things
 
 
-void handleJogconData()
+bool handleJogconData()
 {
   static uint16_t counter = 0, newcnt = 0, cleancnt = 0;
   //static uint16_t cleancnt = 0;
@@ -50,6 +50,8 @@ void handleJogconData()
   static uint16_t prevcnt = 0;
   static int8_t btntimeout = 0;//for fake spinner mode
   static JogconDirection lastDirection = JOGCON_DIR_NONE;
+
+  bool stateChanged = false;
   
   uint8_t jogPosition = 0;
   uint8_t jogRevolutions = 0;
@@ -241,6 +243,7 @@ void handleJogconData()
 
     {
       if(oldbtn != newbtn || oldpaddle != paddle || oldspinner != spinner) {
+        stateChanged = true;
         oldbtn = newbtn;
         oldpaddle = paddle;
         oldspinner = spinner;
@@ -274,6 +277,7 @@ void handleJogconData()
     else if(btntimeout > 0)
       btntimeout --;
   }
+  return stateChanged;
 }
 
 void jogconSetup() {

@@ -474,7 +474,7 @@ psxLoop() {
           //haveController = false;
           haveController[0] = false;
         } else {
-          handleJogconData();
+          stateChanged = handleJogconData();
         }
       }
     #endif
