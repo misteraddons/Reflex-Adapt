@@ -3,6 +3,7 @@
 firmware/Nintendo.hex,Nintendo: NES, SNES (w/ Multitap), N64, GameCube & Wii
 firmware/Non-Nintendo.hex,Non-Nintendo: PC Engine, NeoGeo, Genesis, Saturn, PlayStation & Jaguar
 firmware/Multitap.hex,Multitap: Nintendo, Super Nintendo (w/ Multitap), Genesis (w/ Multitap), Saturn (w/ Multitap) & PC Engine (w/ Multitap)
+firmware/PSX-JogCon.hex,PSX JogCon: PSX JogCon w/ 4 modes: Wheel (Mode+R2), Paddle (Mode+L2), Spinner (Mode+L2+R2) & Pseudo Spinner (Mode+R1+L1) 
 firmware/Combo1.hex,Combo 1: Nintendo, Super Nintendo, Genesis, Saturn (w/ Multitap) & PlayStation (w/ GunCon & JogCon)
 firmware/Combo2.hex,Combo 2: Nintendo, Super Nintendo, Genesis, Saturn (w/ Multitap) & PlayStation (w/ GunCon & neGcon)
 firmware/Combo3.hex,Combo 3: Nintendo, Super Nintendo, Genesis, Saturn (w/ Multitap) & PlayStation (w/ JogCon & neGcon)
