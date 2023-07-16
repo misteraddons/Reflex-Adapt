@@ -83,7 +83,7 @@
 //Comment out (undefine) to use raw values.
 //Set as zero to use automatic map. Will calibrate and scale to full range.
 //Set a positive value to use it as the maximum value. It will be scaled to full range.
-#define N64_ANALOG_MAX 65
+//#define N64_ANALOG_MAX 80
 
 //GameCube config
 //Analog range
@@ -225,7 +225,8 @@ uint32_t colors = 0;
         #ifdef SNES_ENABLE_VBOY
           display.setCol(2*6);
           display.print(F("NES + SNES + VBOY"));
-        #else
+        #endif
+        #ifndef SNES_ENABLE_VBOY
           display.setCol(6*6);
           display.print(F("NES + SNES"));
         #endif
@@ -236,42 +237,13 @@ uint32_t colors = 0;
 #ifdef ENABLE_REFLEX_PSX_JOG
       case RZORD_PSX_JOG:
 #endif
-      {
-#ifdef ENABLE_REFLEX_PSX_JOG //dedicated jogcon mode
-        if(deviceMode == RZORD_PSX_JOG) {
-          display.setCol(6*6);
-          display.println("PSX JOGCON");
-        } else
-#else //general psx mode
-        {
-          uint8_t psxchars = 9;
-          #ifdef GUNCON_SUPPORT
-            psxchars -= 2;
-          #endif
-          #ifdef JOGCON_SUPPORT
-            psxchars -= 2;
-          #endif
-          #ifdef NEGCON_SUPPORT
-            psxchars -= 2;
-          #endif
-          
-          display.setCol(psxchars*6);
-          display.print(F("PSX"));
-          
-          #ifdef GUNCON_SUPPORT
-            display.print(F("+GUN"));
-          #endif
-          #ifdef JOGCON_SUPPORT
-            display.print(F("+JOG"));
-          #endif
-          #ifdef NEGCON_SUPPORT
-            display.print(F("+NEG"));
-          #endif
-        }
-#endif //end general psx mode
-      
+        display.setCol(5*6);
+        display.print(F("PLAYSTATION"));
+#ifdef ENABLE_REFLEX_PSX_JOG
+        if(deviceMode == RZORD_PSX_JOG)
+          display.print(F("-JOGCON"));
+#endif
         break;
-      }
 #endif
 #ifdef ENABLE_REFLEX_PCE
       case RZORD_PCE:
