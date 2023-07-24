@@ -46,15 +46,17 @@ jobs:
 
       - name: Build Release
         run: |
-          mkdir -p release/firmware
-          cp -v firmware/*.hex release/firmware/
-          cp -v release_files/* release/
-          cp -v updater/x86_64-pc-windows-msvc/reflex_updater.exe release/reflex.exe
-          cp -v updater/x86_64-unknown-linux-musl/reflex_updater release/reflex-linux-x86_64
-          cp -v updater/armv7-unknown-linux-musleabihf/reflex_updater release/reflex-linux-armv7
-          cp -v updater/x86_64-apple-darwin/reflex_updater release/reflex-macos
-          chmod +x release/reflex-macos release/reflex-linux-armv7 release/reflex-linux-x86_64
-          ln -s release reflex-${{ inputs.tag }}
+          RELEASE_DIR=distribution/${{ inputs.tag }}
+          rm -rf ${RELEASE_DIR}
+          mkdir -p ${RELEASE_DIR}/firmware
+          cp -v firmware/*.hex ${RELEASE_DIR}/firmware/
+          cp -v release_files/* ${RELEASE_DIR}/
+          cp -v updater/x86_64-pc-windows-msvc/reflex_updater.exe ${RELEASE_DIR}/reflex.exe
+          cp -v updater/x86_64-unknown-linux-musl/reflex_updater ${RELEASE_DIR}/reflex-linux-x86_64
+          cp -v updater/armv7-unknown-linux-musleabihf/reflex_updater ${RELEASE_DIR}/reflex-linux-armv7
+          cp -v updater/x86_64-apple-darwin/reflex_updater ${RELEASE_DIR}/reflex-macos
+          chmod +x release/reflex-macos release/reflex-linux-armv7 ${RELEASE_DIR}/reflex-linux-x86_64
+          ln -s ${RELEASE_DIR} reflex-${{ inputs.tag }}
 
       - name: Zip Archive
         run: zip -r reflex-${{ inputs.tag }}.zip reflex-${{ inputs.tag }}/
@@ -69,4 +71,8 @@ jobs:
           tag_name: ${{ inputs.tag }}
           body: ${{ inputs.release_desc }}
           draft: ${{ inputs.draft_release }}
+      - name: Git Commit
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: distribution/${{ inputs.tag }}
 
