@@ -8,6 +8,11 @@ on:
         type: boolean
         description: Create a draft release
         default: true
+      update_distribution:
+        required: true
+        type: boolean
+        description: Commit the release artifacts to the distribution directory
+        default: true
       tag:
         required: true
         description: Release tag
@@ -55,7 +60,7 @@ jobs:
           cp -v updater/x86_64-unknown-linux-musl/reflex_updater ${RELEASE_DIR}/reflex-linux-x86_64
           cp -v updater/armv7-unknown-linux-musleabihf/reflex_updater ${RELEASE_DIR}/reflex-linux-armv7
           cp -v updater/x86_64-apple-darwin/reflex_updater ${RELEASE_DIR}/reflex-macos
-          chmod +x release/reflex-macos release/reflex-linux-armv7 ${RELEASE_DIR}/reflex-linux-x86_64
+          chmod +x ${RELEASE_DIR}/reflex-macos ${RELEASE_DIR}/reflex-linux-armv7 ${RELEASE_DIR}/reflex-linux-x86_64
           ln -s ${RELEASE_DIR} reflex-${{ inputs.tag }}
 
       - name: Zip Archive
@@ -73,6 +78,7 @@ jobs:
           draft: ${{ inputs.draft_release }}
       - name: Git Commit
         uses: EndBug/add-and-commit@v9
+        if: ${{ inputs.update_distribution }}
         with:
           add: distribution/${{ inputs.tag }}
 
