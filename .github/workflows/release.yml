@@ -80,5 +80,5 @@ jobs:
         uses: EndBug/add-and-commit@v9
         if: ${{ inputs.update_distribution }}
         with:
-          add: distribution/${{ inputs.tag }}/* -A
+          add: distribution/${{ inputs.tag }} distribution/${{ inputs.tag }}/firmware -A
 
