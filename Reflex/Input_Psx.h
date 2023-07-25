@@ -591,6 +591,7 @@ psxLoop() {
         } else if (isGuncon) {
           #ifdef GUNCON_SUPPORT
             loopGuncon();
+            stateChanged = true;
           #endif
         } else {
           stateChanged |= loopDualShock();
