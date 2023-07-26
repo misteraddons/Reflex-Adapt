@@ -62,6 +62,9 @@ enum DeviceEnum {
 #ifdef ENABLE_REFLEX_WII
   RZORD_WII,  //11
 #endif
+#ifdef ENABLE_REFLEX_SMS
+  RZORD_SMS,  //12
+#endif
   RZORD_LAST //this must be the last enum value
 };
 

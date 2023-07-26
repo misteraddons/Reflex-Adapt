@@ -35,6 +35,7 @@
 //#define ENABLE_REFLEX_N64
 //#define ENABLE_REFLEX_GAMECUBE
 //#define ENABLE_REFLEX_WII
+//#define ENABLE_REFLEX_SMS
 
 // Sega MegaDrive/Saturn config
 #define SATLIB_ENABLE_8BITDO_HOME_BTN // support for HOME button on 8bidto M30 2.4G.
@@ -158,6 +159,9 @@
 #endif
 #ifdef ENABLE_REFLEX_WII
   #include "Input_Wii.h"
+#endif
+#ifdef ENABLE_REFLEX_SMS
+  #include "Input_Sms.h"
 #endif
 
 #include "src/DigitalIO/DigitalIO.h"
@@ -285,6 +289,12 @@ uint32_t colors = 0;
       case RZORD_WII:
         display.setCol(9*6);
         display.print(F("WII"));
+        break;
+#endif
+#ifdef ENABLE_REFLEX_SMS
+      case RZORD_SMS:
+        display.setCol(9*6);
+        display.print(F("SMS"));
         break;
 #endif
 
@@ -589,6 +599,11 @@ void setup() {
         wiiSetup();
         break;
 #endif
+#ifdef ENABLE_REFLEX_SMS
+      case RZORD_SMS:
+        smsSetup();
+        break;
+#endif
       default:
         break;
     }
@@ -693,6 +708,11 @@ void loop() {
 #ifdef ENABLE_REFLEX_WII
         case RZORD_WII:
         stateChanged = wiiLoop();
+        break;
+#endif
+#ifdef ENABLE_REFLEX_SMS
+        case RZORD_SMS:
+        stateChanged = smsLoop();
         break;
 #endif
 
