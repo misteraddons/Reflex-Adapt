@@ -3,9 +3,9 @@ package main
 import (
 	"embed"
 	"fmt"
-	"github.com/wizzomafizzo/mrext-lib/pkg/mister"
-	"github.com/wizzomafizzo/mrext-lib/pkg/misterini"
-	"github.com/wizzomafizzo/mrext-lib/pkg/utils"
+	"github.com/wizzomafizzo/mrext/pkg/mister"
+	"github.com/wizzomafizzo/mrext/pkg/misterini"
+	"github.com/wizzomafizzo/mrext/pkg/utils"
 	"io"
 	"io/fs"
 	"os"
