@@ -19,6 +19,10 @@ github.com/wizzomafizzo/mrext-lib v0.0.0-20230725131530-ef05026fbbdc h1:+CFj8ekg
 github.com/wizzomafizzo/mrext-lib v0.0.0-20230725131530-ef05026fbbdc/go.mod h1:6SjrwLp7jR8VsZ6Sr8XGNhQYZar8D/ieJKxQ2vuqYHE=
 github.com/wizzomafizzo/mrext-lib v0.0.0-20230725131937-31a030c29eb1 h1:y7k2dj8V4R89MTQEiHjUvy+88xjwBWPdGx8RbGFf6lc=
 github.com/wizzomafizzo/mrext-lib v0.0.0-20230725131937-31a030c29eb1/go.mod h1:6SjrwLp7jR8VsZ6Sr8XGNhQYZar8D/ieJKxQ2vuqYHE=
+github.com/wizzomafizzo/mrext-lib v0.0.0-20230726035657-addbb8202496 h1:C3k6hOCkWAzItH8Rxki4Tx7k6PMfDC5WiYwvcI9sqHM=
+github.com/wizzomafizzo/mrext-lib v0.0.0-20230726035657-addbb8202496/go.mod h1:6SjrwLp7jR8VsZ6Sr8XGNhQYZar8D/ieJKxQ2vuqYHE=
+github.com/wizzomafizzo/mrext-lib v0.0.0-20230726040652-a336c63ff671 h1:PsoHlqz9SF+K9JTSH3l76OXVrbtKRRj86NDw/Nwx9kM=
+github.com/wizzomafizzo/mrext-lib v0.0.0-20230726040652-a336c63ff671/go.mod h1:6SjrwLp7jR8VsZ6Sr8XGNhQYZar8D/ieJKxQ2vuqYHE=
 golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1 h1:MGwJjxBy0HJshjDNfLsYO8xppfqWlA5ZT9OhtUUhTNw=
 golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1/go.mod h1:FXUEEKJgO7OQYeo8N01OfiKP8RXMtf6e8aTskBGqWdc=
 golang.org/x/net v0.0.0-20210226172049-e18ecbb05110/go.mod h1:m0MpNAwzfU5UDzcl9v0D8zg8gWTRqZa9RBIspLL5mdg=

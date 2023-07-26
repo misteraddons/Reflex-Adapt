@@ -4,6 +4,7 @@ import (
 	"embed"
 	"fmt"
 	"github.com/wizzomafizzo/mrext-lib/pkg/mister"
+	"github.com/wizzomafizzo/mrext-lib/pkg/misterini"
 	"github.com/wizzomafizzo/mrext-lib/pkg/utils"
 	"io"
 	"io/fs"
@@ -15,10 +16,7 @@ import (
 
 const (
 	reflexBinName = "reflex-linux-armv7"
-	vidKey        = "no_merge_vid"
-	adaptVid      = "0x2341"
-	pidKey        = "no_merge_pid"
-	adaptPid      = "0x8036"
+	adaptVidPid   = "0x23418036"
 	adaptQuirks   = "0x2341:0x8036:0x040"
 )
 
@@ -102,42 +100,13 @@ func cleanupUpdater(tmp string) error {
 // tryUpdateInis checks if the user needs the merge vid/pid options set in any of their .ini files, prompts them
 // if they want to update them, and then updates them if they do. It is silent if no .ini files need updating.
 func tryUpdateInis() error {
-	inis, err := mister.ListMisterInis()
+	missing, err := misterini.GetInisWithout(misterini.KeyNoMergeVidpid, adaptVidPid)
 	if err != nil {
 		return err
 	}
 
-	missingVidPid := make([]int, 0)
-
-	// check for the keys in each .ini file
-	for i := range inis {
-		id, data, err := mister.LoadMisterIni(i + 1)
-		if err != nil {
-			return err
-		}
-
-		section := data.Section(mister.MainIniSection)
-		if section == nil {
-			missingVidPid = append(missingVidPid, id)
-			continue
-		}
-
-		if !section.HasKey(vidKey) || !section.HasKey(pidKey) {
-			missingVidPid = append(missingVidPid, id)
-			continue
-		}
-
-		vid := section.Key(vidKey).String()
-		pid := section.Key(pidKey).String()
-
-		if vid != adaptVid || pid != adaptPid {
-			missingVidPid = append(missingVidPid, id)
-			continue
-		}
-	}
-
 	// nothing to do
-	if len(missingVidPid) == 0 {
+	if len(missing) == 0 {
 		return nil
 	}
 
@@ -150,23 +119,18 @@ func tryUpdateInis() error {
 	}
 
 	// update the .ini files
-	for _, id := range missingVidPid {
-		_, data, err := mister.LoadMisterIni(id)
+	for _, mi := range missing {
+		err := mi.Load()
 		if err != nil {
 			return err
 		}
 
-		err = mister.UpdateMisterIni(data, vidKey, adaptVid)
+		err = mi.AddKey(misterini.KeyNoMergeVidpid, adaptVidPid)
 		if err != nil {
 			return err
 		}
 
-		err = mister.UpdateMisterIni(data, pidKey, adaptPid)
-		if err != nil {
-			return err
-		}
-
-		err = mister.SaveMisterIni(id, data)
+		err = mi.Save()
 		if err != nil {
 			return err
 		}
@@ -210,13 +174,13 @@ func clearTerminal() {
 func main() {
 	err := tryUpdateInis()
 	if err != nil {
-		fmt.Printf("An error occurred while updating .ini files: %s", err)
+		fmt.Printf("An error occurred while updating .ini files: %s\n", err)
 		os.Exit(1)
 	}
 
 	updated, err := tryUpdateUboot()
 	if err != nil {
-		fmt.Printf("An error occurred while updating u-boot.txt: %s", err)
+		fmt.Printf("An error occurred while updating u-boot.txt: %s\n", err)
 		os.Exit(1)
 	}
 	if updated {
@@ -226,7 +190,7 @@ func main() {
 
 	updaterDir, err := extractUpdater()
 	if err != nil {
-		fmt.Printf("An error occurred while extracting the updater: %s", err)
+		fmt.Printf("An error occurred while extracting the updater: %s\n", err)
 		_ = cleanupUpdater(updaterDir)
 		os.Exit(1)
 	}
@@ -240,7 +204,7 @@ func main() {
 	cmd.Stdin = os.Stdin
 	err = cmd.Run()
 	if err != nil {
-		fmt.Printf("An error occurred while running the updater: %s", err)
+		fmt.Printf("An error occurred while running the updater: %s\n", err)
 		_ = cleanupUpdater(updaterDir)
 		os.Exit(1)
 	}

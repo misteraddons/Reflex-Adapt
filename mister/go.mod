@@ -2,7 +2,7 @@ module github.com/wizzomafizzo/misteraddons/reflex/updater
 
 go 1.20
 
-require github.com/wizzomafizzo/mrext-lib v0.0.0-20230725131937-31a030c29eb1
+require github.com/wizzomafizzo/mrext-lib v0.0.0-20230726040652-a336c63ff671
 
 require (
 	github.com/bendahl/uinput v1.6.2 // indirect

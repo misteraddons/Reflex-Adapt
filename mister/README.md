@@ -23,3 +23,4 @@ This will output a final binary for MiSTer in the `_bin` directory.
 
 - [ ] Automate this build
 - [ ] Automate creation of a repo .json file for the downloader script
+- [ ] Run UPX on final binary
