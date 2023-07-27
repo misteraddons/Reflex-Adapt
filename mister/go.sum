@@ -24,6 +24,10 @@ github.com/wizzomafizzo/mrext v0.0.0-20230726121528-28efe94f5a7f h1:I9rtmUuByz66
 github.com/wizzomafizzo/mrext v0.0.0-20230726121528-28efe94f5a7f/go.mod h1:hVffvRZS/JL3JqEQOV3pPQYF47gPhNpPZ9j6fEpt02M=
 github.com/wizzomafizzo/mrext v0.0.0-20230726122621-7c5e0b75fc18 h1:trAVpVMEXtw0PM2ZJkWZ5sCrx4VUFC2j8bXQQxCIqLM=
 github.com/wizzomafizzo/mrext v0.0.0-20230726122621-7c5e0b75fc18/go.mod h1:hVffvRZS/JL3JqEQOV3pPQYF47gPhNpPZ9j6fEpt02M=
+github.com/wizzomafizzo/mrext v0.0.0-20230727054217-1e6dd25dfeec h1:wXRHPeWY0K0kcqn/JTAn/0eQIc9kJHRvqvifqsh7Yd8=
+github.com/wizzomafizzo/mrext v0.0.0-20230727054217-1e6dd25dfeec/go.mod h1:hVffvRZS/JL3JqEQOV3pPQYF47gPhNpPZ9j6fEpt02M=
+github.com/wizzomafizzo/mrext v0.0.0-20230727064047-3a4696e9717b h1:heqfifGOKWK5Uwj7AdnL/vTyV9mOo0zww6uF1vjzMpI=
+github.com/wizzomafizzo/mrext v0.0.0-20230727064047-3a4696e9717b/go.mod h1:hVffvRZS/JL3JqEQOV3pPQYF47gPhNpPZ9j6fEpt02M=
 golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1 h1:MGwJjxBy0HJshjDNfLsYO8xppfqWlA5ZT9OhtUUhTNw=
 golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1/go.mod h1:FXUEEKJgO7OQYeo8N01OfiKP8RXMtf6e8aTskBGqWdc=
 golang.org/x/exp v0.0.0-20230725093048-515e97ebf090 h1:Di6/M8l0O2lCLc6VVRWhgCiApHV8MnQurBnFSHsQtNY=
