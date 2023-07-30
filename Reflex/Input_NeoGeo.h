@@ -1,9 +1,9 @@
 /*******************************************************************************
- * Neogeo pad reading with debounce
+ * Neogeo pad reading without debounce
 */
 
 #include "src/ArduinoJoystickLibrary/Joy1.h"
-#include "src/ZordButton/ZordButton.h"
+#include "src/DigitalIO/DigitalIO.h"
 
 //Neogeo pins
 //https://old.pinouts.ru/Game/NeoGeoJoystick_pinout.shtml
@@ -24,20 +24,17 @@
 
 #define NEOGEO_TOTAL_PINS 10
 
-static const uint8_t buttonPins[NEOGEO_TOTAL_PINS] = {
-  NEOGEOPIN_UP, NEOGEOPIN_DOWN, NEOGEOPIN_LEFT, NEOGEOPIN_RIGHT,
-  NEOGEOPIN_A, NEOGEOPIN_B, NEOGEOPIN_C, NEOGEOPIN_D, 
-  NEOGEOPIN_SELECT, NEOGEOPIN_START };
-
-static const uint16_t outputMask[NEOGEO_TOTAL_PINS] = {
-  (0x1), (0x1 << 1), (0x1 << 2), (0x1 << 3), 
-  (0x1 << 1), (0x1 << 2), (0x1 << 0), (0x1 << 3), 
-  (0x1 << 8), (0x1 << 9) };
+DigitalPin<NEOGEOPIN_UP>     ngeo_U;
+DigitalPin<NEOGEOPIN_DOWN>   ngeo_D;
+DigitalPin<NEOGEOPIN_LEFT>   ngeo_L;
+DigitalPin<NEOGEOPIN_RIGHT>  ngeo_R;
+DigitalPin<NEOGEOPIN_A>      ngeo_BA;
+DigitalPin<NEOGEOPIN_B>      ngeo_BB;
+DigitalPin<NEOGEOPIN_C>      ngeo_BC;
+DigitalPin<NEOGEOPIN_D>      ngeo_BD;
+DigitalPin<NEOGEOPIN_SELECT> ngeo_SELECT;
+DigitalPin<NEOGEOPIN_START>  ngeo_START;
   
-//static Bugtton* buttons;
-static ArcadePad* buttons;
-
-
 #ifdef ENABLE_REFLEX_PAD
   const Pad padNeoGeo[] = {
     { 0x0001, 1, 1*6, UP_ON, UP_OFF },//UP
@@ -73,9 +70,17 @@ static ArcadePad* buttons;
 
 void neogeoSetup() {
 
-  buttons = new ArcadePad(NEOGEO_TOTAL_PINS, buttonPins, NEOGEO_DEBOUNCE);
-
-  buttons->begin();
+  //init input pins with pull-up
+  ngeo_U.config(INPUT, HIGH);
+  ngeo_D.config(INPUT, HIGH);
+  ngeo_L.config(INPUT, HIGH);
+  ngeo_R.config(INPUT, HIGH);
+  ngeo_BA.config(INPUT, HIGH);
+  ngeo_BB.config(INPUT, HIGH);
+  ngeo_BC.config(INPUT, HIGH);
+  ngeo_BD.config(INPUT, HIGH);
+  ngeo_SELECT.config(INPUT, HIGH);
+  ngeo_START.config(INPUT, HIGH);
   
   //Create usb controllers
   usbStick[0] = new Joy1_("RZordNeoGeo", JOYSTICK_DEFAULT_REPORT_ID, JOYSTICK_TYPE_GAMEPAD, totalUsb);
@@ -91,6 +96,9 @@ void neogeoSetup() {
 
 inline bool __attribute__((always_inline))
 neogeoLoop() {
+  static uint16_t lastState = 0x03FF;
+  bool stateChanged = false;
+  
   #ifdef ENABLE_REFLEX_PAD
   static bool firstTime = true;
   if(firstTime) {
@@ -99,34 +107,46 @@ neogeoLoop() {
   }
   #endif
 
-  //update debounce lib
-  const bool stateChanged = buttons->update();
+  //Read the neogeo port
+  const uint16_t portState = (
+      (ngeo_START << 9)
+    | (ngeo_SELECT << 8)
+    | (ngeo_BD << 7)
+    | (ngeo_BC << 6)
+    | (ngeo_BB << 5)
+    | (ngeo_BA << 4)
+    | (ngeo_R << 3)
+    | (ngeo_L << 2)
+    | (ngeo_D << 1)
+    | ngeo_U);
+  
+  //Only process data if state changed from previous read
+  if (lastState != portState) {
+    stateChanged = true;
+    lastState = portState;
 
-  if(stateChanged) {
-    uint8_t dpadState = 0xF0;
-    uint16_t buttonData = 0x0;
-    
-    for(uint8_t i = 0; i < NEOGEO_TOTAL_PINS; i++) {
-      const bool isPressed = buttons->state(i) == LOW;
-      if(isPressed) {
-        if(i < 4) { //Dpad
-          dpadState |= outputMask[i];
-        } else { //Buttons
-          buttonData |= outputMask[i];
-        }
-      }
-      
-      #ifdef ENABLE_REFLEX_PAD
+    uint8_t buttonData = 0;
+    bitWrite(buttonData, 1, ~portState & 0x010); //A
+    bitWrite(buttonData, 2, ~portState & 0x020); //B
+    bitWrite(buttonData, 0, ~portState & 0x040); //C
+    bitWrite(buttonData, 3, ~portState & 0x080); //D
+    bitWrite(buttonData, 8, ~portState & 0x100); //SEL
+    bitWrite(buttonData, 9, ~portState & 0x200); //STA
+
+    ((Joy1_*)usbStick[0])->setButtons(buttonData);
+
+    //Get angle from hatTable and pass to joystick class
+    ((Joy1_*)usbStick[0])->setHatSwitch(hatTable[portState & 0xF]);
+
+    usbStick[0]->sendState();
+
+    #ifdef ENABLE_REFLEX_PAD
+      for(uint8_t i = 0; i < NEOGEO_TOTAL_PINS; ++i) {
+        const bool isPressed = !(portState & (1 << i));
         const Pad pad = padNeoGeo[i];
         PrintPadChar(0, 35, pad.col, pad.row, pad.padvalue, isPressed, pad.on, pad.off);
-      #endif
-    }
-
-    dpadState = ~dpadState; //Dpad hatTable uses active low logic
-    
-    ((Joy1_*)usbStick[0])->setButtons(buttonData);
-    ((Joy1_*)usbStick[0])->setHatSwitch(hatTable[dpadState]);
-    usbStick[0]->sendState();
+      }
+    #endif
   }
 
   return stateChanged; //false

@@ -74,7 +74,7 @@
 // #define PCE_ENABLE_MULTITAP
 
 //NeoGeo config (REQUIRED!)
-#define NEOGEO_DEBOUNCE 2 //debounce time in milliseconds
+//#define NEOGEO_DEBOUNCE 2 //debounce time in milliseconds
 
 //Jaguar config
 //#define JAG_DEBOUNCE 8 //debounce time in milliseconds. Optional
