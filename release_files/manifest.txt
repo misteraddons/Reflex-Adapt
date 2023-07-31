@@ -1,18 +1,17 @@
 # reflex-updater manifest
 
-firmware/Nintendo.hex,Nintendo: NES, SNES (w/ Multitap), N64, GameCube & Wii
-firmware/Non-Nintendo.hex,Non-Nintendo: PC Engine, NeoGeo, Genesis, Saturn, PlayStation & Jaguar
-firmware/Multitap.hex,Multitap: NES, SNES (w/ Multitap), Genesis (w/ Multitap), Saturn (w/ Multitap) & PC Engine (w/ Multitap)
-firmware/PSX-JogCon.hex,PSX JogCon: PSX JogCon w/ 4 modes: Wheel (Mode+R2), Paddle (Mode+L2), Spinner (Mode+L2+R2) & Pseudo Spinner (Mode+R1+L1) 
-firmware/Combo1.hex,Combo 1: NES, SNES, Genesis, Saturn (w/ Multitap) & PlayStation (w/ GunCon & JogCon)
-firmware/Combo2.hex,Combo 2: NES, SNES, Genesis, Saturn (w/ Multitap) & PlayStation (w/ GunCon & neGcon)
-firmware/Combo3.hex,Combo 3: NES, SNES, Genesis, Saturn (w/ Multitap) & PlayStation (w/ JogCon & neGcon)
-firmware/Combo4.hex,Combo 4: NES, SNES, PC Engine, N64 & PlayStation (w/ Guncon, JogCon & neGcon)
-firmware/Combo5.hex,Combo 5: NES, SNES, NeoGeo, N64 & PlayStation (w/ Guncon, JogCon & neGcon)
-firmware/Combo6.hex,Combo 6: NES, SNES, Jaguar, N64 & PlayStation (w/ Guncon, JogCon & neGcon)
-firmware/Combo7.hex,Combo 7: NES, SNES, NeoGeo, Wii & PlayStation (w/ Guncon, JogCon & neGcon)
-firmware/Combo8.hex,Combo 8: Genesis, Saturn (w/ Multitap) & PlayStation (w/ Guncon, JogCon & neGcon)
-firmware/Combo9.hex,Combo 9: PC Engine (w/ Multitap), NeoGeo & Jaguar, Nintendo 64, GameCube & Wii
-firmware/Combo10.hex,Combo 10: NES, SNES, N64, GameCube, Wii & PSX (w/ neGcon)
-firmware/Combo11.hex,Combo 11: NES, SNES, N64, Wii & PSX (w/ JogCon & GunCon)
-firmware/Combo12.hex,Combo 12: NES, SNES, N64, Wii & PSX (w/ neGcon & GunCon)
+firmware/Nintendo.hex,Nintendo: NES+SNES+Tap, N64, GC & Wii
+firmware/Non-Nintendo.hex,Non-Nintendo: PCE, Neo, Gen+Sat, PSX+Gun & Jag
+firmware/Tap.hex,Tap: NES+SNES+Tap, Gen+Tap, Sat+Tap & PCE+Tap
+firmware/PSX-Jog.hex,PSX Jog: PSX Jog [4 modes: Wheel (Mode+R2), Paddle (Mode+L2), Spinner (Mode+L2+R2) & Fake Spinner (Mode+R1+L1)]
+firmware/Combo1.hex,Combo 1: NES+SNES, Gen+Sat+Tap & PSX+Gun+Jog
+firmware/Combo2.hex,Combo 2: NES+SNES, Gen+Sat+Tap & PSX+Gun+neGcon
+firmware/Combo3.hex,Combo 3: NES+SNES, Gen+Sat+Tap & PSX+Jog+neGcon
+firmware/Combo4.hex,Combo 4: NES+SNES, PCE, N64 & PSX+Gun+Jog+neGcon
+firmware/Combo5.hex,Combo 5: NES+SNES, Neo, Jag, N64 & PSX+Gun+Jog+neGcon
+firmware/Combo6.hex,Combo 6: NES+SNES, Neo, Wii & PSX+Gun+Jog+neGcon
+firmware/Combo7.hex,Combo 7: Gen+Sat, Neo & PSX+Gun+Jog+neGcon
+firmware/Combo8.hex,Combo 8: PCE, Neo, Jag, N64, GC & Wii
+firmware/Combo9.hex,Combo 9: NES+SNES, N64, GC, Wii & PSX+neGcon
+firmware/Combo10.hex,Combo 10: NES+SNES, N64, Wii & PSX+Jog+Gun
+firmware/Combo11.hex,Combo 11: NES+SNES, N64, Wii & PSX+neGcon+Gun
