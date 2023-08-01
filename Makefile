@@ -1,4 +1,4 @@
-TARGET_NAMES = Nintendo Non-Nintendo Multitap PSX-JogCon Combo1 Combo2 Combo3 Combo4 Combo5 Combo6 Combo7 Combo8 Combo9 Combo10 Combo11 Combo12
+TARGET_NAMES = Nintendo Non-Nintendo Multitap PSX-JogCon Combo1 Combo2 Combo3 Combo4 Combo5 Combo6 Combo7 Combo8 Combo9 Combo10 Combo11
 
 # Saturn = 20%
 # Saturn Multitap = 
