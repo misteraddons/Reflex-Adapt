@@ -14,11 +14,7 @@
 //https://old.pinouts.ru/Game/NeoGeoJoystick_pinout.shtml
 #define NEOGEOPIN_UP     15
 #define NEOGEOPIN_DOWN   5
-#if REFLEX_PIN_VERSION == 1
-  #define NEOGEOPIN_LEFT   3
-#else
-  #define NEOGEOPIN_LEFT   13
-#endif
+#define NEOGEOPIN_LEFT   13
 #define NEOGEOPIN_RIGHT  6
 #define NEOGEOPIN_A      16
 #define NEOGEOPIN_B      7

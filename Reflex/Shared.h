@@ -94,15 +94,6 @@ const uint8_t hatTable[] = {
   JOYSTICK_HATSWITCH_RELEASE  //1111
 };
 
-/*
-enum DeviceEnum {
-  RZORD_NONE = 0,
-  RZORD_SATURN,
-  RZORD_SNES,
-  RZORD_PSX
-};
-*/
-
 #ifdef REFLEX_USE_OLED_DISPLAY
   #include "src/SSD1306Ascii/SSD1306Ascii.h"
   #include "src/SSD1306Ascii/SSD1306AsciiAvrI2c.h"

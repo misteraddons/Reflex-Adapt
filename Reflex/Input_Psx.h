@@ -28,18 +28,11 @@
 //If you dont want to force a mode but instead change the default:
 //Don't enable the force mode and edit the isNeGconMiSTer variable below as you desire.
 
-//PSX pins
-#if REFLEX_PIN_VERSION == 1
-  const byte PIN_PS1_ATT = 2;
-#else
-  const byte PIN_PS1_ATT = 21;
-#endif
+//PSX pins - Port 1
+const byte PIN_PS1_ATT = 21;
 
+//PSX pins - Port 2
 const byte PIN_PS2_ATT = 5;
-const byte PIN_PS3_ATT = 10;
-const byte PIN_PS4_ATT = 18;
-const byte PIN_PS5_ATT = 19;
-const byte PIN_PS6_ATT = 20;
 
 PsxController* psx;//variable to hold current reading port
 

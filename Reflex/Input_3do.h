@@ -14,14 +14,9 @@
 #include "src/ArduinoJoystickLibrary/Joy1.h"
 
 //3DO pins
-#define THREEDOPIN_CLOCK  4 // (db9 7)
-#define THREEDOPIN_DOUT   5 // (db9 6)
-//#define THREEDO_PIN_DIN   // (db9 9)
-#if REFLEX_PIN_VERSION == 1
-  #define THREEDOPIN_DIN 3
-#else
-  #define THREEDOPIN_DIN 13
-#endif
+#define THREEDOPIN_CLOCK 4  // (db9 7)
+#define THREEDOPIN_DOUT  5  // (db9 6)
+#define THREEDOPIN_DIN   13 // (db9 9)
 
 ThreedoPort<THREEDOPIN_CLOCK, THREEDOPIN_DOUT, THREEDOPIN_DIN> tdo1;
 

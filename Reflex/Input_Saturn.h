@@ -15,11 +15,7 @@
 
 //Saturn pins - Port 1
 #define SAT1_TH 4
-#if REFLEX_PIN_VERSION == 1
-  #define SAT1_TR 3
-#else
-  #define SAT1_TR 13
-#endif
+#define SAT1_TR 13
 #define SAT1_TL 5
 #define SAT1_D0 9
 #define SAT1_D1 8

@@ -11,11 +11,7 @@
 
 //SMS pins - Port 1
 #define SMS1_TH 4
-#if REFLEX_PIN_VERSION == 1
-  #define SMS1_TR 3
-#else
-  #define SMS1_TR 13
-#endif
+#define SMS1_TR 13
 #define SMS1_TL 5
 #define SMS1_U  9
 #define SMS1_D  8
