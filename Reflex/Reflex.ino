@@ -15,12 +15,7 @@
  * Optional settings
  *******************************************************************************/
 
-#define REFLEX_VERSION -2 // V2 - mode button. oled display.
-//#define REFLEX_VERSION -1 // V1 - mode button. single rgb led.
-//#define REFLEX_VERSION 0  // V1 - rotary encoder. single rgb led.
-//#define REFLEX_VERSION 1  // V2 - mode button. non-functional rgb leds. uses TX/RX leds
-//#define REFLEX_VERSION 2  // V2 - fixed rgb leds
-
+#define REFLEX_USE_OLED_DISPLAY //enable use of the oled display. at minimum it will show the current mode
 #define ENABLE_REFLEX_LOGO //reflex logo on oled display
 #define ENABLE_REFLEX_PAD //pad on oled display
 
@@ -99,13 +94,18 @@
 
 
 #ifndef REFLEX_NO_DEFAULTS
+#define ENABLE_REFLEX_SATURN
 #define ENABLE_REFLEX_GAMECUBE
 #endif // REFLEX_NO_DEFAULTS
 
 /******************************************************************************/
 
-#ifndef REFLEX_VERSION
-  #error REFLEX_VERSION must be defined
+#if defined(ENABLE_REFLEX_LOGO) && !defined(REFLEX_USE_OLED_DISPLAY)
+  #error REFLEX_USE_OLED_DISPLAY must be enabled if using ENABLE_REFLEX_LOGO
+#endif
+
+#if defined(ENABLE_REFLEX_PAD) && !defined(REFLEX_USE_OLED_DISPLAY)
+  #error REFLEX_USE_OLED_DISPLAY must be enabled if using ENABLE_REFLEX_PAD
 #endif
 
 #if defined(ENABLE_REFLEX_PSX_JOG) && !defined(ENABLE_REFLEX_PSX)
@@ -114,18 +114,6 @@
 
 #if defined(ENABLE_REFLEX_PSX_JOG) && !defined(JOGCON_SUPPORT)
   #error JOGCON_SUPPORT must be enabled if using ENABLE_REFLEX_PSX_JOG
-#endif
-
-#if REFLEX_VERSION == 0 || REFLEX_VERSION == -1
-  #define REFLEX_PIN_VERSION 1
-#else
-  #define REFLEX_PIN_VERSION 2
-#endif
-
-#if REFLEX_VERSION == -2
-  #define REFLEX_USE_OLED_DISPLAY
-#elif REFLEX_VERSION == -1 || REFLEX_VERSION == 0
-  #define REFLEX_USE_SINGLE_OLED
 #endif
 
 #include "Shared.h"
@@ -166,56 +154,15 @@
 
 #include "src/DigitalIO/DigitalIO.h"
 #include <avr/wdt.h>
-
-#if REFLEX_VERSION != 0 //for version zero I'm using the rotary encoder. no saving/loading from eeprom
-  #include <EEPROM.h>
-#endif
-
-//Oled Display
-#if REFLEX_VERSION == -2
-  //included in shared.h
-  //SSD1306AsciiAvrI2c display;
-#else
-  #include "src/Adafruit_NeoPixel/Adafruit_NeoPixel.h"
-#endif
-
+#include <EEPROM.h>
 
 //eerpom index for storage values
 #define RZORD_EEPROM_MODE 0
 
+#define pinBtn 12 //mode button
 
-#define pinBtn 12
-//int mode = 0; // 0 = Off, 1 = Sega, 2 = Nintendo, 3 = Sony
-//int deviceInit;
-
-// NeoPixel
-#if REFLEX_VERSION != -2
-  #define LED_PIN        11 // On Trinket or Gemma, suggest changing this to 1
-  #define NUMPIXELS 2 // Popular NeoPixel ring size
-  Adafruit_NeoPixel pixels(NUMPIXELS, LED_PIN, NEO_GRB + NEO_KHZ800);
-  #define DELAYVAL 500 // Time (in milliseconds) to pause between pixels
-#endif
-
-/*#if defined(REFLEX_USE_OLED_DISPLAY) && defined(ENABLE_REFLEX_LOGO)
-  const char reflexLogo[] PROGMEM = "  _   _  _     _\n |_) |_ |_ |  |_ \\/\n | \\ |_ |  |_ |_ /\\";
-#endif*/
-
-//uint8_t colors[] = {0,0,0};
-uint32_t colors = 0;
-#if REFLEX_VERSION != -2
-  void setLedColors(const uint8_t r, const uint8_t g, const uint8_t b) {
-    colors = pixels.Color(r, g, b);
-    //colors[0] = r;
-    //colors[1] = g;
-    //colors[2] = b;
-  }
-#else
-  #define setLedColors(...)
-#endif
-
-#if REFLEX_VERSION == -2
+#ifdef REFLEX_USE_OLED_DISPLAY
   void setPixelMode() {
-    //display.clear();
     clearOledDisplay();
     switch(deviceMode) {
 #ifdef ENABLE_REFLEX_SATURN
@@ -302,314 +249,92 @@ uint32_t colors = 0;
         break;
     }
   }
-#else
-  void setPixelMode() {
-    uint8_t controllerCount = 0;
-    const uint8_t pw = 20; //led power (brightness)
-    // NeoPixels
-    pixels.clear(); // Set all pixel colors to 'off'
-    
-    //Serial.println(deviceMode);
-    switch(deviceMode) {
-      case RZORD_SATURN:
-        //Serial.println("LED BLUE");
-        controllerCount = 2;
-        setLedColors(0, 0, pw);
-        break;
-      case RZORD_SNES:
-        //Serial.println("LED RED");
-        controllerCount = 2;
-        setLedColors(pw, 0, 0);
-        break;
-      case RZORD_PSX:
-        //Serial.println("LED GREEN");
-        controllerCount = 2;
-        setLedColors(0, pw, 0);
-        break;
-      case RZORD_PSX_JOG:
-        //Serial.println("LED LIGHT GREEN");
-        controllerCount = 2;
-        setLedColors(0, pw/2, 0);
-        break;
-      case RZORD_PCE:
-        //Serial.println("LED YELLOW");
-        controllerCount = 2;
-        setLedColors(pw, pw, 0);
-        break;
-      case RZORD_NEOGEO:
-        //Serial.println("LED AQUA");
-        controllerCount = 1;
-        setLedColors(0, pw, pw);
-        break;
-      case RZORD_3DO:
-        controllerCount = 2;
-        setLedColors(0, pw, pw);
-        break;
-      case RZORD_JAGUAR:
-        controllerCount = 1;
-        setLedColors(0, pw, pw);
-        break;
-      case RZORD_N64:
-        controllerCount = 1;
-        setLedColors(0, pw, pw);
-        break;
-      default:
-        break;
-    }
-    
-    for(uint8_t i=0; i<controllerCount; i++) {
-      pixels.setPixelColor(i, colors);
-      //delay(DELAYVAL);
-    }
-    pixels.show();
-  }
 #endif
 
 void setNextMode() {
-    deviceMode = (DeviceEnum)(deviceMode + 1);
-    if(deviceMode >= RZORD_LAST)
-      deviceMode = (DeviceEnum)1;
-  /*switch(deviceMode) {
-    case RZORD_SATURN:
-      //Serial.println("CURRENT MODE SATURN");
-      //Serial.println("CHANGE TO SNES");
-      deviceMode = RZORD_SNES;
-      break;
-    case RZORD_SNES:
-      //Serial.println("CURRENT MODE SNES");
-      //Serial.println("CHANGE TO PSX");
-      deviceMode = RZORD_PSX;
-      break;
-    case RZORD_PSX:
-      //Serial.println("CURRENT MODE PSX");
-      //Serial.println("CHANGE TO PSX_JOG");
-      deviceMode = RZORD_PSX_JOG;
-      break;
-    case RZORD_PSX_JOG:
-      //Serial.println("CURRENT MODE PSX_JOG");
-      //Serial.println("CHANGE TO PCE");
-      deviceMode = RZORD_PCE;
-      break;
-    case RZORD_PCE:
-      //Serial.println("CURRENT MODE PCE");
-      //Serial.println("CHANGE TO NEOGEO");
-      deviceMode = RZORD_NEOGEO;
-      break;
-    default://loop to first value
-      deviceMode = RZORD_SATURN;
-      //Serial.println("CURRENT MODE NEOGEO");
-      //Serial.println("CHANGE TO SATURN");
-      break;
-  }*/
+  deviceMode = (DeviceEnum)(deviceMode + 1);
+  if(deviceMode >= RZORD_LAST)
+    deviceMode = (DeviceEnum)1;
 }
 
-#if REFLEX_VERSION != -2
-  static bool LEDMODE = true;
-#endif
-
-#if REFLEX_VERSION == 1
-  void showModeUsingTXLed() {
-    const uint32_t maxNoBlinkCounter = 1300000;
-    const uint32_t maxTimeCounter =     200000;
-    static uint8_t timesBlinked = 0;
-    static uint32_t timeCounter = micros();
-    static uint32_t noBlinkTimer = micros();
-    static bool isSleeping = false;
-    const uint8_t timesToBlink = deviceMode * 2; // OFF/ON sequences
-    if (isSleeping) {
-      if (micros() - noBlinkTimer > maxNoBlinkCounter) {
-        //reset variables
-        isSleeping = false;
-        timesBlinked = 0;
-        noBlinkTimer = micros();
-      }
-    } else {
-      if (micros() - timeCounter > maxTimeCounter) {
-        if(timesBlinked < timesToBlink) {
-          LEDMODE = !LEDMODE;
-          timesBlinked++;
-        } else {
-          isSleeping = true;
-          LEDMODE = true;
-          noBlinkTimer = micros();
-        }
-        timeCounter = micros();
-      }
-    }
-    if(LEDMODE)
-      TXLED0;//ON
-    else
-      TXLED1;//OFF
-  }
-#endif
-
-
-//DeviceEnum deviceMode = RZORD_NONE;
-
-// 315deg = 0.5V = 186
-// 0deg   = 1.2V = 254
-// 45deg  = 2.1V = 430
-// 90deg  = 3.1V = 635
-// 135deg = 4.0V = 819
-// 180deg = 4.5V = 922
-// 225deg = 4.7V = 956
-// 270deg = 5.0V = 1024
-/*
-90
-250
-409
-611
-783
-891
-930
-1023
-1023
-*/
-
 void setup() {
-  //#if REFLEX_VERSION == 0
-    //
-  //#elif REFLEX_VERSION == 1
-    //
-  //#else
-    //pinMode(LED_BUILTIN, OUTPUT);
-  //#endif
-
-
-  //Initialize oled display
-
-  
+  //configure the mode button  
   fastPinMode(pinBtn, INPUT_PULLUP);
-  
-  //Serial.begin(115200);
-  //while (!Serial){};
-  //Serial.println("Hello");
-  //Serial.println(mode);
-  
-  //deviceInit = 0;
-
-  //initialize oled display
-  #if REFLEX_VERSION != -2
-    // NeoPixel
-    pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
-  #endif
     
-  #if REFLEX_VERSION == 0
-    //use rotary encoder
-    const int sensorValue = analogRead(A3);
-    //Serial.println(sensorValue);
-    if (sensorValue < 150) {
-      deviceMode = RZORD_SATURN; //90
-      saturnSetup();
-    } else if (sensorValue < 320) {
-      deviceMode = RZORD_SNES; //250
-      snesSetup();
-    } else if (sensorValue < 500) {
-      deviceMode = RZORD_PSX; //409
-      psxSetup();
-    } else if (sensorValue < 680) {
-      deviceMode = RZORD_PCE; //611
-      pceSetup();
-    } else {
-      deviceMode = RZORD_NEOGEO; //783
-      neogeoSetup();
-    }
 
-    //leds go from 0 to 80, then to 0. feedback during boot
-    pixels.clear();
-    uint8_t loopCounter = 0;
-    uint8_t i = 1;
-    while (true) {
-      if (i == 80)
-        loopCounter++;
-      if (i == 0)
-        break;
-      else if (loopCounter == 0)
-        i++;
-      else
-        i--;
-      pixels.setPixelColor(0, pixels.Color(i, i, i));
-      pixels.show();
-      delay(10);
-    }
-    pixels.clear();
-    pixels.show();
-    delay(100);
-
-  #else
-  
-    //use eeprom
-    deviceMode = (DeviceEnum)EEPROM.read(RZORD_EEPROM_MODE);
-    if (deviceMode >= RZORD_LAST)
-      deviceMode = (DeviceEnum)1;
-      
-    switch(deviceMode) {
+  //use eeprom
+  deviceMode = (DeviceEnum)EEPROM.read(RZORD_EEPROM_MODE);
+  if (deviceMode >= RZORD_LAST)
+    deviceMode = (DeviceEnum)1;
+    
+  switch(deviceMode) {
 #ifdef ENABLE_REFLEX_SATURN
-      case RZORD_SATURN:
-        saturnSetup();
-        break;
+    case RZORD_SATURN:
+      saturnSetup();
+      break;
 #endif
 #ifdef ENABLE_REFLEX_SNES
-      case RZORD_SNES:
-        snesSetup();
-        break;
+    case RZORD_SNES:
+      snesSetup();
+      break;
 #endif
 #ifdef ENABLE_REFLEX_PSX
-      case RZORD_PSX:
-        psxSetup();
-        break;
+    case RZORD_PSX:
+      psxSetup();
+      break;
 #endif
 #ifdef ENABLE_REFLEX_PSX_JOG
-      case RZORD_PSX_JOG:
-        psxSetup();
-        break;
+    case RZORD_PSX_JOG:
+      psxSetup();
+      break;
 #endif
 #ifdef ENABLE_REFLEX_PCE
-      case RZORD_PCE:
-        pceSetup();
-        break;
+    case RZORD_PCE:
+      pceSetup();
+      break;
 #endif
 #ifdef ENABLE_REFLEX_NEOGEO
-      case RZORD_NEOGEO:
-        neogeoSetup();
-        break;
+    case RZORD_NEOGEO:
+      neogeoSetup();
+      break;
 #endif
 #ifdef ENABLE_REFLEX_3DO
-      case RZORD_3DO:
-        threedoSetup();
-        break;
+    case RZORD_3DO:
+      threedoSetup();
+      break;
 #endif
 #ifdef ENABLE_REFLEX_JAGUAR
-      case RZORD_JAGUAR:
-        jaguarSetup();
-        break;
+    case RZORD_JAGUAR:
+      jaguarSetup();
+      break;
 #endif
 #ifdef ENABLE_REFLEX_N64
-      case RZORD_N64:
-        n64Setup();
-        break;
+    case RZORD_N64:
+      n64Setup();
+      break;
 #endif
 #ifdef ENABLE_REFLEX_GAMECUBE
-      case RZORD_GAMECUBE:
-        gameCubeSetup();
-        break;
+    case RZORD_GAMECUBE:
+      gameCubeSetup();
+      break;
 #endif
 #ifdef ENABLE_REFLEX_WII
-      case RZORD_WII:
-        wiiSetup();
-        break;
+    case RZORD_WII:
+      wiiSetup();
+      break;
 #endif
 #ifdef ENABLE_REFLEX_SMS
-      case RZORD_SMS:
-        smsSetup();
-        break;
+    case RZORD_SMS:
+      smsSetup();
+      break;
 #endif
-      default:
-        break;
-    }
-  #endif
 
-  #if REFLEX_VERSION == -2
+    default:
+      break;
+  } //end switch deviceMode
+
+  //initialize the oled display
+  #ifdef REFLEX_USE_OLED_DISPLAY
     display.begin(&Adafruit128x64, I2C_ADDRESS);
     display.setContrast(1);
     //display.setFont(System5x7);
@@ -617,43 +342,22 @@ void setup() {
     display.clear();
 
     #ifdef ENABLE_REFLEX_LOGO
-      //art
-      //display.println(F("  _   _  _     _\n |_) |_ |_ |  |_ \\/\n | \\ |_ |  |_ |_ /\\"));
-
-      //simple font 2x
       display.set1X();
       display.setCol(5*6);
       display.set2X();
-      //display.println(F("  REFLEX"));
       display.print(F("REFLEX"));
       display.set1X();
-    
     #endif
-  #endif
-
-  setPixelMode();
+    
+    setPixelMode();
+  #endif //REFLEX_USE_OLED_DISPLAY
 
   //Serial.println("Device initialized");
 }
 
 void loop() {
-  static unsigned long last = 0;
-  static bool stateChanged = false;
-  
-  #if REFLEX_VERSION == 1
-    static bool firstBoot = true;
-    if(firstBoot) {
-      firstBoot = false;
-      delay(500);
-      //TX_RX_LED_INIT;
-      for(uint16_t timeOut = 0; timeOut < 3500; timeOut++) { //2500
-        showModeUsingTXLed();
-        delay(2);
-      }
-      LEDMODE = true;
-      TXLED0;
-    }
-  #endif
+  static uint32_t last = 0;
+  bool stateChanged = false;
 
   if (micros() - last >= sleepTime) {
     switch(deviceMode){
@@ -724,117 +428,69 @@ void loop() {
   }
 
   //Disable oled display after 300 seconds (5 minutes) of no state changed
-  if(stateChanged) {
-    if (!oledOn)
-      setOledDisplay(true);
-    else
-      oledDisplayTimer = millis();
-  }
-  if (oledOn && millis() - oledDisplayTimer >= 300000) {
-    //oledDisplayTimer = millis();
-    //display.ssd1306WriteCmd(SSD1306_DISPLAYOFF);
-    //oledOn = false;
-    setOledDisplay(false);
-  }
-  
-  if(fastDigitalRead(pinBtn) == LOW) { //todo debounce?
-    delay(300);
-
-    if(!oledOn) {
-      //display.ssd1306WriteCmd(SSD1306_DISPLAYON);
-      //setPixelMode();
-      //oledOn = true;
-      //delay(300);
-      //oledDisplayTimer = millis();
-      setOledDisplay(true);
-      return;
+  //Any input state change will wake up the display
+  #ifdef REFLEX_USE_OLED_DISPLAY
+    if(stateChanged) {
+      if (!oledOn)
+        setOledDisplay(true);
+      else
+        oledDisplayTimer = millis();
     }
-      
-      //Only handle mode button press when no controller is connected
-      if(true) { // !haveController
+    if (oledOn && millis() - oledDisplayTimer >= 300000) {
+      setOledDisplay(false);
+    }
+  #endif
   
-      DeviceEnum previousDeviceMode = deviceMode;
-      setNextMode();
-      setPixelMode();
-  
-      //uint16_t timeOut = 0;
-      for(uint16_t timeOut = 0; timeOut < 2000; timeOut++) { //2500
-          //Serial.println(timeOut);
-          
-          delay(2);
-  
-          //blink led
-          #if REFLEX_VERSION == 1
-            showModeUsingTXLed();
-          #elif REFLEX_VERSION != -2
-            if (timeOut % 100 == 0){
-              if(LEDMODE)
-                pixels.setPixelColor(0, colors);
-              else
-                pixels.clear();
-              pixels.show();
-              LEDMODE = !LEDMODE;
-            }
-          #endif
-          /*if (timeOut % 100 == 0){
-            digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
-          }*/
-  
-          //check for button press
-          if(fastDigitalRead(pinBtn) == LOW) {//todo debounce?
-            #if REFLEX_VERSION == 1
-              LEDMODE = true;
-            #endif
-            delay(300);
-            setNextMode();
-            setPixelMode();
-            timeOut = 0;
-          }
-      }
-  
-      if(previousDeviceMode == deviceMode)//mode was not changed
-      {
-        setPixelMode();
-        //todo also set txled?
+  if(fastDigitalRead(pinBtn) == LOW) {
+    delay(300); //todo debounce?
+
+    #ifdef REFLEX_USE_OLED_DISPLAY
+      if(!oledOn) {
+        setOledDisplay(true);
         return;
       }
-  
-      //save mode
-      #if REFLEX_VERSION != 0
-        EEPROM.write(RZORD_EEPROM_MODE, (byte)deviceMode);
-        //EEPROM.update(RZORD_EEPROM_MODE, (byte)deviceMode);
-      #endif
-      
-      //Serial.println("Rebooting...");
-      #if REFLEX_VERSION == -2
-        display.clear();
-        display.print(F("REBOOTING..."));
-      #endif
-  
-      //initialize watchdog and blink led faster
-      wdt_enable(WDTO_1S);
-      while(1) {
-        //blink led fast to indicate that mode will change
-        //static bool LEDMODE = true;
-        #if REFLEX_VERSION == 1
-          if(LEDMODE)
-            TXLED0;//ON
-          else
-            TXLED1;//OFF
-          LEDMODE = !LEDMODE;
-        #elif REFLEX_VERSION != -2
-          if(LEDMODE)
-            pixels.setPixelColor(0, colors);
-          else
-            pixels.clear();
-          pixels.show();
-          LEDMODE = !LEDMODE;
+    #endif
+
+    DeviceEnum previousDeviceMode = deviceMode;
+    setNextMode();
+    #ifdef REFLEX_USE_OLED_DISPLAY
+      setPixelMode();
+    #endif
+
+    for(uint16_t timeOut = 0; timeOut < 2000; timeOut++) { //timeout to save the next mode and reset the device
+      delay(2);
+
+      //check for button press
+      if(fastDigitalRead(pinBtn) == LOW) {
+        delay(300); //todo debounce?
+        setNextMode();
+        #ifdef REFLEX_USE_OLED_DISPLAY
+          setPixelMode();
         #endif
-        //digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
-        delay(120);
+        timeOut = 0;
       }
-    }//end if(!haveController)
+    }
+
+    if (previousDeviceMode == deviceMode) { //mode was not changed
+      #ifdef REFLEX_USE_OLED_DISPLAY
+        setPixelMode();
+      #endif
+      return;
+    }
+
+    //save mode
+    EEPROM.write(RZORD_EEPROM_MODE, (byte)deviceMode);
+    //EEPROM.update(RZORD_EEPROM_MODE, (byte)deviceMode);
+
+    #ifdef REFLEX_USE_OLED_DISPLAY
+      display.clear();
+      display.print(F("REBOOTING..."));
+    #endif
+
+    //initialize watchdog
+    wdt_enable(WDTO_1S);
+    while(1) { }
 
   }//end if(fastDigitalRead(pinBtn) == LOW) 
   
-}
+}//end loop
