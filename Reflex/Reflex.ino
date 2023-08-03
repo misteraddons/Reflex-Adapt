@@ -94,8 +94,7 @@
 
 
 #ifndef REFLEX_NO_DEFAULTS
-#define ENABLE_REFLEX_SATURN
-#define ENABLE_REFLEX_GAMECUBE
+#define ENABLE_SATURN
 #endif // REFLEX_NO_DEFAULTS
 
 /******************************************************************************/
@@ -176,8 +175,7 @@
         #ifdef SNES_ENABLE_VBOY
           display.setCol(2*6);
           display.print(F("NES + SNES + VBOY"));
-        #endif
-        #ifndef SNES_ENABLE_VBOY
+        #else
           display.setCol(6*6);
           display.print(F("NES + SNES"));
         #endif
@@ -188,13 +186,42 @@
 #ifdef ENABLE_REFLEX_PSX_JOG
       case RZORD_PSX_JOG:
 #endif
-        display.setCol(5*6);
-        display.print(F("PLAYSTATION"));
-#ifdef ENABLE_REFLEX_PSX_JOG
-        if(deviceMode == RZORD_PSX_JOG)
-          display.print(F("-JOGCON"));
-#endif
+      {
+#ifdef ENABLE_REFLEX_PSX_JOG //dedicated jogcon mode
+        if(deviceMode == RZORD_PSX_JOG) {
+          display.setCol(6*6);
+          display.println("PSX JOGCON");
+        } else
+#else //general psx mode
+        {
+          uint8_t psxchars = 9;
+          #ifdef GUNCON_SUPPORT
+            psxchars -= 2;
+          #endif
+          #ifdef JOGCON_SUPPORT
+            psxchars -= 2;
+          #endif
+          #ifdef NEGCON_SUPPORT
+            psxchars -= 2;
+          #endif
+
+          display.setCol(psxchars*6);
+          display.print(F("PSX"));
+
+          #ifdef GUNCON_SUPPORT
+            display.print(F("+GUN"));
+          #endif
+          #ifdef JOGCON_SUPPORT
+            display.print(F("+JOG"));
+          #endif
+          #ifdef NEGCON_SUPPORT
+            display.print(F("+NEG"));
+          #endif
+        }
+#endif //end general psx mode
+
         break;
+      }
 #endif
 #ifdef ENABLE_REFLEX_PCE
       case RZORD_PCE:
