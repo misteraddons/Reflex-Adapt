@@ -1,9 +1,15 @@
+/*******************************************************************************
+ * Reflex Adapt USB
+ * PSX input module - JogCon support
+ * 
+ * Based on MiSTer-A1 JogCon (JogConUSB) by sorgelig.
+ * https://github.com/MiSTer-devel/Retro-Controllers-USB-MiSTer/tree/master/JogConUSB
+ * 
+*/
+
 #ifdef ENABLE_PSX_JOGCON_MOUSE
   MouseRel1_* RelMouse;
 #endif
-
-
-//Begin Jogcon things
 
 byte ff;
 byte mode;
@@ -35,9 +41,6 @@ void init_jogcon() {
     psx->read ();    // Make sure the protocol is up to date
   }
 }
-
-//End Jogcon things
-
 
 bool handleJogconData()
 {

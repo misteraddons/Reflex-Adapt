@@ -1,38 +1,13 @@
 /*******************************************************************************
- * This sketch turns a PSX Guncon controller into a USB absolute mouse
- * or Joystick, using an Arduino Leonardo.
- *
- * It uses the PsxNewLib, ArduinoJoystickLibrary
- * and an edited version of AbsMouse Library.
- *
- * For details on PsxNewLib, see
+ * Reflex Adapt USB
+ * PSX input module
+ * 
+ * Uses PsxNewLib
  * https://github.com/SukkoPera/PsxNewLib
- *
- * For details on ArduinoJoystickLibrary, see
+ * 
+ * Uses a modified version of Joystick Library
  * https://github.com/MHeironimus/ArduinoJoystickLibrary
- *
- * For details on AbsMouse, see
- * https://github.com/jonathanedgecombe/absmouse
- *
- * The guncon needs to "scan" the entire screen before it can properly send
- * the coorinates. Just point it at the screen and move slowly from side to side
- * and top to botom. The values will be stored as min and max, and will be used
- * to calculate the absolute mouse position.
- * It's recommended to use a full screen white image when doing this.
- *
- * When connected it will be in a not enabled state.
- * It can emulate a Mouse or a Joystick:
- *
- * Press Gun Trigger / Circle to enable mouse emulation. Off-screen: bottom-left.
- * Press Gun A (Left side) / Start to enable joystick emulation. Off-screen: center.
- * Press Gun B (Right side) / Start to enable joystick emulation. Off-screen: bottom-left.
- *
- * To disable, point it off screen and press A + B + Trigger
- *
- * Buttons are mapped as follows:
- * A (Left side) / Start -> Mouse Right / Joystick btn 1
- * B (Right side) / Cross -> Mouse Middle / Joystick btn 2
- * Trigger / Circle -> Mouse Left / Joystick btn 0
+ * 
 */
 
 #include "src/DigitalIO/DigitalIO.h"
@@ -53,34 +28,24 @@
 //If you dont want to force a mode but instead change the default:
 //Don't enable the force mode and edit the isNeGconMiSTer variable below as you desire.
 
+//PSX pins
 #if REFLEX_PIN_VERSION == 1
   const byte PIN_PS1_ATT = 2;
 #else
-  const byte PIN_PS1_ATT = 21;//A3
+  const byte PIN_PS1_ATT = 21;
 #endif
 
 const byte PIN_PS2_ATT = 5;
 const byte PIN_PS3_ATT = 10;
-const byte PIN_PS4_ATT = 18;//A0
-const byte PIN_PS5_ATT = 19;//A1
-const byte PIN_PS6_ATT = 20;//A2
-
-//const unsigned long POLLING_INTERVAL = 1000U / 400U;//needs more testing
-
-// Send debug messages to serial port
-//#define ENABLE_SERIAL_DEBUG
-
-//PsxControllerHwSpi<PIN_PS1_ATT> psx;
+const byte PIN_PS4_ATT = 18;
+const byte PIN_PS5_ATT = 19;
+const byte PIN_PS6_ATT = 20;
 
 PsxController* psx;//variable to hold current reading port
 
 PsxController* psxlist[] = {
   new PsxControllerHwSpi<PIN_PS1_ATT>(),
   new PsxControllerHwSpi<PIN_PS2_ATT>()
-  //new PsxControllerHwSpi<PIN_PS3_ATT>(),
-  //new PsxControllerHwSpi<PIN_PS4_ATT>(),
-  //new PsxControllerHwSpi<PIN_PS5_ATT>(),
-  //new PsxControllerHwSpi<PIN_PS6_ATT>()
 };
 
 boolean isNeGcon = false;
@@ -601,5 +566,5 @@ psxLoop() {
     }
 
   //} end if (millis() - last >= POLLING_INTERVAL)
-  return stateChanged;//haveController[0] || haveController[1];
+  return stateChanged;
 }

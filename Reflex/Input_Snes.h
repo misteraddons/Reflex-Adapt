@@ -1,85 +1,37 @@
 /*******************************************************************************
- * Snes controller input library.
+ * Reflex Adapt USB
+ * NES/SNES/VB input module
+ * 
+ * Uses SnesLib
  * https://github.com/sonik-br/SnesLib
+ * 
+ * Uses a modified version of Joystick Library
+ * https://github.com/MHeironimus/ArduinoJoystickLibrary
 */
 
-//Uncomment to enable multitap support. Requires wiring two additional pins.
-//#define SNES_ENABLE_MULTITAP
-
-//#define SNES_MULTI_CONNECTION 4
-
 #include "src/SnesLib/SnesLib.h"
-
 #include "src/ArduinoJoystickLibrary/Joy1.h"
 
-
-//Snes joy 1 pins
+//Snes pins - Port 1
 #define SNES1_CLOCK  9
 #define SNES1_LATCH  8
 #define SNES1_DATA1  7
 #define SNES1_DATA2  5
 #define SNES1_SELECT 4
 
-//Snes joy 2 pins. joy 2 to 6 shares same CLOCK and LATCH pins
+//Snes pins - Port 2
 #define SNES2_CLOCK  20
 #define SNES2_LATCH  19
 #define SNES2_DATA1  18
 #define SNES2_DATA2  14
-#define SNES2_SELECT  16
-
-//Snes joy 3 pins
-#define SNES3_DATA1  6
-
-//Snes joy 4 pins
-#if REFLEX_PIN_VERSION == 1
-  #define SNES4_DATA1  2
-#else
-  #define SNES4_DATA1  21
-#endif
-
-//Snes joy 5 pins
-#define SNES5_DATA1  10
-
-//Snes joy 6 pins
-#if REFLEX_PIN_VERSION == 1
-  #define SNES6_DATA1  3
-#else
-  #define SNES6_DATA1  13
-#endif
+#define SNES2_SELECT 16
 
 #ifdef SNES_ENABLE_MULTITAP
-  //SnesPort<SNES1_CLOCK, SNES1_LATCH, SNES1_DATA1, SNES1_DATA2, SNES1_SELECT> snes;
-  //SnesPort<SNES2_CLOCK, SNES2_LATCH, SNES2_DATA1> snes2;
-  //SnesPort<SNES2_CLOCK, SNES2_LATCH, SNES3_DATA1> snes3;
-  //SnesPort<SNES2_CLOCK, SNES2_LATCH, SNES4_DATA1> snes4;
-  //SnesPort<SNES2_CLOCK, SNES2_LATCH, SNES5_DATA1> snes5;
-  //SnesPort<SNES2_CLOCK, SNES2_LATCH, SNES6_DATA1> snes6;
-
   SnesPort<SNES1_CLOCK, SNES1_LATCH, SNES1_DATA1, SNES1_DATA2, SNES1_SELECT> snes1;
-  //SnesPort<SNES2_CLOCK, SNES2_LATCH, SNES2_DATA1, 14, 16> snes2;
   SnesPort<SNES2_CLOCK, SNES2_LATCH, SNES2_DATA1, SNES2_DATA2, SNES2_SELECT> snes2;
 #else
-  /*SnesPort<SNES1_CLOCK, SNES1_LATCH, SNES1_DATA1> snes1;
-  SnesPort<SNES2_CLOCK, SNES2_LATCH, SNES2_DATA1> snes2;
-  SnesPort<SNES2_CLOCK, SNES2_LATCH, SNES3_DATA1> snes3;
-  SnesPort<SNES2_CLOCK, SNES2_LATCH, SNES4_DATA1> snes4;
-  SnesPort<SNES2_CLOCK, SNES2_LATCH, SNES5_DATA1> snes5;
-  SnesPort<SNES2_CLOCK, SNES2_LATCH, SNES6_DATA1> snes6;*/
-
-
   SnesPort<SNES1_CLOCK, SNES1_LATCH, SNES1_DATA1> snes1;
   SnesPort<SNES2_CLOCK, SNES2_LATCH, SNES2_DATA1> snes2;
-
-  //SnesPort<SNES2_CLOCK, SNES2_LATCH, SNES2_DATA1, SNES3_DATA1, SNES4_DATA1, SNES5_DATA1> snes1;
-
-  //SnesPort<SNES1_CLOCK, SNES1_LATCH, SNES1_DATA1> snes1;
-  //SnesPort<SNES1_CLOCK, SNES1_LATCH, SNES1_DATA1, SNES2_DATA1> snes1;
-  //SnesPort<SNES2_CLOCK, SNES2_LATCH, SNES3_DATA1, SNES4_DATA1> snes2;
-  //SnesPort<SNES2_CLOCK, SNES2_LATCH, SNES2_DATA1, SNES3_DATA1, SNES4_DATA1> snes2;
-  //SnesPort<SNES2_CLOCK, SNES2_LATCH, SNES3_DATA1> snes3;
-  //SnesPort<SNES2_CLOCK, SNES2_LATCH, SNES4_DATA1> snes4;
-  //SnesPort<SNES2_CLOCK, SNES2_LATCH, SNES5_DATA1> snes5;
-  //SnesPort<SNES2_CLOCK, SNES2_LATCH, SNES6_DATA1> snes6;
 #endif
 
 bool isVirtualBoy = false;
@@ -99,7 +51,7 @@ bool isVirtualBoy = false;
     { SNES_L,      0, 1*6, SHOULDERBTN_ON, SHOULDERBTN_OFF },
     { SNES_R,      0, 8*6, SHOULDERBTN_ON, SHOULDERBTN_OFF },
     
-    //NES specific - Horizontal align
+    //NES specific - Horizontal aligned
     { SNES_Y,      3, 7*6, FACEBTN_ON, FACEBTN_OFF },
     { SNES_B,      3, 8*6, FACEBTN_ON, FACEBTN_OFF },
     { SNES_SELECT, 2, 4*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
@@ -193,10 +145,6 @@ void snesSetup() {
   //Init the class
   snes1.begin();
   snes2.begin();
-  //snes3.begin();
-  //snes4.begin();
-  //snes5.begin();
-  //snes6.begin();
 
   delayMicroseconds(10);
 
@@ -227,7 +175,6 @@ void snesSetup() {
   //Create usb controllers
   for (uint8_t i = 0; i < totalUsb; i++) {
     usbStick[i] = new Joy1_(isVirtualBoy ? "RZordVboy" : "RZordSnesNtt", JOYSTICK_DEFAULT_REPORT_ID + i, JOYSTICK_TYPE_GAMEPAD, totalUsb);
-    //usbStick[i] = new Joy1_(isVirtualBoy ? "RZordVboy" : "RZordSnes", JOYSTICK_DEFAULT_REPORT_ID + i, JOYSTICK_TYPE_GAMEPAD, totalUsb);
   }
 
   //Set usb parameters and reset to default values
@@ -264,21 +211,11 @@ snesLoop() {
   //Read snes port
   snes1.update();
   snes2.update();
-  //snes3.update();
-  //snes4.update();
-  //snes5.update();
-  //snes6.update();
-
   
   //Get the number of connected controllers
   const uint8_t joyCount1 = snes1.getControllerCount();
   const uint8_t joyCount2 = snes2.getControllerCount();
-  //const uint8_t joyCount3 = snes3.getControllerCount();
-  //const uint8_t joyCount4 = snes4.getControllerCount();
-  //const uint8_t joyCount5 = snes5.getControllerCount();
-  //const uint8_t joyCount6 = snes6.getControllerCount();
-  const uint8_t joyCount = joyCount1 + joyCount2;// + joyCount3 + joyCount4;// + joyCount5 + joyCount6;
-  //Serial.println(joyCount);
+  const uint8_t joyCount = joyCount1 + joyCount2;
 
   for (uint8_t i = 0; i < joyCount; i++) {
     if (i == totalUsb)
@@ -287,14 +224,6 @@ snesLoop() {
     //Get the data for the specific controller
     const uint8_t inputPort = (i < joyCount1) ? 0 : 1;
     const SnesController& sc = inputPort == 0 ? snes1.getSnesController(i) : snes2.getSnesController(i - joyCount1);
-    /*const SnesController& sc = (i < joyCount1) ? snes1.getSnesController(i) :
-                          snes2.getSnesController(i - joyCount1);
-                         //(i - joyCount1 < joyCount2) ? snes2.getSnesController(i - joyCount1) :
-                         //(i - joyCount1 - joyCount2 < joyCount3) ? snes3.getSnesController(i - joyCount1 - joyCount2) :
-                         //snes4.getSnesController(i - joyCount1 - joyCount2 - joyCount3);
-                         //(i - joyCount1 - joyCount2 - joyCount3 < joyCount4) ? snes4.getSnesController(i - joyCount1 - joyCount2 - joyCount3) :
-                         //(i - joyCount1 - joyCount2 - joyCount3 - joyCount4 < joyCount5) ? snes5.getSnesController(i - joyCount1 - joyCount2 - joyCount3 - joyCount4) :
-                         //snes6.getSnesController(i - joyCount1 - joyCount2 - joyCount3 - joyCount4 - joyCount5);*/
 
     #ifdef ENABLE_REFLEX_PAD
       //Only used if not in multitap mode
@@ -370,7 +299,6 @@ snesLoop() {
 
       //Get angle from hatTable and pass to joystick class
       ((Joy1_*)usbStick[i])->setHatSwitch(hatTable[hatData]);
-
       
 
       usbStick[i]->sendState();
@@ -431,5 +359,5 @@ snesLoop() {
   //Keep count for next read
   lastControllerCount = joyCount;
   
-  return stateChanged; //joyCount != 0;
+  return stateChanged;
 }

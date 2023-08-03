@@ -1,13 +1,11 @@
 /*******************************************************************************
- * Sega Saturn controllers to USB using an Arduino Leonardo.
+ * Reflex Adapt USB
+ * MegaDrive/Saturn input module
  *
- * Works with digital pad and analog pad.
+ * Uses SaturnLib
+ * https://github.com/sonik-br/SaturnLib
  *
- * By using the multitap it's possible to connect up to 7 controllers.
- *
- * Also works with MegaDrive controllers and mulltitaps.
- *
- * For details on Joystick Library, see
+ * Uses a modified version of Joystick Library
  * https://github.com/MHeironimus/ArduinoJoystickLibrary
  *
 */
@@ -16,22 +14,22 @@
 #include "src/ArduinoJoystickLibrary/Joy1.h"
 
 //Saturn pins - Port 1
-#define SAT1_TH 4 //S0
+#define SAT1_TH 4
 #if REFLEX_PIN_VERSION == 1
-  #define SAT1_TR 3 //S1
+  #define SAT1_TR 3
 #else
-  #define SAT1_TR 13 //S1
+  #define SAT1_TR 13
 #endif
-#define SAT1_TL 5 //S2
+#define SAT1_TL 5
 #define SAT1_D0 9
 #define SAT1_D1 8
 #define SAT1_D2 7
 #define SAT1_D3 6
 
 //Saturn pins - Port 2
-#define SAT2_TH 16 //S0
-#define SAT2_TR 10 //S1
-#define SAT2_TL 14 //S2
+#define SAT2_TH 16
+#define SAT2_TR 10
+#define SAT2_TL 14
 #define SAT2_D0 20
 #define SAT2_D1 19
 #define SAT2_D2 18
@@ -330,5 +328,5 @@ saturnLoop() {
     }
     delayMicroseconds(2500);*/
 
-    return stateChanged; //joyCount != 0;
+    return stateChanged;
 }

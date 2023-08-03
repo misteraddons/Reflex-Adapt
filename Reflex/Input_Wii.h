@@ -1,7 +1,6 @@
 /*******************************************************************************
- * Wii controllers to USB using an Arduino Leonardo.
- *
- * Works with digital pad.
+ * Reflex Adapt USB
+ * Wii input module
  * 
  * Uses NintendoExtensionCtrl Lib
  * https://github.com/dmadison/NintendoExtensionCtrl/
@@ -9,7 +8,7 @@
  * Uses SoftWire Lib
  * https://github.com/felias-fogg/SoftI2CMaster
  *
- * For details on Joystick Library, see
+ * Uses a modified version of Joystick Library
  * https://github.com/MHeironimus/ArduinoJoystickLibrary
  *
 */
@@ -363,6 +362,5 @@ wiiLoop() {
     }//end else pad read
   }//end havecontroller
 
-
-  return stateChanged; //joyCount != 0;
+  return stateChanged;
 }

@@ -1,13 +1,15 @@
 /*******************************************************************************
- * Sega Master System controllers to USB using an Arduino Leonardo.
+ * Reflex Adapt USB
+ * Master System input module
  *
- * Works with digital pad.
+ * Uses a modified version of Joystick Library
+ * https://github.com/MHeironimus/ArduinoJoystickLibrary
 */
 
 #include "src/DigitalIO/DigitalIO.h"
 #include "src/ArduinoJoystickLibrary/Joy1.h"
 
-//Saturn pins - Port 1
+//SMS pins - Port 1
 #define SMS1_TH 4
 #if REFLEX_PIN_VERSION == 1
   #define SMS1_TR 3
@@ -15,19 +17,19 @@
   #define SMS1_TR 13
 #endif
 #define SMS1_TL 5
-#define SMS1_U 9
-#define SMS1_D 8
-#define SMS1_L 7
-#define SMS1_R 6
+#define SMS1_U  9
+#define SMS1_D  8
+#define SMS1_L  7
+#define SMS1_R  6
 
-//Saturn pins - Port 2
+//SMS pins - Port 2
 #define SMS2_TH 16
 #define SMS2_TR 10
 #define SMS2_TL 14
-#define SMS2_U 20
-#define SMS2_D 19
-#define SMS2_L 18
-#define SMS2_R 15
+#define SMS2_U  20
+#define SMS2_D  19
+#define SMS2_L  18
+#define SMS2_R  15
 
 DigitalPin<SMS1_U> sms1_U;
 DigitalPin<SMS1_D> sms1_D;

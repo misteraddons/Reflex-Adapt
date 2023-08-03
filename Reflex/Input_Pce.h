@@ -1,9 +1,11 @@
 /*******************************************************************************
- * NEC PC Engine controllers to USB using an Arduino Leonardo.
+ * Reflex Adapt USB
+ * PC Engine input module
+ * 
+ * Uses PceLib
+ * https://github.com/sonik-br/PceLib
  *
- * Works with 2btn and 6btn digital pad, multitap.
- *
- * For details on Joystick Library, see
+ * Uses a modified version of Joystick Library
  * https://github.com/MHeironimus/ArduinoJoystickLibrary
  *
 */
@@ -12,28 +14,20 @@
 #include "src/ArduinoJoystickLibrary/Joy1.h"
 
 //PCE pins - Port 1
-/*#define PCE1_SEL A2
-#define PCE1_CLR 7
-#define PCE1_D0 A4 //U 1 3
-#define PCE1_D1 A5 //R 2 4
-#define PCE1_D2 A3 //D S 5
-#define PCE1_D3 A0 //L R 6*/
-
-//PCE pins - Port 1
 #define PCE1_SEL 5
 #define PCE1_CLR 4
-#define PCE1_D0  9 //U 1 3
-#define PCE1_D1  8 //R 2 4
-#define PCE1_D2  7 //D S 5
-#define PCE1_D3  6 //L R 6
+#define PCE1_D0  9
+#define PCE1_D1  8
+#define PCE1_D2  7
+#define PCE1_D3  6
 
 //PCE pins - Port 2
 #define PCE2_SEL 14
 #define PCE2_CLR 16
-#define PCE2_D0  20 //U 1 3
-#define PCE2_D1  19 //R 2 4
-#define PCE2_D2  18 //D S 5
-#define PCE2_D3  15 //L R 6
+#define PCE2_D0  20
+#define PCE2_D1  19
+#define PCE2_D2  18
+#define PCE2_D3  15
 
 PcePort<PCE1_SEL, PCE1_CLR, PCE1_D0, PCE1_D1, PCE1_D2, PCE1_D3> pce1;
 PcePort<PCE2_SEL, PCE2_CLR, PCE2_D0, PCE2_D1, PCE2_D2, PCE2_D3> pce2;
@@ -291,5 +285,5 @@ pceLoop() {
     sleepTime = 50;
   */
   
-  return stateChanged; //joyCount != 0;
+  return stateChanged;
 }

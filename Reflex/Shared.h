@@ -4,8 +4,6 @@
 //Arduino Joystick Library
 #include "src/ArduinoJoystickLibrary/Joystick.h"
 
-//#define RZORD_ENABLE_AUTORESET
-
 //Send debug messages to serial port
 //#define ENABLE_SERIAL_DEBUG
 
@@ -196,50 +194,6 @@ enum DeviceEnum {
     }
   #endif //ENABLE_REFLEX_PAD
 
-
 #endif //REFLEX_USE_OLED_DISPLAY
-
-
-
-#ifdef RZORD_ENABLE_AUTORESET
-#include <avr/wdt.h>
-void resetDevice(){
-  //Set all used Leonardo pins as INPUT LOW.
-  //Comment if need to free space, not using a leonardo or not based on ATmega32U4
-  DDRB &= B00000001; //bits .1234567
-  PORTB &= B00000001;
-  DDRC &= B10111111; //bits ......6.
-  PORTC &= B10000000;
-  DDRD &= B00101100; //bits 01..4.67
-  PORTD &= B00101100;
-  DDRE &= B01000000; //bits ......6.
-  PORTE &= B01000000;
-  DDRF &= B00001100; //bits 01..4567
-  PORTF &= B00001100;
-
-  //use the watchdog to reset the arduino
-  bool ledmode = false;
-  wdt_enable(WDTO_4S);
-  while(1) {
-    //blink led fast to indicate that mode will change
-    digitalWrite(LED_BUILTIN, ledmode = !ledmode);
-    delay(90);
-  }
-}
-#endif
-
-void blinkLed() {
-  #if REFLEX_VERSION == 2
-    TXLED1;//OFF
-    delay(500);
-    TXLED0;//ON
-    delay(500);
-  #else
-    digitalWrite(LED_BUILTIN, HIGH);
-    delay(500);
-    digitalWrite(LED_BUILTIN, LOW);
-    delay(500);
-  #endif
-}
 
 #endif //RZORD_SHARED_H_

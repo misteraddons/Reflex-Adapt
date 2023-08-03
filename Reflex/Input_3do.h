@@ -1,21 +1,19 @@
 /*******************************************************************************
- * 3DO controllers to USB using an Arduino Leonardo.
+ * Reflex Adapt USB
+ * 3DO input module
  *
- * Works with digital pad.
+ * Uses ThreedoLib
+ * https://github.com/sonik-br/ThreedoLib
  *
- * Supports multiple daisy chained devices.
- *
- * For details on Joystick Library, see
+ * Uses a modified version of Joystick Library
  * https://github.com/MHeironimus/ArduinoJoystickLibrary
  *
 */
-
 
 #include "src/ThreedoLib/ThreedoLib.h"
 #include "src/ArduinoJoystickLibrary/Joy1.h"
 
 //3DO pins
-
 #define THREEDOPIN_CLOCK  4 // (db9 7)
 #define THREEDOPIN_DOUT   5 // (db9 6)
 //#define THREEDO_PIN_DIN   // (db9 9)
@@ -218,8 +216,8 @@ threedoLoop() {
       sleepTime = 500;
     } else {
       //100us per device seems enough
-      sleepTime = 100*joyCount;
+      sleepTime = 100 * joyCount;
     }
 
-    return stateChanged; //joyCount != 0;
+    return stateChanged;
 }

@@ -1,9 +1,11 @@
 /*******************************************************************************
- * Jaguar controllers to USB using an Arduino Leonardo.
+ * Reflex Adapt USB
+ * Jaguar input module
  *
- * Works with digital pad.
+ * Uses JaguarLib
+ * https://github.com/sonik-br/JaguarLib
  *
- * For details on Joystick Library, see
+ * Uses a modified version of Joystick Library
  * https://github.com/MHeironimus/ArduinoJoystickLibrary
  *
 */
@@ -11,17 +13,17 @@
 #include "src/JaguarLib/JaguarLib.h"
 #include "src/ArduinoJoystickLibrary/Joy1.h"
 
-//Jaguar pins - Port 1
-#define JAGPIN_J3_J4   13 //h1  // ORIGINALLY PIN 9
-#define JAGPIN_J2_J5   10 //h2   // ORIGINALLY PIN 8
-#define JAGPIN_J1_J6   7 //h3
-#define JAGPIN_J0_J7   6 //h4
-#define JAGPIN_B0_B2   5 //h5
-#define JAGPIN_B1_B3   4 //h6
-#define JAGPIN_J11_J15 9 //h7  // ORIGINALLY PIN 13
-#define JAGPIN_J10_J14 8 //h8 PS1ACK  // ORIGINALLY PIN 10
-#define JAGPIN_J9_J13  22 //h9 PS1GUN
-#define JAGPIN_J8_J12  14 //12 PS1DATA
+//Jaguar pins
+#define JAGPIN_J3_J4   13
+#define JAGPIN_J2_J5   10
+#define JAGPIN_J1_J6   7
+#define JAGPIN_J0_J7   6
+#define JAGPIN_B0_B2   5
+#define JAGPIN_B1_B3   4
+#define JAGPIN_J11_J15 9
+#define JAGPIN_J10_J14 8
+#define JAGPIN_J9_J13  22
+#define JAGPIN_J8_J12  14
 
 JagPort<JAGPIN_J3_J4, JAGPIN_J2_J5, JAGPIN_J1_J6, JAGPIN_J0_J7, JAGPIN_B0_B2, JAGPIN_B1_B3, JAGPIN_J11_J15, JAGPIN_J10_J14, JAGPIN_J9_J13, JAGPIN_J8_J12> jag1;
 
@@ -226,5 +228,5 @@ jaguarLoop() {
   //Keep count for next read
   lastControllerCount = joyCount;
 
-  return stateChanged; //joyCount != 0;
+  return stateChanged;
 }

@@ -1,3 +1,9 @@
+/*******************************************************************************
+ * Reflex Adapt USB
+ * PSX input module - GunCon support
+ * 
+*/
+
 const uint16_t maxMouseValue = 1023;//32767;
 
 //min and max possible values
@@ -522,5 +528,4 @@ void gunconSetup() {
   
   usbStick[0]->resetState();
   usbStick[0]->sendState();
-  
 }

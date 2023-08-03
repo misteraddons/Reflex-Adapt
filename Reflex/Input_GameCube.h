@@ -1,12 +1,11 @@
 /*******************************************************************************
- * GameCube controllers to USB using an Arduino Leonardo.
- *
- * Works with analog pad.
+ * Reflex Adapt USB
+ * GameCube input module
  * 
  * Uses Nintendo Lib
  * https://github.com/NicoHood/Nintendo
  *
- * For details on Joystick Library, see
+ * Uses a modified version of Joystick Library
  * https://github.com/MHeironimus/ArduinoJoystickLibrary
  *
 */
@@ -14,12 +13,11 @@
 #include "src/NicoHoodNintendo/Nintendo.h"
 #include "src/ArduinoJoystickLibrary/Joy1.h"
 
-
 //GameCube pins - Port 1
-#define GC_1_DATA 21 // 9 old, 21 new
+#define GC_1_DATA 21
 
 //GameCube pins - Port 2
-#define GC_2_DATA 5 // 20 old, 5 new
+#define GC_2_DATA 5
 
 CGamecubeController* gclist[] = {
   new CGamecubeController(GC_1_DATA),
@@ -142,7 +140,7 @@ void gameCubeSetup() {
 
 inline bool __attribute__((always_inline))
 gameCubeLoop() {
-  static uint8_t lastControllerCount = 0;
+  //static uint8_t lastControllerCount = 0;
   static bool haveController[] = { false, false };
   static bool isEnabled[] = { false, false };
   static uint16_t oldButtons[] = { 0, 0 };
@@ -322,5 +320,5 @@ gameCubeLoop() {
   }//end for
 
 
-  return stateChanged[0] || stateChanged[1]; //joyCount != 0;
+  return stateChanged[0] || stateChanged[1];
 }

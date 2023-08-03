@@ -1,3 +1,9 @@
+/*******************************************************************************
+ * Reflex Adapt USB
+ * PSX input module - NeGcon support
+ * 
+*/
+
 bool loopNeGcon() {
   static byte lastX[] = { ANALOG_IDLE_VALUE, ANALOG_IDLE_VALUE };
   static uint8_t lastZ[] = { ANALOG_MAX_VALUE, ANALOG_MAX_VALUE };

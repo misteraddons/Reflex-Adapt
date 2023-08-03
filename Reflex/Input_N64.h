@@ -1,12 +1,11 @@
 /*******************************************************************************
- * N64 controllers to USB using an Arduino Leonardo.
- *
- * Works with analog pad.
+ * Reflex Adapt USB
+ * N64 input module
  * 
  * Uses Nintendo Lib
  * https://github.com/NicoHood/Nintendo
  *
- * For details on Joystick Library, see
+ * Uses a modified version of Joystick Library
  * https://github.com/MHeironimus/ArduinoJoystickLibrary
  *
 */
@@ -15,10 +14,10 @@
 #include "src/ArduinoJoystickLibrary/Joy1.h"
 
 //N64 pins - Port 1
-#define N64_1_DATA 21 // 9 old, 21 new
+#define N64_1_DATA 21
 
 //N64 pins - Port 2
-#define N64_2_DATA 5 // 20 old, 5 new
+#define N64_2_DATA 5
 
 CN64Controller* n64;//variable to hold current reading port
 
@@ -362,5 +361,5 @@ n64Loop() {
   }//end for
 
 
-  return stateChanged[0] || stateChanged[1]; //joyCount != 0;
+  return stateChanged[0] || stateChanged[1];
 }

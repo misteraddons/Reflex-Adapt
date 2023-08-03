@@ -1,5 +1,10 @@
 /*******************************************************************************
- * Neogeo pad reading without debounce
+ * Reflex Adapt USB
+ * Neogeo input module - without debounce
+ * 
+ * Uses a modified version of Joystick Library
+ * https://github.com/MHeironimus/ArduinoJoystickLibrary
+ * 
 */
 
 #include "src/ArduinoJoystickLibrary/Joy1.h"
@@ -7,20 +12,20 @@
 
 //Neogeo pins
 //https://old.pinouts.ru/Game/NeoGeoJoystick_pinout.shtml
-#define NEOGEOPIN_UP     15 //15  F6
-#define NEOGEOPIN_DOWN   5  //7   C6
+#define NEOGEOPIN_UP     15
+#define NEOGEOPIN_DOWN   5
 #if REFLEX_PIN_VERSION == 1
-  #define NEOGEOPIN_LEFT   3 //14  C7
+  #define NEOGEOPIN_LEFT   3
 #else
-  #define NEOGEOPIN_LEFT   13 //14  C7
+  #define NEOGEOPIN_LEFT   13
 #endif
-#define NEOGEOPIN_RIGHT  6  //6   D7
-#define NEOGEOPIN_A      16 //13  F5
-#define NEOGEOPIN_B      7  //5   E6
-#define NEOGEOPIN_C      4  //12  D4
-#define NEOGEOPIN_D      8  //4   B4
-#define NEOGEOPIN_SELECT 9  //3   B5
-#define NEOGEOPIN_START  14 //11  F7
+#define NEOGEOPIN_RIGHT  6
+#define NEOGEOPIN_A      16
+#define NEOGEOPIN_B      7
+#define NEOGEOPIN_C      4
+#define NEOGEOPIN_D      8
+#define NEOGEOPIN_SELECT 9
+#define NEOGEOPIN_START  14
 
 #define NEOGEO_TOTAL_PINS 10
 
@@ -149,5 +154,5 @@ neogeoLoop() {
     #endif
   }
 
-  return stateChanged; //false
+  return stateChanged;
 }
