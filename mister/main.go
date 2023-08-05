@@ -161,6 +161,11 @@ func tryUpdateUboot() (bool, error) {
 			return false, err
 		}
 
+		err = mister.EnableFastUsbPoll()
+		if err != nil {
+			return false, err
+		}
+
 		return true, nil
 	}
 
