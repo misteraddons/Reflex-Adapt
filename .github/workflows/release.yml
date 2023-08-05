@@ -42,6 +42,10 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: '1.20'
+      - name: Install UPX
+        uses: crazy-max/ghaction-upx@v2
+        with:
+          install-only: true
       - name: Download Updater
         uses: actions/download-artifact@v3
         with:
@@ -75,6 +79,7 @@ jobs:
           cp -rv ${RELEASE_DIR}/firmware mister/_files
           cd mister
           env GOARCH=arm go build -o _bin/reflex_updater.sh
+          upx -fq _bin/reflex_updater.sh
           bash ./generate_repo.sh
           cp -v _bin/reflex_updater.sh ${RELEASE_DIR}/reflex_updater.sh
           cp -v _bin/reflexadapt.json ${RELEASE_DIR}/reflexadapt.json
