@@ -10,6 +10,7 @@ import (
 	"io/fs"
 	"os"
 	"os/exec"
+	"os/signal"
 	"path/filepath"
 	"strings"
 )
@@ -207,6 +208,17 @@ func main() {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Stdin = os.Stdin
+
+	// forward all signals to the updater
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs)
+	go func(cmd *exec.Cmd) {
+		sig := <-sigs
+		if cmd.Process != nil {
+			_ = cmd.Process.Signal(sig)
+		}
+	}(cmd)
+
 	err = cmd.Run()
 	if err != nil {
 		fmt.Printf("An error occurred while running the updater: %s\n", err)
