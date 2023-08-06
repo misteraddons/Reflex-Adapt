@@ -81,9 +81,8 @@ jobs:
           env GOARCH=arm GOARM=7 go build -o _bin/reflex_updater.sh
           upx -fq _bin/reflex_updater.sh
           bash ./generate_repo.sh
-          cd ..
-          cp -v _bin/reflex_updater.sh ${RELEASE_DIR}/reflex_updater.sh
-          cp -v _bin/reflexadapt.json ${RELEASE_DIR}/reflexadapt.json
+          cp -v _bin/reflex_updater.sh ../${RELEASE_DIR}/reflex_updater.sh
+          cp -v _bin/reflexadapt.json ../${RELEASE_DIR}/reflexadapt.json
 
       - name: Zip Archive
         run: zip -r reflex-${{ inputs.tag }}.zip reflex-${{ inputs.tag }}/
