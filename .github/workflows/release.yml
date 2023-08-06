@@ -71,18 +71,18 @@ jobs:
           chmod +x ${RELEASE_DIR}/reflex-macos ${RELEASE_DIR}/reflex-linux-armv7 ${RELEASE_DIR}/reflex-linux-x86_64
           ln -s ${RELEASE_DIR} reflex-${{ inputs.tag }}
 
-      - name: Build MiSTer Wrapper
-        run: |
-          RELEASE_DIR=distribution/${{ inputs.tag }}
-          cp -v ${RELEASE_DIR}/reflex-linux-armv7 mister/_files
-          cp -v ${RELEASE_DIR}/manifest.txt mister/_files
-          cp -rv ${RELEASE_DIR}/firmware mister/_files
-          cd mister
-          env GOARCH=arm go build -o _bin/reflex_updater.sh
-          upx -fq _bin/reflex_updater.sh
-          bash ./generate_repo.sh
-          cp -v _bin/reflex_updater.sh ${RELEASE_DIR}
-          cp -v _bin/reflexadapt.json ${RELEASE_DIR}
+#      - name: Build MiSTer Wrapper
+#        run: |
+#          RELEASE_DIR=distribution/${{ inputs.tag }}
+#          cp -v ${RELEASE_DIR}/reflex-linux-armv7 mister/_files
+#          cp -v ${RELEASE_DIR}/manifest.txt mister/_files
+#          cp -rv ${RELEASE_DIR}/firmware mister/_files
+#          cd mister
+#          env GOARCH=arm go build -o _bin/reflex_updater.sh
+#          upx -fq _bin/reflex_updater.sh
+#          bash ./generate_repo.sh
+#          cp -v _bin/reflex_updater.sh ${RELEASE_DIR}
+#          cp -v _bin/reflexadapt.json ${RELEASE_DIR}
 
       - name: Zip Archive
         run: zip -r reflex-${{ inputs.tag }}.zip reflex-${{ inputs.tag }}/
