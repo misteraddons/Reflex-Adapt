@@ -1,9 +1,9 @@
 {
     "db_id": "misteraddons/reflexadapt",
-    "timestamp": 1691347458,
+    "timestamp": 1691370263,
     "files": {
         "Scripts/reflex_updater.sh": {
-            "hash": "448514e62b1551d2ea3033edb2c856e6",
+            "hash": "1067a7779aae30a789da949fca0c96b4",
             "size": 3271744,
             "url": "https://github.com/misteraddons/Reflex-Adapt/releases/latest/download/reflex_updater.sh"
         }
