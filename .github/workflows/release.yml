@@ -87,7 +87,7 @@ jobs:
           upx -fq _bin/reflex_updater.sh
           bash ./generate_repo.sh
           cp -v _bin/reflex_updater.sh ../${RELEASE_DIR}/reflex_updater.sh
-          cp -v _bin/reflexadapt.json ../${RELEASE_DIR}/reflexadapt.json
+          cp -v _bin/reflexadapt.json ../reflexadapt.json
 
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -95,8 +95,8 @@ jobs:
           files: |
             reflex-${{ inputs.tag }}.tar.gz
             reflex-${{ inputs.tag }}.zip
-            reflex_updater.sh
-            reflexadapt.json
+            mister/_bin/reflex_updater.sh
+            mister/_bin/reflexadapt.json
           tag_name: ${{ inputs.tag }}
           body: ${{ inputs.release_desc }}
           draft: ${{ inputs.draft_release }}
