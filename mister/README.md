@@ -18,9 +18,3 @@ It will:
 3. Run `env GOARCH=arm GOARM=7 go build -o _bin/reflex_updater.sh`
 
 This will output a final binary for MiSTer in the `_bin` directory.
-
-## Todo
-
-- [ ] Automate this build
-- [ ] Automate creation of a repo .json file for the downloader script
-- [ ] Run UPX on final binary
