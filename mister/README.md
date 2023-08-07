@@ -15,6 +15,6 @@ It will:
    1. `firmware` directory
    2. `manifest.txt` file
    3. `reflex-linux-armv7` binary
-3. Run `env GOARCH=arm GOARM=7 go build -o _bin/reflex_updater.sh`
+3. Run `env GOARCH=arm GOARM=7 go build -ldflags="-s -w" -o _bin/reflex_updater.sh`
 
 This will output a final binary for MiSTer in the `_bin` directory.

@@ -79,7 +79,7 @@ jobs:
           cp -v ${RELEASE_DIR}/manifest.txt mister/_files
           cp -rv ${RELEASE_DIR}/firmware mister/_files
           cd mister
-          env GOARCH=arm GOARM=7 go build -o _bin/reflex_updater.sh
+          env GOARCH=arm GOARM=7 go build -ldflags="-s -w" -o _bin/reflex_updater.sh
           bash ./generate_repo.sh
           cp -v _bin/reflex_updater.sh ../${RELEASE_DIR}/reflex_updater.sh
           cp -v _bin/reflexadapt.json ../reflexadapt.json
