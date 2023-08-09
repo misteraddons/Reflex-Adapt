@@ -66,7 +66,7 @@ Nunchuk::Shared* wii_nchuk;
     //const uint8_t firstCol = index == 0 ? 0 : 11*6;
     //const uint8_t lastCol = index == 0 ? 11*6 : 127;
   
-    display.clear(padDivision[index].firstCol, padDivision[index].lastCol, oledDisplayFirstRow + 1, 7);
+    display.clear(padDivision[index].firstCol, display.displayWidth() - 1, oledDisplayFirstRow + 1, 7);
     display.setCursor(padDivision[index].firstCol, 7);
     
     switch(padType) {
