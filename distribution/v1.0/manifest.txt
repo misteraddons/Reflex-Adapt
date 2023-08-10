@@ -2,8 +2,8 @@
 
 firmware/Nintendo.hex,Nintendo: NES+SNES+Tap, N64, GC & Wii
 firmware/Non-Nintendo.hex,Non-Nintendo: PCE, Neo, Gen+Sat, PSX+Gun & Jag
-firmware/Tap.hex,Tap: NES+SNES+Tap, Gen+Tap, Sat+Tap & PCE+Tap
-firmware/PSX-JogCon.hex,PSX Jog: PSX Jog [4 modes: Wheel (Mode+R2), Paddle (Mode+L2), Spinner (Mode+L2+R2) & Fake Spinner (Mode+R1+L1)]
+firmware/Multitap.hex,Multitap: NES+SNES+Tap, Gen+Tap, Sat+Tap & PCE+Tap
+firmware/PSX-JogCon.hex,PSX JogCon: PSX JogCon [4 modes: Wheel (Mode+R2), Paddle (Mode+L2), Spinner (Mode+L2+R2) & Fake Spinner (Mode+R1+L1)]
 firmware/Combo1.hex,Combo 1: NES+SNES, Gen+Sat+Tap & PSX+Gun+Jog
 firmware/Combo2.hex,Combo 2: NES+SNES, Gen+Sat+Tap & PSX+Gun+neGcon
 firmware/Combo3.hex,Combo 3: NES+SNES, Gen+Sat+Tap & PSX+Jog+neGcon
