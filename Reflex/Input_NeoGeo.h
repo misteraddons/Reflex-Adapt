@@ -126,7 +126,7 @@ neogeoLoop() {
     stateChanged = true;
     lastState = portState;
 
-    uint8_t buttonData = 0;
+    uint16_t buttonData = 0;
     bitWrite(buttonData, 1, ~portState & 0x010); //A
     bitWrite(buttonData, 2, ~portState & 0x020); //B
     bitWrite(buttonData, 0, ~portState & 0x040); //C
