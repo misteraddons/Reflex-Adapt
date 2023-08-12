@@ -43,7 +43,7 @@
 #define SDA_PIN 4// D8/A8/PB4
 #define SDA_PORT PORTB
 
-#define I2C_FASTMODE 1
+#define I2C_FASTMODE 0
 #define I2C_TIMEOUT 1000
 #define I2C_PULLUP 1
 //--------------

@@ -94,7 +94,7 @@
 
 
 #ifndef REFLEX_NO_DEFAULTS
-#define ENABLE_SATURN
+#define ENABLE_REFLEX_SATURN
 #endif // REFLEX_NO_DEFAULTS
 
 /******************************************************************************/
