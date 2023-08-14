@@ -7,6 +7,8 @@ reflex.vid.2=0x2A03
 reflex.pid.2=0x0036
 reflex.vid.3=0x2A03
 reflex.pid.3=0x8036
+reflex.vid.4=0x16D0
+reflex.pid.4=0x127E
 reflex.upload_port.0.vid=0x2341
 reflex.upload_port.0.pid=0x0036
 reflex.upload_port.1.vid=0x2341
@@ -15,7 +17,9 @@ reflex.upload_port.2.vid=0x2A03
 reflex.upload_port.2.pid=0x0036
 reflex.upload_port.3.vid=0x2A03
 reflex.upload_port.3.pid=0x8036
-reflex.upload_port.4.board=leonardo
+reflex.upload_port.4.vid=0x16D0
+reflex.upload_port.4.pid=0x127E
+reflex.upload_port.5.board=leonardo
 
 reflex.upload.tool=arduino:avrdude
 reflex.upload.tool.default=arduino:avrdude
@@ -39,11 +43,10 @@ reflex.bootloader.lock_bits=0x2F
 
 reflex.build.mcu=atmega32u4
 reflex.build.f_cpu=16000000L
-reflex.build.vid=0x2341
-reflex.build.pid=0x8036
-reflex.build.usb_product="Arduino Leonardo"
+reflex.build.vid=0x16D0
+reflex.build.pid=0x127E
+reflex.build.usb_product="Reflex Adapt"
 reflex.build.board=AVR_LEONARDO
 reflex.build.core=arduino:arduino
 reflex.build.variant=arduino:leonardo
 reflex.build.extra_flags={build.usb_flags}
-
