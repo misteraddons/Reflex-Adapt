@@ -174,7 +174,7 @@ void snesSetup() {
 
   //Create usb controllers
   for (uint8_t i = 0; i < totalUsb; i++) {
-    usbStick[i] = new Joy1_(isVirtualBoy ? "ReflexAdaptVboy" : "ReflexAdaptSNESNTT", JOYSTICK_DEFAULT_REPORT_ID + i, JOYSTICK_TYPE_GAMEPAD, totalUsb);
+    usbStick[i] = new Joy1_(isVirtualBoy ? "ReflexVboy" : "ReflexSNESNTT", JOYSTICK_DEFAULT_REPORT_ID + i, JOYSTICK_TYPE_GAMEPAD, totalUsb);
   }
 
   //Set usb parameters and reset to default values

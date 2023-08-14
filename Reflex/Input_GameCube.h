@@ -112,7 +112,7 @@ void gameCubeSetup() {
   
   //Create usb controllers
   for (uint8_t i = 0; i < totalUsb; i++) {
-    usbStick[i] = new Joy1_("ReflexAdaptGC", JOYSTICK_DEFAULT_REPORT_ID + i, JOYSTICK_TYPE_GAMEPAD, totalUsb,
+    usbStick[i] = new Joy1_("ReflexGC", JOYSTICK_DEFAULT_REPORT_ID + i, JOYSTICK_TYPE_GAMEPAD, totalUsb,
           true,//includeXAxis,
           true,//includeYAxis,
           true,//includeZAxis,
