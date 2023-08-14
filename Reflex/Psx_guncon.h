@@ -518,12 +518,12 @@ void loopGuncon() {
 
 void gunconSetup() {
   #ifdef ENABLE_PSX_GUNCON_MOUSE
-    AbsMouse = new Guncon1_("RZordPsGun", JOYSTICK_DEFAULT_REPORT_ID, JOYSTICK_TYPE_MOUSE, 2);
-    usbStick[0] = new Guncon1_("RZordPsGun", JOYSTICK_DEFAULT_REPORT_ID + 1, JOYSTICK_TYPE_GAMEPAD, 2);
+    AbsMouse = new Guncon1_("ReflexAdaptPSGun", JOYSTICK_DEFAULT_REPORT_ID, JOYSTICK_TYPE_MOUSE, 2);
+    usbStick[0] = new Guncon1_("ReflexAdaptPSGun", JOYSTICK_DEFAULT_REPORT_ID + 1, JOYSTICK_TYPE_GAMEPAD, 2);
     AbsMouse->resetState();
     AbsMouse->sendState();
   #else
-    usbStick[0] = new Guncon1_("RZordPsGun", JOYSTICK_DEFAULT_REPORT_ID + 1, JOYSTICK_TYPE_GAMEPAD, 1);
+    usbStick[0] = new Guncon1_("ReflexAdaptPSGun", JOYSTICK_DEFAULT_REPORT_ID + 1, JOYSTICK_TYPE_GAMEPAD, 1);
   #endif
   
   usbStick[0]->resetState();

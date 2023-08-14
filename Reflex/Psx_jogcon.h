@@ -295,11 +295,11 @@ void jogconSetup() {
 
 #ifdef ENABLE_PSX_JOGCON_MOUSE
   if(enableMouseMove) {
-      RelMouse = new MouseRel1_("RZordPsJogCon", JOYSTICK_DEFAULT_REPORT_ID, 2);
+      RelMouse = new MouseRel1_("ReflexAdaptPSJogCon", JOYSTICK_DEFAULT_REPORT_ID, 2);
       //RelMouse->begin (false);
       RelMouse->resetState();//todo send?
       RelMouse->sendState();
-    usbStick[0] = new Jogcon1_("RZordPsJogCon", JOYSTICK_DEFAULT_REPORT_ID + 1, JOYSTICK_TYPE_GAMEPAD, 2);
+    usbStick[0] = new Jogcon1_("ReflexAdaptPSJogCon", JOYSTICK_DEFAULT_REPORT_ID + 1, JOYSTICK_TYPE_GAMEPAD, 2);
   } else
 #endif
   {

@@ -84,7 +84,7 @@ void neogeoSetup() {
   ngeo_START.config(INPUT, HIGH);
   
   //Create usb controllers
-  usbStick[0] = new Joy1_("RZordNeoGeo", JOYSTICK_DEFAULT_REPORT_ID, JOYSTICK_TYPE_GAMEPAD, totalUsb);
+  usbStick[0] = new Joy1_("ReflexAdaptNeoGeo", JOYSTICK_DEFAULT_REPORT_ID, JOYSTICK_TYPE_GAMEPAD, totalUsb);
   
   //Set usb parameters and reset to default values
   usbStick[0]->resetState();
