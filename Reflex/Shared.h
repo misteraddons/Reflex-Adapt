@@ -1,5 +1,5 @@
-#ifndef RZORD_SHARED_H_
-#define RZORD_SHARED_H_
+#ifndef REFLEX_SHARED_H_
+#define REFLEX_SHARED_H_
 
 //Arduino Joystick Library
 #include "src/ArduinoJoystickLibrary/Joystick.h"
@@ -26,47 +26,47 @@ const char PSTR_PAD[] PROGMEM = "PAD";
 
 
 enum DeviceEnum {
-  RZORD_NONE = 0,
+  REFLEX_NONE = 0,
 #ifdef ENABLE_REFLEX_SATURN
-  RZORD_SATURN, //1
+  REFLEX_SATURN, //1
 #endif
 #ifdef ENABLE_REFLEX_SNES
-  RZORD_SNES,   //2
+  REFLEX_SNES,   //2
 #endif
 #ifdef ENABLE_REFLEX_PSX
-  RZORD_PSX,    //3
+  REFLEX_PSX,    //3
 #endif
 #ifdef ENABLE_REFLEX_PSX_JOG
-  RZORD_PSX_JOG,//4
+  REFLEX_PSX_JOG,//4
 #endif
 #ifdef ENABLE_REFLEX_PCE
-  RZORD_PCE,    //5
+  REFLEX_PCE,    //5
 #endif
 #ifdef ENABLE_REFLEX_NEOGEO
-  RZORD_NEOGEO,  //6
+  REFLEX_NEOGEO,  //6
 #endif
 #ifdef ENABLE_REFLEX_3DO
-  RZORD_3DO,  //7
+  REFLEX_3DO,  //7
 #endif
 #ifdef ENABLE_REFLEX_JAGUAR
-  RZORD_JAGUAR,  //8
+  REFLEX_JAGUAR,  //8
 #endif
 #ifdef ENABLE_REFLEX_N64
-  RZORD_N64,  //9
+  REFLEX_N64,  //9
 #endif
 #ifdef ENABLE_REFLEX_GAMECUBE
-  RZORD_GAMECUBE,  //10
+  REFLEX_GAMECUBE,  //10
 #endif
 #ifdef ENABLE_REFLEX_WII
-  RZORD_WII,  //11
+  REFLEX_WII,  //11
 #endif
 #ifdef ENABLE_REFLEX_SMS
-  RZORD_SMS,  //12
+  REFLEX_SMS,  //12
 #endif
-  RZORD_LAST //this must be the last enum value
+  REFLEX_LAST //this must be the last enum value
 };
 
-DeviceEnum deviceMode = RZORD_NONE;
+DeviceEnum deviceMode = REFLEX_NONE;
 
 #ifdef ENABLE_SERIAL_DEBUG
   #define dstart(spd) do {Serial.begin (spd); while (!Serial) {digitalWrite (LED_BUILTIN, (millis () / 500) % 2);}} while (0);
@@ -187,4 +187,4 @@ const uint8_t hatTable[] = {
 
 #endif //REFLEX_USE_OLED_DISPLAY
 
-#endif //RZORD_SHARED_H_
+#endif //REFLEX_SHARED_H_

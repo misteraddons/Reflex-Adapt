@@ -156,7 +156,7 @@
 #include <EEPROM.h>
 
 //eerpom index for storage values
-#define RZORD_EEPROM_MODE 0
+#define REFLEX_EEPROM_MODE 0
 
 #define pinBtn 12 //mode button
 
@@ -165,13 +165,13 @@
     clearOledDisplay();
     switch(deviceMode) {
 #ifdef ENABLE_REFLEX_SATURN
-      case RZORD_SATURN:
+      case REFLEX_SATURN:
         display.setCol(2*6);
         display.print(F("GENESIS + SATURN"));
         break;
 #endif
 #ifdef ENABLE_REFLEX_SNES
-      case RZORD_SNES:
+      case REFLEX_SNES:
         #ifdef SNES_ENABLE_VBOY
           display.setCol(2*6);
           display.print(F("NES + SNES + VBOY"));
@@ -182,13 +182,13 @@
         break;
 #endif
 #ifdef ENABLE_REFLEX_PSX
-      case RZORD_PSX:
+      case REFLEX_PSX:
 #ifdef ENABLE_REFLEX_PSX_JOG
-      case RZORD_PSX_JOG:
+      case REFLEX_PSX_JOG:
 #endif
       {
 #ifdef ENABLE_REFLEX_PSX_JOG //dedicated jogcon mode
-        if(deviceMode == RZORD_PSX_JOG) {
+        if(deviceMode == REFLEX_PSX_JOG) {
           display.setCol(6*6);
           display.println("PSX JOGCON");
         } else
@@ -224,49 +224,49 @@
       }
 #endif
 #ifdef ENABLE_REFLEX_PCE
-      case RZORD_PCE:
+      case REFLEX_PCE:
         display.setCol(6*6);
         display.print(F("PC-ENGINE"));
         break;
 #endif
 #ifdef ENABLE_REFLEX_NEOGEO
-      case RZORD_NEOGEO:
+      case REFLEX_NEOGEO:
         display.setCol(7*6);
         display.print(F("NEO-GEO"));
         break;
 #endif
 #ifdef ENABLE_REFLEX_3DO
-      case RZORD_3DO:
+      case REFLEX_3DO:
         display.setCol(9*6);
         display.print(F("3DO"));
         break;
 #endif
 #ifdef ENABLE_REFLEX_JAGUAR
-      case RZORD_JAGUAR:
+      case REFLEX_JAGUAR:
         display.setCol(7*6);
         display.print(F("JAGUAR"));
         break;
 #endif
 #ifdef ENABLE_REFLEX_N64
-      case RZORD_N64:
+      case REFLEX_N64:
         display.setCol(9*6);
         display.print(F("N64"));
         break;
 #endif
 #ifdef ENABLE_REFLEX_GAMECUBE
-      case RZORD_GAMECUBE:
+      case REFLEX_GAMECUBE:
         display.setCol(6*6);
         display.print(F("GAMECUBE"));
         break;
 #endif
 #ifdef ENABLE_REFLEX_WII
-      case RZORD_WII:
+      case REFLEX_WII:
         display.setCol(9*6);
         display.print(F("WII"));
         break;
 #endif
 #ifdef ENABLE_REFLEX_SMS
-      case RZORD_SMS:
+      case REFLEX_SMS:
         display.setCol(9*6);
         display.print(F("SMS"));
         break;
@@ -280,7 +280,7 @@
 
 void setNextMode() {
   deviceMode = (DeviceEnum)(deviceMode + 1);
-  if(deviceMode >= RZORD_LAST)
+  if(deviceMode >= REFLEX_LAST)
     deviceMode = (DeviceEnum)1;
 }
 
@@ -290,68 +290,68 @@ void setup() {
     
 
   //use eeprom
-  deviceMode = (DeviceEnum)EEPROM.read(RZORD_EEPROM_MODE);
-  if (deviceMode >= RZORD_LAST)
+  deviceMode = (DeviceEnum)EEPROM.read(REFLEX_EEPROM_MODE);
+  if (deviceMode >= REFLEX_LAST)
     deviceMode = (DeviceEnum)1;
     
   switch(deviceMode) {
 #ifdef ENABLE_REFLEX_SATURN
-    case RZORD_SATURN:
+    case REFLEX_SATURN:
       saturnSetup();
       break;
 #endif
 #ifdef ENABLE_REFLEX_SNES
-    case RZORD_SNES:
+    case REFLEX_SNES:
       snesSetup();
       break;
 #endif
 #ifdef ENABLE_REFLEX_PSX
-    case RZORD_PSX:
+    case REFLEX_PSX:
       psxSetup();
       break;
 #endif
 #ifdef ENABLE_REFLEX_PSX_JOG
-    case RZORD_PSX_JOG:
+    case REFLEX_PSX_JOG:
       psxSetup();
       break;
 #endif
 #ifdef ENABLE_REFLEX_PCE
-    case RZORD_PCE:
+    case REFLEX_PCE:
       pceSetup();
       break;
 #endif
 #ifdef ENABLE_REFLEX_NEOGEO
-    case RZORD_NEOGEO:
+    case REFLEX_NEOGEO:
       neogeoSetup();
       break;
 #endif
 #ifdef ENABLE_REFLEX_3DO
-    case RZORD_3DO:
+    case REFLEX_3DO:
       threedoSetup();
       break;
 #endif
 #ifdef ENABLE_REFLEX_JAGUAR
-    case RZORD_JAGUAR:
+    case REFLEX_JAGUAR:
       jaguarSetup();
       break;
 #endif
 #ifdef ENABLE_REFLEX_N64
-    case RZORD_N64:
+    case REFLEX_N64:
       n64Setup();
       break;
 #endif
 #ifdef ENABLE_REFLEX_GAMECUBE
-    case RZORD_GAMECUBE:
+    case REFLEX_GAMECUBE:
       gameCubeSetup();
       break;
 #endif
 #ifdef ENABLE_REFLEX_WII
-    case RZORD_WII:
+    case REFLEX_WII:
       wiiSetup();
       break;
 #endif
 #ifdef ENABLE_REFLEX_SMS
-    case RZORD_SMS:
+    case REFLEX_SMS:
       smsSetup();
       break;
 #endif
@@ -389,60 +389,60 @@ void loop() {
   if (micros() - last >= sleepTime) {
     switch(deviceMode){
 #ifdef ENABLE_REFLEX_SATURN
-      case RZORD_SATURN:
+      case REFLEX_SATURN:
         stateChanged = saturnLoop();
         break;
 #endif
 #ifdef ENABLE_REFLEX_SNES
-      case RZORD_SNES:
+      case REFLEX_SNES:
         stateChanged = snesLoop();
         break;
 #endif
 #ifdef ENABLE_REFLEX_PSX
-      case RZORD_PSX:
+      case REFLEX_PSX:
 #ifdef ENABLE_REFLEX_PSX_JOG
-      case RZORD_PSX_JOG:
+      case REFLEX_PSX_JOG:
 #endif
         stateChanged = psxLoop();
         break;
 #endif
 #ifdef ENABLE_REFLEX_PCE
-      case RZORD_PCE:
+      case REFLEX_PCE:
         stateChanged = pceLoop();
         break;
 #endif
 #ifdef ENABLE_REFLEX_NEOGEO
-        case RZORD_NEOGEO:
+        case REFLEX_NEOGEO:
         stateChanged = neogeoLoop();
         break;
 #endif
 #ifdef ENABLE_REFLEX_3DO
-        case RZORD_3DO:
+        case REFLEX_3DO:
         stateChanged = threedoLoop();
         break;
 #endif
 #ifdef ENABLE_REFLEX_JAGUAR
-        case RZORD_JAGUAR:
+        case REFLEX_JAGUAR:
         stateChanged = jaguarLoop();
         break;
 #endif
 #ifdef ENABLE_REFLEX_N64
-        case RZORD_N64:
+        case REFLEX_N64:
         stateChanged = n64Loop();
         break;
 #endif
 #ifdef ENABLE_REFLEX_GAMECUBE
-        case RZORD_GAMECUBE:
+        case REFLEX_GAMECUBE:
         stateChanged = gameCubeLoop();
         break;
 #endif
 #ifdef ENABLE_REFLEX_WII
-        case RZORD_WII:
+        case REFLEX_WII:
         stateChanged = wiiLoop();
         break;
 #endif
 #ifdef ENABLE_REFLEX_SMS
-        case RZORD_SMS:
+        case REFLEX_SMS:
         stateChanged = smsLoop();
         break;
 #endif
@@ -506,8 +506,8 @@ void loop() {
     }
 
     //save mode
-    EEPROM.write(RZORD_EEPROM_MODE, (byte)deviceMode);
-    //EEPROM.update(RZORD_EEPROM_MODE, (byte)deviceMode);
+    EEPROM.write(REFLEX_EEPROM_MODE, (byte)deviceMode);
+    //EEPROM.update(REFLEX_EEPROM_MODE, (byte)deviceMode);
 
     #ifdef REFLEX_USE_OLED_DISPLAY
       display.clear();
