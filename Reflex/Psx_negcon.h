@@ -84,7 +84,7 @@ bool loopNeGcon() {
 void negconSetup() {
   totalUsb = 2;//MAX_USB_STICKS;
   for (uint8_t i = 0; i < totalUsb; i++) {
-    usbStick[i] = new Joy1_(isNeGconMiSTer ? "ReflexPSPSWheel" : "ReflexPSPSneGcon", JOYSTICK_DEFAULT_REPORT_ID + i, JOYSTICK_TYPE_GAMEPAD, totalUsb,
+    usbStick[i] = new Joy1_(isNeGconMiSTer ? "ReflexPSWheel" : "ReflexPSneGcon", JOYSTICK_DEFAULT_REPORT_ID + i, JOYSTICK_TYPE_GAMEPAD, totalUsb,
       true,//includeXAxis,
       false,//includeYAxis,
       true,//includeZAxis,joy
