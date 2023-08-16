@@ -4,7 +4,6 @@ import (
 	"embed"
 	"fmt"
 	"github.com/wizzomafizzo/mrext/pkg/mister"
-	"github.com/wizzomafizzo/mrext/pkg/misterini"
 	"github.com/wizzomafizzo/mrext/pkg/utils"
 	"io"
 	"io/fs"
@@ -15,9 +14,10 @@ import (
 	"strings"
 )
 
+// TODO: when getting rid of usb quirks, add in a check for fast polling
+
 const (
 	reflexBinName = "reflex-linux-armv7"
-	adaptVidPid   = "0x23418036"
 	adaptQuirks   = "0x2341:0x8036:0x040"
 )
 
@@ -98,48 +98,6 @@ func cleanupUpdater(tmp string) error {
 	return nil
 }
 
-// tryUpdateInis checks if the user needs the merge vid/pid options set in any of their .ini files, prompts them
-// if they want to update them, and then updates them if they do. It is silent if no .ini files need updating.
-func tryUpdateInis() error {
-	missing, err := misterini.GetInisWithout(misterini.KeyNoMergeVidpid, adaptVidPid)
-	if err != nil {
-		return err
-	}
-
-	// nothing to do
-	if len(missing) == 0 {
-		return nil
-	}
-
-	// prompt the user
-	answer := utils.YesOrNoPrompt(
-		"Some of your .ini files are not configured correctly for Reflex Adapt. Would you like to update them?",
-	)
-	if !answer {
-		return nil
-	}
-
-	// update the .ini files
-	for _, mi := range missing {
-		err := mi.Load()
-		if err != nil {
-			return err
-		}
-
-		err = mi.AddKey(misterini.KeyNoMergeVidpid, adaptVidPid)
-		if err != nil {
-			return err
-		}
-
-		err = mi.Save()
-		if err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
 // tryUpdateUboot checks if the user needs the usbhid.quirks option set in their u-boot.txt, prompts them if they want
 // to update it, and then updates it if they do. It is silent if u-boot.txt does not need updating.
 func tryUpdateUboot() (bool, error) {
@@ -150,7 +108,7 @@ func tryUpdateUboot() (bool, error) {
 
 	if !utils.Contains(quirks, adaptQuirks) {
 		answer := utils.YesOrNoPrompt(
-			"Your u-boot.txt is not configured correctly for Reflex Adapt. Would you like to update it?",
+			"Reflex Adapt requires changes to your system's u-boot.txt. Would you like to update it?",
 		)
 		if !answer {
 			return false, nil
@@ -178,19 +136,13 @@ func clearTerminal() {
 }
 
 func main() {
-	err := tryUpdateInis()
-	if err != nil {
-		fmt.Printf("An error occurred while updating .ini files: %s\n", err)
-		os.Exit(1)
-	}
-
 	updated, err := tryUpdateUboot()
 	if err != nil {
 		fmt.Printf("An error occurred while updating u-boot.txt: %s\n", err)
 		os.Exit(1)
 	}
 	if updated {
-		fmt.Println("Please power cycle your MiSTer for u-boot.txt changes to take effect.")
+		fmt.Println("Please power cycle your MiSTer for these changes to take effect.")
 		os.Exit(0)
 	}
 
@@ -209,7 +161,7 @@ func main() {
 	cmd.Stderr = os.Stderr
 	cmd.Stdin = os.Stdin
 
-	// forward all signals to the updater
+	// forward signal to the updater
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs)
 	go func(cmd *exec.Cmd) {
