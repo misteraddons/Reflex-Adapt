@@ -4,7 +4,6 @@ This is a wrapper which bundles all the Reflex updater files into a single
 binary and autoconfigures the user's MiSTer to use Adapt properly.
 
 It will:
-- Check for and configure VID/PID settings in any of the user's MiSTer.ini files
 - Check for and configure u-boot.txt module parameters for USB HID quirks
 - Extract the updater to `/tmp` and run it as normal
 
