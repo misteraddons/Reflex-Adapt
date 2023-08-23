@@ -3,6 +3,7 @@ package main
 import (
 	"embed"
 	"fmt"
+	"github.com/wizzomafizzo/mrext/pkg/config"
 	"github.com/wizzomafizzo/mrext/pkg/mister"
 	"github.com/wizzomafizzo/mrext/pkg/utils"
 	"io"
@@ -19,6 +20,10 @@ import (
 const (
 	reflexBinName = "reflex-linux-armv7"
 	adaptQuirks   = "0x2341:0x8036:0x040"
+	dbName        = "misteraddons/reflexadapt"
+	dbUrl         = "https://github.com/misteraddons/Reflex-Adapt/raw/main/reflexadapt.json.zip"
+	configFolder  = config.ScriptsConfigFolder + "/reflex"
+	noDbFile      = configFolder + "/.no-db-reflexadapt"
 )
 
 //go:embed _files
@@ -131,6 +136,45 @@ func tryUpdateUboot() (bool, error) {
 	return false, nil
 }
 
+// tryAddDb prompts if the user wants the updater repo db added to their downloader.ini file. Optionally, they can
+// say no and the check will be disabled.
+func tryAddDb() (bool, error) {
+	_ = os.MkdirAll(configFolder, 0755)
+
+	if _, err := os.Stat(noDbFile); err == nil {
+		return false, nil
+	}
+
+	downloadIni, err := mister.LoadDownloaderIni()
+	if err != nil {
+		return false, err
+	}
+	if downloadIni.HasDb(dbName) {
+		return false, nil
+	}
+
+	answer := utils.YesOrNoPrompt("Do you want Reflex Updater to automatically update with downloader or update_all?")
+	if !answer {
+		err := os.WriteFile(noDbFile, []byte{}, 0644)
+		if err != nil {
+			return false, err
+		}
+		return false, nil
+	}
+
+	err = downloadIni.AddDb(dbName, dbUrl)
+	if err != nil {
+		return false, err
+	}
+
+	err = downloadIni.Save()
+	if err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
+
 func clearTerminal() {
 	fmt.Print("\033[H\033[2J")
 }
@@ -144,6 +188,15 @@ func main() {
 	if updated {
 		fmt.Println("Please power cycle your MiSTer for these changes to take effect.")
 		os.Exit(0)
+	}
+
+	updated, err = tryAddDb()
+	if err != nil {
+		fmt.Printf("An error occurred while updating downloader.ini: %s\n", err)
+		os.Exit(1)
+	}
+	if updated {
+		utils.InfoPrompt("Please run downloader or update_all to get controller mappings after configuring Adapt.")
 	}
 
 	updaterDir, err := extractUpdater()

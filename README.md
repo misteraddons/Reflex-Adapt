@@ -24,5 +24,5 @@ Alternatively, manually add the following to your `downloader.ini` file on the S
 
 ```
 [misteraddons/reflexadapt]
-db_url = https://github.com/misteraddons/mappings-reflex_adapt/raw/main/reflexadapt.json.zip
+db_url = https://github.com/misteraddons/Reflex-Adapt/raw/main/reflexadapt.json.zip
 ```
