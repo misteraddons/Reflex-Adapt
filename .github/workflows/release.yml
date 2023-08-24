@@ -97,4 +97,6 @@ jobs:
         if: ${{ inputs.update_distribution }}
         with:
           add: distribution/${{ inputs.tag }}/* -f -A
-
+  repo:
+    name: Rebuild MiSTer Repo
+    uses: misteraddons/Reflex-Adapt/.github/workflows/repo.yml@main
