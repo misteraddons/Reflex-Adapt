@@ -100,3 +100,4 @@ jobs:
   repo:
     name: Rebuild MiSTer Repo
     uses: misteraddons/Reflex-Adapt/.github/workflows/repo.yml@main
+    needs: [ updater, firmware, assemble ]
