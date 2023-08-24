@@ -1,0 +1,33 @@
+name: Repo
+
+on:
+  workflow_dispatch:
+  workflow_call:
+  push:
+    paths:
+      - mister/config/**
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Get Latest Release
+        uses: pozetroninc/github-action-get-latest-release@master
+        with:
+          repository: misteraddons/Reflex-Adapt
+          excludes: prerelease, draft
+        id: updater
+      - name: Fetch Reflex Updater
+        uses: dsaltares/fetch-gh-release-asset@master
+        with:
+          repo: misteraddons/Reflex-Adapt
+          version: tags/${{ steps.updater.outputs.release }}
+          file: reflex_updater.sh
+      - name: Generate Repo File
+        run: python3 ./mister/generate_repo.py "${{ steps.updater.outputs.release }}"
+      - name: Commit Repo File
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: reflexadapt.json.zip
