@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/wizzomafizzo/mrext/pkg/config"
 	"github.com/wizzomafizzo/mrext/pkg/mister"
+	"github.com/wizzomafizzo/mrext/pkg/misterini"
 	"github.com/wizzomafizzo/mrext/pkg/utils"
 	"io"
 	"io/fs"
@@ -18,12 +19,14 @@ import (
 // TODO: when getting rid of usb quirks, add in a check for fast polling
 
 const (
-	reflexBinName = "reflex-linux-armv7"
-	adaptQuirks   = "0x2341:0x8036:0x040"
-	dbName        = "misteraddons/reflexadapt"
-	dbUrl         = "https://github.com/misteraddons/Reflex-Adapt/raw/main/reflexadapt.json.zip"
-	configFolder  = config.ScriptsConfigFolder + "/reflex"
-	noDbFile      = configFolder + "/.no-db-reflexadapt"
+	quirksAreRequired = true // TODO: remove this after next main release
+	reflexBinName     = "reflex-linux-armv7"
+	adaptQuirks       = "0x2341:0x8036:0x040"
+	adaptVidPid       = "0x23418036"
+	dbName            = "misteraddons/reflexadapt"
+	dbUrl             = "https://github.com/misteraddons/Reflex-Adapt/raw/main/reflexadapt.json.zip"
+	configFolder      = config.ScriptsConfigFolder + "/reflex"
+	noDbFile          = configFolder + "/.no-db-reflexadapt"
 )
 
 //go:embed _files
@@ -103,9 +106,82 @@ func cleanupUpdater(tmp string) error {
 	return nil
 }
 
+// tryUpdateInis checks if the user needs the merge vid/pid options set in any of their .ini files, prompts them
+// if they want to update them, and then updates them if they do. It is silent if no .ini files need updating.
+func tryUpdateInis() error {
+	//goland:noinspection GoBoolExpressions
+	if !quirksAreRequired {
+		return nil
+	}
+
+	missing, err := misterini.GetInisWithout(misterini.KeyNoMergeVidpid, adaptVidPid)
+	if err != nil {
+		return err
+	}
+
+	// nothing to do
+	if len(missing) == 0 {
+		return nil
+	}
+
+	// prompt the user
+	answer := utils.YesOrNoPrompt(
+		"Some of your MiSTer.ini files are not configured for Reflex Adapt's multitap support. Would you like to update them?",
+	)
+	if !answer {
+		return nil
+	}
+
+	// update the .ini files
+	for _, mi := range missing {
+		err := mi.Load()
+		if err != nil {
+			return err
+		}
+
+		err = mi.AddKey(misterini.KeyNoMergeVidpid, adaptVidPid)
+		if err != nil {
+			return err
+		}
+
+		err = mi.Save()
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 // tryUpdateUboot checks if the user needs the usbhid.quirks option set in their u-boot.txt, prompts them if they want
 // to update it, and then updates it if they do. It is silent if u-boot.txt does not need updating.
 func tryUpdateUboot() (bool, error) {
+	//goland:noinspection GoBoolExpressions
+	if !quirksAreRequired {
+		fastUsb, err := mister.IsFastUsbPollActive()
+		if err != nil {
+			return false, err
+		}
+
+		if !fastUsb {
+			answer := utils.YesOrNoPrompt(
+				"Reflex Adapt works best with fast USB polling enabled in your system's u-boot.txt. Would you like to enable it?",
+			)
+			if !answer {
+				return false, nil
+			}
+
+			err = mister.EnableFastUsbPoll()
+			if err != nil {
+				return false, err
+			}
+
+			return true, nil
+		} else {
+			return false, nil
+		}
+	}
+
 	quirks, err := mister.GetUsbHidQuirks()
 	if err != nil {
 		return false, err
@@ -113,7 +189,7 @@ func tryUpdateUboot() (bool, error) {
 
 	if !utils.Contains(quirks, adaptQuirks) {
 		answer := utils.YesOrNoPrompt(
-			"Reflex Adapt requires changes to your system's u-boot.txt. Would you like to update it?",
+			"Reflex Adapt requires changes to your system's u-boot.txt for fast USB polling and composite USB devices. Would you like to update it?",
 		)
 		if !answer {
 			return false, nil
@@ -153,7 +229,7 @@ func tryAddDb() (bool, error) {
 		return false, nil
 	}
 
-	answer := utils.YesOrNoPrompt("Do you want Reflex Updater to automatically update with downloader or update_all?")
+	answer := utils.YesOrNoPrompt("Do you want Reflex Updater to automatically update with downloader and update_all?")
 	if !answer {
 		err := os.WriteFile(noDbFile, []byte{}, 0644)
 		if err != nil {
@@ -180,7 +256,22 @@ func clearTerminal() {
 }
 
 func main() {
-	updated, err := tryUpdateUboot()
+	err := tryUpdateInis()
+	if err != nil {
+		fmt.Printf("An error occurred while updating .ini files: %s\n", err)
+		os.Exit(1)
+	}
+
+	updated, err := tryAddDb()
+	if err != nil {
+		fmt.Printf("An error occurred while updating downloader.ini: %s\n", err)
+		os.Exit(1)
+	}
+	if updated {
+		utils.InfoPrompt("Please run downloader or update_all to get controller mappings after configuring Adapt.")
+	}
+
+	updated, err = tryUpdateUboot()
 	if err != nil {
 		fmt.Printf("An error occurred while updating u-boot.txt: %s\n", err)
 		os.Exit(1)
@@ -188,15 +279,6 @@ func main() {
 	if updated {
 		fmt.Println("Please power cycle your MiSTer for these changes to take effect.")
 		os.Exit(0)
-	}
-
-	updated, err = tryAddDb()
-	if err != nil {
-		fmt.Printf("An error occurred while updating downloader.ini: %s\n", err)
-		os.Exit(1)
-	}
-	if updated {
-		utils.InfoPrompt("Please run downloader or update_all to get controller mappings after configuring Adapt.")
 	}
 
 	updaterDir, err := extractUpdater()
