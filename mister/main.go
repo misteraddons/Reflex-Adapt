@@ -21,8 +21,8 @@ import (
 const (
 	quirksAreRequired = true // TODO: remove this after next main release
 	reflexBinName     = "reflex-linux-armv7"
-	adaptQuirks       = "0x2341:0x8036:0x040"
-	adaptVidPid       = "0x23418036"
+	adaptQuirks       = "0x16d0:0x127e:0x040"
+	adaptVidPid       = "0x16d0127e"
 	dbName            = "misteraddons/reflexadapt"
 	dbUrl             = "https://github.com/misteraddons/Reflex-Adapt/raw/main/reflexadapt.json.zip"
 	configFolder      = config.ScriptsConfigFolder + "/reflex"
