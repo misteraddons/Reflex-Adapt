@@ -16,8 +16,6 @@ import (
 	"strings"
 )
 
-// TODO: when getting rid of usb quirks, add in a check for fast polling
-
 const (
 	quirksAreRequired = true // TODO: remove this after next main release
 	reflexBinName     = "reflex-linux-armv7"
@@ -215,11 +213,11 @@ func tryUpdateUboot() (bool, error) {
 // tryAddDb prompts if the user wants the updater repo db added to their downloader.ini file. Optionally, they can
 // say no and the check will be disabled.
 func tryAddDb() (bool, error) {
-	_ = os.MkdirAll(configFolder, 0755)
-
-	if _, err := os.Stat(noDbFile); err == nil {
-		return false, nil
-	}
+	//_ = os.MkdirAll(configFolder, 0755)
+	//
+	//if _, err := os.Stat(noDbFile); err == nil {
+	//	return false, nil
+	//}
 
 	downloadIni, err := mister.LoadDownloaderIni()
 	if err != nil {
@@ -256,16 +254,18 @@ func clearTerminal() {
 }
 
 func main() {
+	wasError := false
+
 	err := tryUpdateInis()
 	if err != nil {
 		fmt.Printf("An error occurred while updating .ini files: %s\n", err)
-		os.Exit(1)
+		wasError = true
 	}
 
 	updated, err := tryAddDb()
 	if err != nil {
 		fmt.Printf("An error occurred while updating downloader.ini: %s\n", err)
-		os.Exit(1)
+		wasError = true
 	}
 	if updated {
 		utils.InfoPrompt("Please run downloader or update_all to get controller mappings after configuring Adapt.")
@@ -274,11 +274,15 @@ func main() {
 	updated, err = tryUpdateUboot()
 	if err != nil {
 		fmt.Printf("An error occurred while updating u-boot.txt: %s\n", err)
-		os.Exit(1)
+		wasError = true
 	}
 	if updated {
 		fmt.Println("Please power cycle your MiSTer for these changes to take effect.")
 		os.Exit(0)
+	}
+
+	if wasError {
+		utils.InfoPrompt("Errors occurred while setting up Adapt for MiSTer. You can safely configure the firmware of your Adapt, but it may not function correctly on MiSTer until the errors are addressed.")
 	}
 
 	updaterDir, err := extractUpdater()
