@@ -15,3 +15,4 @@ firmware/Combo8.hex,Combo 8: PCE, Neo, Jag, N64, GC & Wii
 firmware/Combo9.hex,Combo 9: NES+SNES, N64, GC, Wii & PSX+neGcon
 firmware/Combo10.hex,Combo 10: NES+SNES, N64, Wii & PSX+Jog+Gun
 firmware/Combo11.hex,Combo 11: NES+SNES, N64, Wii & PSX+neGcon+Gun
+firmware/Combo12.hex,Combo 12: NES+SNES, N64, Gen+Sat, PSX
