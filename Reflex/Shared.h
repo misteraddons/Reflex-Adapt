@@ -19,7 +19,7 @@ uint8_t totalUsb = 1;//how many controller outputs via usb.
 
 //strings in progmem
 #define PSTR_TO_F(s) reinterpret_cast<const __FlashStringHelper *> (s)
-const char PSTR_NA[] PROGMEM = "N/A";
+const char PSTR_NA[] PROGMEM = "PLUG+RESET";
 const char PSTR_NONE[] PROGMEM = "NONE";
 const char PSTR_DIGITAL[] PROGMEM = "DIGITAL";
 const char PSTR_PAD[] PROGMEM = "PAD";

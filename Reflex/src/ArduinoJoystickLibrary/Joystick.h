@@ -100,7 +100,7 @@ class Joystick_
   public:
     Joystick_(const char* serial, const uint8_t totalControllers) : _endpointIndex(getNextIndex(serial, totalControllers))
     {
-      _useComposite = totalControllers > MAX_ENDPOINTS;
+      _useComposite = totalControllers == 2 || totalControllers > MAX_ENDPOINTS;
     };
     void sendState() {
       if (_useComposite)
