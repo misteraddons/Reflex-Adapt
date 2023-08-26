@@ -12,7 +12,7 @@ If you would like a specific combo added, please create an Issue.
 
 ## MiSTer Installation
 
-1. Download [reflex_updater.sh](https://github.com/misteraddons/Reflex-Adapt/releases/download/latest/reflex_updater.sh) and copy it to the `Scripts` folder on your MiSTer's SD card
+1. Download [reflex_updater.sh](https://github.com/misteraddons/Reflex-Adapt/releases/latest/download/reflex_updater.sh) and copy it to the `Scripts` folder on your MiSTer's SD card
 2. Launch the `reflex_updater` script from the Scripts menu on your MiSTer
 3. When prompted, agree to have the Reflex Adapt repository added
 4. Flash your Reflex Adapt with the desired firmware configuration and exit the updater
