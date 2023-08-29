@@ -256,11 +256,11 @@ func clearTerminal() {
 func main() {
 	wasError := false
 
-	err := tryUpdateInis()
-	if err != nil {
-		fmt.Printf("An error occurred while updating .ini files: %s\n", err)
-		wasError = true
-	}
+	//err := tryUpdateInis()
+	//if err != nil {
+	//	fmt.Printf("An error occurred while updating .ini files: %s\n", err)
+	//	wasError = true
+	//}
 
 	updated, err := tryAddDb()
 	if err != nil {
