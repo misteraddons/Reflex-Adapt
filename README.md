@@ -1,6 +1,6 @@
 # Reflex Adapt
 
-<a href="https://github.com/misteraddons/Reflex-Adapt/releases/download/v1.05/reflex-v1.05.zip"><img src="images/desktop-download.png" alt="Download Windows/Mac/Linux updater" title="Download Windows/Mac/Linux updater" width="140"></a>
+<a href="https://github.com/misteraddons/Reflex-Adapt/releases/download/v1.06/reflex-v1.06.zip"><img src="images/desktop-download.png" alt="Download Windows/Mac/Linux updater" title="Download Windows/Mac/Linux updater" width="140"></a>
 <a href="https://github.com/misteraddons/Reflex-Adapt/releases/latest/download/reflex_updater.sh"><img src="images/mister-download.png" alt="Download MiSTer updater" title="Download MiSTer updater" width="140"></a>
 
 
