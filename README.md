@@ -1,5 +1,9 @@
 # Reflex Adapt
 
+<a href="https://github.com/misteraddons/Reflex-Adapt/releases/download/v1.05/reflex-v1.05.zip"><img src="images/desktop-download.png" alt="Download Windows/Mac/Linux updater" title="Download Windows/Mac/Linux updater" width="140"></a>
+<a href="https://github.com/misteraddons/Reflex-Adapt/releases/latest/download/reflex_updater.sh"><img src="images/mister-download.png" alt="Download MiSTer updater" title="Download MiSTer updater" width="140"></a>
+
+
 Reflex Adapt converts original gaming input devices to USB for use with MiSTer/PC/Linux/Mac. The controllers show up as direct input devices and feature very low latency. 
 
 The built in OLED display shows the current mode, and a realtime view of the buttons as they're pressed.
