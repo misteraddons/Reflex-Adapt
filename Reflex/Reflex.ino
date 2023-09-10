@@ -249,8 +249,13 @@
 #endif
 #ifdef ENABLE_REFLEX_N64
       case REFLEX_N64:
-        display.setCol(9*6);
-        display.print(F("N64"));
+        #ifdef N64_ANALOG_MAX
+          display.setCol(5*6);
+          display.print(F("N64 Classic"));
+        #else
+          display.setCol(6*6);
+          display.print(F("N64 Modern"));
+        #endif
         break;
 #endif
 #ifdef ENABLE_REFLEX_GAMECUBE
