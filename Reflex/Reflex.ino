@@ -250,11 +250,11 @@
 #ifdef ENABLE_REFLEX_N64
       case REFLEX_N64:
         #ifdef N64_ANALOG_MAX
-          display.setCol(5*6);
-          display.print(F("N64 Classic"));
+          display.setCol(1*6);
+          display.print(F("N64 EXTENDED RANGE"));
         #else
-          display.setCol(6*6);
-          display.print(F("N64 Modern"));
+          display.setCol(1*6);
+          display.print(F("N64 ORIGINAL RANGE"));
         #endif
         break;
 #endif
