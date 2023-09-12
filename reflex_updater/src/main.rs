@@ -221,7 +221,7 @@ fn main_interactive() -> Result<bool> {
     let names: Vec<_> = manifest.iter().map(|x| x.desc.clone()).collect();
     let selection = Select::with_theme(&selection_theme())
         .items(&names)
-        .with_prompt("Select Reflex Firmware (ESC or q to cancel)")
+        .with_prompt("Select Reflex Firmware [ BACK (ESC) or q to cancel ]")
         .default(0)
         .report(false)
         .interact_opt()?;
@@ -254,14 +254,14 @@ fn main() -> Result<()> {
 
     match main_interactive() {
         Ok(true) => {
-            println!("\nSuccess. Press RETURN to exit.");
+            println!("\nSuccess. Press OK (RETURN) to exit.");
             wait_for_return();
             Ok(())
         }
         Ok(false) => Ok(()),
         Err(e) => {
             eprintln!(
-                "\nAn unexpected error was encountered:\n{:#}\n\nPress RETURN to exit.",
+                "\nAn unexpected error was encountered:\n{:#}\n\nPress OK (RETURN) to exit.",
                 e
             );
             wait_for_return();
