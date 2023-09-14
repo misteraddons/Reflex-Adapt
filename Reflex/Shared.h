@@ -146,7 +146,8 @@ const uint8_t hatTable[] = {
       char on;
       char off;
     };
-  
+    
+    #define SPACEBAR ' '
     #define UP_ON 34
     #define UP_OFF 35
     #define DOWN_ON 36
