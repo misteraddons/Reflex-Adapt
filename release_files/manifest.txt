@@ -20,3 +20,4 @@ firmware/Combo13.hex,Combo 13: Gen+Sat, PSX, N64 & Wii
 firmware/Combo14.hex,Combo 14: NES+SNES, Gen+Sat, PSX & N64
 firmware/Combo15.hex,Combo 14: NES+SNES, Gen+Sat, PSX & GC
 firmware/Combo16.hex,Combo 16: NES+SNES, N64, Wii & PSX+JogCon
+firmware/Combo17.hex,Combo 17: NES+SNES, Gen+Sat, PCE & PSX

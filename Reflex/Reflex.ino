@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Reflex adapder
+ * Reflex Adapt
  * by MisterAddons (PorkchopExpress)
  * 
  * Powered by RetroZord
