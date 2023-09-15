@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	quirksAreRequired = true // TODO: remove this after next main release
+	quirksAreRequired = false
 	reflexBinName     = "reflex-linux-armv7"
 	adaptQuirks       = "0x16d0:0x127e:0x040"
 	adaptVidPid       = "0x16d0127e"
