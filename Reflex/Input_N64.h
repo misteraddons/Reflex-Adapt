@@ -143,7 +143,7 @@ void n64Setup() {
   delay(5);
 
   totalUsb = 2;
-  sleepTime = 50;
+  sleepTime = 100;
   
   //Create usb controllers
   for (uint8_t i = 0; i < totalUsb; i++) {
@@ -211,6 +211,10 @@ n64Loop() {
         else if (!isEnabled[i])
           display.print(PSTR_TO_F(PSTR_NA));
       }
+      for (uint8_t i = 0; i < 2; i++) {
+        if(isEnabled[i])
+          showDefaultPadN64(i, true);
+      }
       #endif
     }
 
@@ -238,7 +242,6 @@ n64Loop() {
         #endif
       }
       haveController[i] = haveControllerNow;
-      sleepTime = 50;
     } else {
       //controller just removed?
       if(haveController) {
@@ -248,7 +251,6 @@ n64Loop() {
         #endif
       }
       haveController[i] = false;
-      sleepTime = 50000;
     }
   }
 
@@ -257,11 +259,11 @@ n64Loop() {
       //controller read sucess
   
       const uint16_t digitalData = (n64data[i].report.buttons0 << 12) + (n64data[i].report.dpad << 8) + (n64data[i].report.buttons1 << 4) + n64data[i].report.cpad;
-      const bool buttonsChanged = digitalData != oldButtons;
+      const bool buttonsChanged = digitalData != oldButtons[i];
       const bool analogChanged = n64data[i].report.xAxis != oldX[i] || n64data[i].report.yAxis != oldY[i];
   
       if (buttonsChanged || analogChanged) { //state changed?
-        stateChanged[i] = true;
+        stateChanged[i] = buttonsChanged;
         
         //L+R+START internally resets the analog stick. We also need to reset it's min/max value;
         if (n64data[i].report.low0)

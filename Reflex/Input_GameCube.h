@@ -212,7 +212,6 @@ gameCubeLoop() {
         #endif
       }
       haveController[i] = haveControllerNow;
-      sleepTime = 100;
     } else {
       //controller just removed?
       if(haveController) {
@@ -223,7 +222,6 @@ gameCubeLoop() {
         #endif
       }
       haveController[i] = false;
-      sleepTime = 50000;
     }
   }
 
@@ -236,7 +234,7 @@ gameCubeLoop() {
       const bool analogChanged = gcdata[i].report.xAxis != oldX[i] || gcdata[i].report.yAxis != oldY[i] || gcdata[i].report.cxAxis != oldCX[i] || gcdata[i].report.cyAxis != oldCY[i];
 
       if (buttonsChanged || analogChanged) { //state changed?
-        stateChanged[i] = true;
+        stateChanged[i] = buttonsChanged;
   
         uint16_t buttonData = 0;
         bitWrite(buttonData, 2, gcdata[i].report.a);

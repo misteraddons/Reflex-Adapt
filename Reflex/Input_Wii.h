@@ -324,7 +324,7 @@ wiiLoop() {
       bool analogChanged = leftX != oldLX || leftY != oldLY || rightX != oldRX || rightY != oldRY;
 
       if (buttonsChanged || analogChanged) { //state changed?
-        stateChanged = true;
+        stateChanged = buttonsChanged;
         
         ((Joy1_*)usbStick[0])->setButtons(buttonData);
 

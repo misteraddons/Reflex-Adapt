@@ -47,6 +47,9 @@ boolean isGuncon = false;
 
 boolean isNeGconMiSTer = false;
 
+uint8_t specialDpadMask = 0x0;
+const uint8_t SPECIALMASK_POPN = 0xE;
+
 #ifdef ENABLE_REFLEX_PAD
   const Pad padPsx[] = {
     { PSB_SELECT,    2, 4*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
@@ -67,15 +70,37 @@ boolean isNeGconMiSTer = false;
     { PSB_SQUARE,    2, 7*6, FACEBTN_ON, FACEBTN_OFF }
   };
 
+  const Pad padPsxPopN[] = {
+    { PSB_SELECT,    0, 3*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
+    { PSB_START,     0, 5*6, RECTANGLEBTN_ON, RECTANGLEBTN_OFF },
+    { PSB_CIRCLE,    1, 1*6, FACEBTN_ON, FACEBTN_OFF },
+    { PSB_CROSS,     1, 3*6, FACEBTN_ON, FACEBTN_OFF },
+    { PSB_SQUARE,    1, 5*6, FACEBTN_ON, FACEBTN_OFF },
+    { PSB_PAD_UP,    1, 7*6, FACEBTN_ON, FACEBTN_OFF },
+    { PSB_TRIANGLE,  2, 0*6, FACEBTN_ON, FACEBTN_OFF },
+    { PSB_R1,        2, 2*6, FACEBTN_ON, FACEBTN_OFF },
+    { PSB_L1,        2, 4*6, FACEBTN_ON, FACEBTN_OFF },
+    { PSB_R2,        2, 6*6, FACEBTN_ON, FACEBTN_OFF },
+    { PSB_L2,        2, 8*6, FACEBTN_ON, FACEBTN_OFF }
+  };
+
   void loopPadDisplayCharsPsx(const uint8_t index, const PsxControllerProtocol padType, void* p, const bool force) {
-    for(uint8_t i = 0; i < (sizeof(padPsx) / sizeof(Pad)); ++i){
-      if(padType != PSPROTO_DUALSHOCK && padType != PSPROTO_DUALSHOCK2 && (i == 1 || i == 2))
-        continue;
-      if(padType == PSPROTO_NEGCON && (i == 0 || i == 8 || i == 9))
-        continue;
-      const Pad pad = padPsx[i];
-      PrintPadChar(index, padDivision[index].firstCol, pad.col, pad.row, pad.padvalue, p && static_cast<PsxController*>(p)->buttonPressed(static_cast<PsxButton>(pad.padvalue)), pad.on, pad.off, force);
+    if(specialDpadMask == SPECIALMASK_POPN) {
+      for(uint8_t i = 0; i < (sizeof(padPsxPopN) / sizeof(Pad)); ++i){
+        const Pad pad = padPsxPopN[i];
+        PrintPadChar(index, padDivision[index].firstCol, pad.col, pad.row, pad.padvalue, p && static_cast<PsxController*>(p)->buttonPressed(static_cast<PsxButton>(pad.padvalue)), pad.on, pad.off, force);
+      }
+    } else {
+      for(uint8_t i = 0; i < (sizeof(padPsx) / sizeof(Pad)); ++i){
+        if(padType != PSPROTO_DUALSHOCK && padType != PSPROTO_DUALSHOCK2 && (i == 1 || i == 2))
+          continue;
+        if(padType == PSPROTO_NEGCON && (i == 0 || i == 8 || i == 9))
+          continue;
+        const Pad pad = padPsx[i];
+        PrintPadChar(index, padDivision[index].firstCol, pad.col, pad.row, pad.padvalue, p && static_cast<PsxController*>(p)->buttonPressed(static_cast<PsxButton>(pad.padvalue)), pad.on, pad.off, force);
+      }      
     }
+
   }
 
   void ShowDefaultPadPsx(const uint8_t index, const PsxControllerProtocol padType) {
@@ -90,7 +115,10 @@ boolean isNeGconMiSTer = false;
     switch(padType) {
       case PSPROTO_DIGITAL:
       case PSPROTO_NEGCON:
-        display.print(isNeGcon ? F("NEGCON") : PSTR_TO_F(PSTR_DIGITAL));
+        if(specialDpadMask == SPECIALMASK_POPN)
+          display.print(F("POP N"));
+        else
+          display.print(isNeGcon ? F("NEGCON") : PSTR_TO_F(PSTR_DIGITAL));
         break;
       case PSPROTO_DUALSHOCK:
         display.print(F("DUALSHOCK"));
@@ -128,12 +156,16 @@ bool haveController[] = {false,false};
 boolean enableMouseMove = false; //used on guncon and jogcon modes
 
 void handleDpad(const bool isjog = false) {
-  int16_t dpad = B0;
+  uint8_t dpad = B0;
   bitWrite(dpad, 0, !psx->buttonPressed (PSB_PAD_UP));
   bitWrite(dpad, 1, !psx->buttonPressed (PSB_PAD_DOWN));
   bitWrite(dpad, 2, !psx->buttonPressed (PSB_PAD_LEFT));
   bitWrite(dpad, 3, !psx->buttonPressed (PSB_PAD_RIGHT));
   //usbStick[outputIndex]->setHatSwitch(0, hatTable[dpad]);
+
+  if (specialDpadMask)
+    dpad = (dpad | specialDpadMask) & 0xF;
+
   if (isjog)
     ((Jogcon1_*)usbStick[outputIndex])->setHatSwitch(hatTable[dpad]);
   else
@@ -170,7 +202,8 @@ bool loopDualShock() {
   byte analogY = ANALOG_IDLE_VALUE;
   //word convertedX, convertedY;
 
-  bool stateChanged = psx->buttonsChanged();//check if any digital value changed (dpad and buttons)
+  const bool digitalStateChanged = psx->buttonsChanged();//check if any digital value changed (dpad and buttons)
+  bool stateChanged = digitalStateChanged;
   
   const PsxControllerProtocol proto = psx->getProtocol();
 
@@ -285,7 +318,7 @@ bool loopDualShock() {
     lastPadType[inputPort] = currentPadType[inputPort];
   #endif
 
-  return stateChanged;
+  return digitalStateChanged;
 }
 
 void psxSetup() {
@@ -388,6 +421,13 @@ void psxSetup() {
         gunconSetup();
       #endif
     } else { //dualshock [default]
+
+      if (proto == PSPROTO_DIGITAL
+      && psx->buttonPressed(PSB_PAD_DOWN)
+      && psx->buttonPressed(PSB_PAD_LEFT)
+      && psx->buttonPressed(PSB_PAD_RIGHT))
+        specialDpadMask = SPECIALMASK_POPN;
+
       totalUsb = 2;//MAX_USB_STICKS;
       for (uint8_t i = 0; i < totalUsb; i++) {
         usbStick[i] = new Joy1_("ReflexPSDS1", JOYSTICK_DEFAULT_REPORT_ID + i, JOYSTICK_TYPE_GAMEPAD, totalUsb,

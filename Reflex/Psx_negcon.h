@@ -19,7 +19,8 @@ bool loopNeGcon() {
     }
   #endif
   
-  bool stateChanged = psx->buttonsChanged();//check if any digital value changed (dpad and buttons)
+  const bool digitalStateChanged = psx->buttonsChanged();//check if any digital value changed (dpad and buttons)
+  bool stateChanged = digitalStateChanged;
 
   byte lx, ly;
   psx->getLeftAnalog (lx, ly);
@@ -78,7 +79,7 @@ bool loopNeGcon() {
       }
     #endif
   }
-  return stateChanged;
+  return digitalStateChanged;
 }
 
 void negconSetup() {

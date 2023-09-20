@@ -63,6 +63,9 @@ enum DeviceEnum {
 #ifdef ENABLE_REFLEX_SMS
   REFLEX_SMS,  //12
 #endif
+#ifdef ENABLE_REFLEX_JPC
+  REFLEX_JPC,  //13
+#endif
   REFLEX_LAST //this must be the last enum value
 };
 

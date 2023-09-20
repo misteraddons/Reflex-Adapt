@@ -31,6 +31,7 @@
 //#define ENABLE_REFLEX_GAMECUBE
 //#define ENABLE_REFLEX_WII
 //#define ENABLE_REFLEX_SMS
+//#define ENABLE_REFLEX_JPC
 
 // Sega MegaDrive/Saturn config
 #define SATLIB_ENABLE_8BITDO_HOME_BTN // support for HOME button on 8bidto M30 2.4G.
@@ -94,7 +95,7 @@
 
 
 #ifndef REFLEX_NO_DEFAULTS
-#define ENABLE_REFLEX_SATURN
+  #define ENABLE_REFLEX_SATURN
 #endif // REFLEX_NO_DEFAULTS
 
 /******************************************************************************/
@@ -147,7 +148,7 @@
 #ifdef ENABLE_REFLEX_WII
   #include "Input_Wii.h"
 #endif
-#ifdef ENABLE_REFLEX_SMS
+#if defined(ENABLE_REFLEX_SMS) || defined(ENABLE_REFLEX_JPC)
   #include "Input_Sms.h"
 #endif
 
@@ -272,8 +273,14 @@
 #endif
 #ifdef ENABLE_REFLEX_SMS
       case REFLEX_SMS:
-        display.setCol(9*6);
-        display.print(F("SMS"));
+        display.setCol(1*6);
+        display.print(F("SMS+ATARI+C64+AMIGA"));
+        break;
+#endif
+#ifdef ENABLE_REFLEX_JPC
+      case REFLEX_JPC:
+        display.setCol(2*6);
+        display.print(F("FMT+MSX+X68K+PC-X8"));
         break;
 #endif
 
@@ -357,6 +364,11 @@ void setup() {
 #endif
 #ifdef ENABLE_REFLEX_SMS
     case REFLEX_SMS:
+      smsSetup();
+      break;
+#endif
+#ifdef ENABLE_REFLEX_JPC
+    case REFLEX_JPC:
       smsSetup();
       break;
 #endif
@@ -451,6 +463,11 @@ void loop() {
         stateChanged = smsLoop();
         break;
 #endif
+#ifdef ENABLE_REFLEX_JPC
+        case REFLEX_JPC:
+        stateChanged = smsLoop();
+        break;
+#endif
 
       default:
         stateChanged = false;
@@ -468,7 +485,7 @@ void loop() {
       else
         oledDisplayTimer = millis();
     }
-    if (oledOn && millis() - oledDisplayTimer >= 300000) {
+    if (oledOn && millis() - oledDisplayTimer >= 120000) { //two minutes
       setOledDisplay(false);
     }
   #endif
