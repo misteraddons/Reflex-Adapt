@@ -12,7 +12,7 @@ firmware/Combo4.hex,Combo 4: NES+SNES, PCE, N64 & PSX+Gun+Jog+neGcon
 firmware/Combo5.hex,Combo 5: NES+SNES, Neo, Jag, N64 & PSX+Gun+Jog+neGcon
 firmware/Combo6.hex,Combo 6: NES+SNES, Neo, Wii & PSX+Gun+Jog+neGcon
 firmware/Combo7.hex,Combo 7: Gen+Sat, Neo & PSX+Gun+Jog+neGcon
-firmware/Combo8.hex,Combo 8: PCE, Neo, Jag, N64, GC & Wii
+firmware/Combo8.hex,Combo 8: PCE, 3DO, Neo, Jag, N64, GC & Wii
 firmware/Combo9.hex,Combo 9: NES+SNES, N64, GC, Wii & PSX+neGcon
 firmware/Combo10.hex,Combo 10: NES+SNES, N64, Wii & PSX+Jog
 firmware/Combo11.hex,Combo 11: NES+SNES, N64, Wii & PSX+neGcon+Gun
