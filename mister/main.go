@@ -14,6 +14,7 @@ import (
 	"os/signal"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 const (
@@ -277,6 +278,15 @@ func main() {
 		wasError = true
 	}
 	if updated {
+		fmt.Printf("Writing u-boot.txt changes to disk")
+		wait := 0
+		for wait < 5 {
+			fmt.Printf(".")
+			wait++
+			time.Sleep(1 * time.Second)
+		}
+		fmt.Println()
+
 		fmt.Println("Please power cycle your MiSTer for these changes to take effect.")
 		os.Exit(0)
 	}
