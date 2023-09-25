@@ -42,6 +42,8 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: '1.20'
+          cache-dependency-path: |
+             mister/go.sum
       - name: Download Updater
         uses: actions/download-artifact@v3
         with:
