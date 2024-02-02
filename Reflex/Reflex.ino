@@ -39,7 +39,7 @@
 // #define SATLIB_ENABLE_SATTAP //support for 6p multitap
 
 // SNES config
-//#define SNES_ENABLE_VBOY
+#define SNES_ENABLE_VBOY
 //#define SNES_ENABLE_MULTITAP
 
 // PS1 Guncon config
