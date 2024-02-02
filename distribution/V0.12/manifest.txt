@@ -1,0 +1,33 @@
+# reflex-updater manifest
+
+firmware/Nintendo.hex,Nintendo: NES+SNES+VB+Tap, N64, GC & Wii
+firmware/Non-Nintendo.hex,Non-Nintendo: PCE, Neo, Gen+Sat, PSX+Gun & Jag
+firmware/Non-Nintendo-Sony.hex,Non-Nintendo-Sony: JP-PC, SMS+Atari+C64, Gen+Sat, 3DO, PCE, Neo & Jag 
+firmware/Multitap.hex,Multitap: NES+SNES+VB+Tap, Gen+Tap, Sat+Tap & PCE+Tap
+firmware/PSX-JogCon.hex,PSX JogCon: PSX JogCon [4 modes: Wheel (Mode+R2), Paddle (Mode+L2), Spinner (Mode+L2+R2) & Fake Spinner (Mode+R1+L1)]
+firmware/Combo1.hex,Combo 1: NES+SNES+VB, Gen+Sat & PSX+Gun+Jog
+firmware/Combo2.hex,Combo 2: NES+SNES+VB, Gen+Sat+Tap & PSX+Gun+neGcon
+firmware/Combo3.hex,Combo 3: NES+SNES+VB, Gen+Sat+Tap & PSX+Jog+neGcon
+firmware/Combo4.hex,Combo 4: NES+SNES+VB, PCE, N64 & PSX+Gun+Jog+neGcon
+firmware/Combo5.hex,Combo 5: NES+SNES+VB, Neo, Jag, N64 & PSX+Gun+Jog+neGcon
+firmware/Combo6.hex,Combo 6: NES+SNES+VB, Neo, Wii & PSX+Gun+Jog+neGcon
+firmware/Combo7.hex,Combo 7: Gen+Sat, Neo & PSX+Gun+Jog+neGcon
+firmware/Combo8.hex,Combo 8: PCE, 3DO, Neo, Jag, N64, GC & Wii
+firmware/Combo9.hex,Combo 9: NES+SNES+VB, N64, GC, Wii & PSX+neGcon
+firmware/Combo10.hex,Combo 10: NES+SNES+VB, N64, Wii & PSX+Jog
+firmware/Combo11.hex,Combo 11: NES+SNES+VB, N64, Wii & PSX+neGcon+Gun
+firmware/Combo12.hex,Combo 12: NES+SNES+VB, N64, Gen+Sat & PSX
+firmware/Combo13.hex,Combo 13: Gen+Sat, PSX, N64 & Wii
+firmware/Combo14.hex,Combo 14: NES+SNES+VB, Gen+Sat, PSX & N64
+firmware/Combo15.hex,Combo 15: NES+SNES+VB, Gen+Sat, PSX & GC
+firmware/Combo16.hex,Combo 16: NES+SNES+VB, N64, Wii & PSX+JogCon
+firmware/Combo17.hex,Combo 17: NES+SNES+VB, Gen+Sat, PCE & PSX
+firmware/Combo18.hex,Combo 18: NES+SNES+VB, N64, Wii & PSX+neGcon
+firmware/Combo19.hex,Combo 19: NES+SNES+VB, SMS+Atari+C64, JP-PC, Gen+Sat & PSX+neGcon
+firmware/Combo20.hex,Combo 20: NES+SNES+VB, Gen+Sat, N64 & Neo
+firmware/Combo21.hex,Combo 21: PSX+neGcon+Guncon+Jogcon, N64 & Wii
+firmware/Combo22.hex,Combo 22: NES+SNES+VB, Gen+Sat, N64 & SMS+Atari+C64
+firmware/Combo23.hex,Combo 23: PCE, Gen+Sat, N64 & PSX
+firmware/Combo24.hex,Combo 24: NES+SNES+VB, SMS+Atari+C64, Gen+Sat & PSX
+firmware/Combo25.hex,Combo 25: NES+SNES+VB, Gen+Sat, Neo, GC & PSX
+firmware/Combo26.hex,Combo 26: SMS+Atari+C64, NES+SNES+VB, Gen+Sat & PSX+Gun
