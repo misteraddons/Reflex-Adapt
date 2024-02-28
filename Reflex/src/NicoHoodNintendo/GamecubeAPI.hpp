@@ -87,8 +87,24 @@ bool CGamecubeController::read(void)
         }
     }
 
-
-    if (status.device == NINTENDO_DEVICE_GC_WIRED)
+    if (status.device == NINTENDO_DEVICE_GC_KEYBOARD)
+    {
+        // Read the keyboard.
+        // The keyboard will only report 3 key presses at a time.
+        // They are stored in an array in the order you first pressed them. { GCKEY_LEFTCTRL, GCKEY_A, GCKEY_NONE }
+        // This means that left control was pressed first, then a was pressed second, and are still being held.
+        // Releasing a key shifts the array to the left.. So if we released left control first,
+        // the array would then look like this. { GCKEY_A, GCKEY_NONE, GCKEY_NONE }
+        // There are times where if you press more than 4 or more keys, it will start reporting
+        // either { 0x01, 0x01, 0x01 } OR { 0x02, 0x02, 0x02 }
+        if (!gc_read_keyboard(pin, &report))
+        {
+            reset();
+            return false;
+        }
+    }
+    // Optimistically attempt to read all other devices
+    else
     {
         // Read the controller, abort if it fails.
         // Additional information: If you press X + Y + Start on the controller for 3 seconds
@@ -103,21 +119,6 @@ bool CGamecubeController::read(void)
         // Check if controller reported that we read the origin values (check if it disconnected).
         // The Gamecube would just request (instantly) the origin again, but we keep things simple.
         if (report.origin) {
-            reset();
-            return false;
-        }
-    } else if (status.device == NINTENDO_DEVICE_GC_KEYBOARD)
-    {
-        // Read the keyboard.
-        // The keyboard will only report 3 key presses at a time.
-        // They are stored in an array in the order you first pressed them. { GCKEY_LEFTCTRL, GCKEY_A, GCKEY_NONE }
-        // This means that left control was pressed first, then a was pressed second, and are still being held.
-        // Releasing a key shifts the array to the left.. So if we released left control first,
-        // the array would then look like this. { GCKEY_A, GCKEY_NONE, GCKEY_NONE }
-        // There are times where if you press more than 4 or more keys, it will start reporting
-        // either { 0x01, 0x01, 0x01 } OR { 0x02, 0x02, 0x02 }
-        if (!gc_read_keyboard(pin, &report))
-        {
             reset();
             return false;
         }
