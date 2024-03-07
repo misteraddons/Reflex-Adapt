@@ -116,12 +116,19 @@ bool CGamecubeController::read(void)
             return false;
         }
 
+	// Reflex-Adapt: Disabling this will allow wireless controllers that don't report origin
+	// until they have associated with the controller to function. I can't see any abnormal
+	// behavior without this. We could add more code to check for wireless controllers from
+	// status report but I'd rather keep it simple and either disable this, let it fail on next
+	// read or change GameCubeLoop to periodically poll like a real GC and leave this intact.
+	// Likely we can do the latter without affecting performance at all.
+	
         // Check if controller reported that we read the origin values (check if it disconnected).
         // The Gamecube would just request (instantly) the origin again, but we keep things simple.
-        if (report.origin) {
-            reset();
-            return false;
-        }
+        //if (report.origin) {
+        //    reset();
+        //    return false;
+        //}
     }
 
     // Return status information for optional use.
