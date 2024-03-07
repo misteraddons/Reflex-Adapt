@@ -87,26 +87,7 @@ bool CGamecubeController::read(void)
         }
     }
 
-
-    if (status.device == NINTENDO_DEVICE_GC_WIRED)
-    {
-        // Read the controller, abort if it fails.
-        // Additional information: If you press X + Y + Start on the controller for 3 seconds
-        // It will turn off unless you release the buttons. The recalibration is all done
-        // on the Gamecube side. If the controller resets origin will have different values for sure.
-        if (!gc_read(pin, &report, status.rumble))
-        {
-            reset();
-            return false;
-        }
-
-        // Check if controller reported that we read the origin values (check if it disconnected).
-        // The Gamecube would just request (instantly) the origin again, but we keep things simple.
-        if (report.origin) {
-            reset();
-            return false;
-        }
-    } else if (status.device == NINTENDO_DEVICE_GC_KEYBOARD)
+    if (status.device == NINTENDO_DEVICE_GC_KEYBOARD)
     {
         // Read the keyboard.
         // The keyboard will only report 3 key presses at a time.
@@ -121,6 +102,33 @@ bool CGamecubeController::read(void)
             reset();
             return false;
         }
+    }
+    // Optimistically attempt to read all other devices
+    else
+    {
+        // Read the controller, abort if it fails.
+        // Additional information: If you press X + Y + Start on the controller for 3 seconds
+        // It will turn off unless you release the buttons. The recalibration is all done
+        // on the Gamecube side. If the controller resets origin will have different values for sure.
+        if (!gc_read(pin, &report, status.rumble))
+        {
+            reset();
+            return false;
+        }
+
+	// Reflex-Adapt: Disabling this will allow wireless controllers that don't report origin
+	// until they have associated with the controller to function. I can't see any abnormal
+	// behavior without this. We could add more code to check for wireless controllers from
+	// status report but I'd rather keep it simple and either disable this, let it fail on next
+	// read or change GameCubeLoop to periodically poll like a real GC and leave this intact.
+	// Likely we can do the latter without affecting performance at all.
+	
+        // Check if controller reported that we read the origin values (check if it disconnected).
+        // The Gamecube would just request (instantly) the origin again, but we keep things simple.
+        //if (report.origin) {
+        //    reset();
+        //    return false;
+        //}
     }
 
     // Return status information for optional use.
