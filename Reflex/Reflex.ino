@@ -31,8 +31,8 @@
 //#define ENABLE_REFLEX_GAMECUBE
 //#define ENABLE_REFLEX_WII
 //#define ENABLE_REFLEX_SMS
+//#define ENABLE_REFLEX_SMS_SPORTSPAD // "sports" mode, controller mode works as a regular SMS pad
 //#define ENABLE_REFLEX_JPC
-
 // Sega MegaDrive/Saturn config
 #define SATLIB_ENABLE_8BITDO_HOME_BTN // support for HOME button on 8bidto M30 2.4G.
 // #define SATLIB_ENABLE_MEGATAP //suport for 4p megatap
@@ -60,6 +60,9 @@
 // Can be disabled if only using on MiSTer
 // #define ENABLE_PSX_GUNCON_MOUSE
 // #define ENABLE_PSX_JOGCON_MOUSE
+
+// different mouse input <Mouse.h> figure this out and merge with above
+// #define ENABLE_SMS_SPORTSPAD_MOUSE
 
 // Oled display can be used for detailed info
 //#define ENABLE_PSX_GENERAL_OLED
@@ -150,6 +153,9 @@
 #endif
 #if defined(ENABLE_REFLEX_SMS) || defined(ENABLE_REFLEX_JPC)
   #include "Input_Sms.h"
+#endif
+#ifdef ENABLE_REFLEX_SMS_SPORTSPAD
+  #include "Input_SportsPad.h"
 #endif
 
 #include "src/DigitalIO/DigitalIO.h"
@@ -277,6 +283,17 @@
         display.print(F("SMS+ATARI+C64+AMIGA"));
         break;
 #endif
+#ifdef ENABLE_REFLEX_SMS_SPORTSPAD
+      case REFLEX_SMS_SPORTSPAD:
+        #ifdef ENABLE_SMS_SPORTSPAD_MOUSE
+          display.setCol(3*6);
+          display.print(F("SPORTS PAD MOUSE"));
+        #else
+          display.setCol(2*6);
+          display.print(F("SPORTS PAD JOYSTICK")); // not yet implemented
+        #endif
+        break;
+#endif
 #ifdef ENABLE_REFLEX_JPC
       case REFLEX_JPC:
         display.setCol(2*6);
@@ -365,6 +382,11 @@ void setup() {
 #ifdef ENABLE_REFLEX_SMS
     case REFLEX_SMS:
       smsSetup();
+      break;
+#endif
+#ifdef ENABLE_REFLEX_SMS_SPORTSPAD
+    case REFLEX_SMS_SPORTSPAD:
+      sportsPadSetup();
       break;
 #endif
 #ifdef ENABLE_REFLEX_JPC
@@ -461,6 +483,11 @@ void loop() {
 #ifdef ENABLE_REFLEX_SMS
         case REFLEX_SMS:
         stateChanged = smsLoop();
+        break;
+#endif
+#ifdef ENABLE_REFLEX_SMS_SPORTSPAD
+        case REFLEX_SMS_SPORTSPAD:
+        stateChanged = sportsPadLoop();
         break;
 #endif
 #ifdef ENABLE_REFLEX_JPC
