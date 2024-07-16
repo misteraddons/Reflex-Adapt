@@ -115,33 +115,33 @@ NXC_I2C_TYPE & ExtensionController::i2c() const {
 	return data.i2c;
 }
 
-void ExtensionController::printDebug(Print& output) const {
-	printDebugRaw(output);
-}
+// void ExtensionController::printDebug(Print& output) const {
+// 	printDebugRaw(output);
+// }
 
-void ExtensionController::printDebugID(Print& output) const {
-	uint8_t idData[ID_Size];
-	boolean success = requestIdentity(idData);
+// void ExtensionController::printDebugID(Print& output) const {
+// 	uint8_t idData[ID_Size];
+// 	boolean success = requestIdentity(idData);
 
-	if (success) {
-		output.print("ID: ");
-		printRaw(idData, ID_Size, HEX, output);
-	}
-	else {
-		output.println("Bad ID Read");
-	}
-}
+// 	if (success) {
+// 		output.print("ID: ");
+// 		printRaw(idData, ID_Size, HEX, output);
+// 	}
+// 	else {
+// 		output.println("Bad ID Read");
+// 	}
+// }
 
-void ExtensionController::printDebugRaw(Print& output) const {
-	printDebugRaw(HEX, output);
-}
+// void ExtensionController::printDebugRaw(Print& output) const {
+// 	printDebugRaw(HEX, output);
+// }
 
-void ExtensionController::printDebugRaw(uint8_t baseFormat, Print& output) const {
-	output.print("Raw[");
-	output.print(data.requestSize);
-	output.print("]: ");
-	printRaw(data.controlData, data.requestSize, baseFormat, output);
-}
+// void ExtensionController::printDebugRaw(uint8_t baseFormat, Print& output) const {
+// 	output.print("Raw[");
+// 	output.print(data.requestSize);
+// 	output.print("]: ");
+// 	printRaw(data.controlData, data.requestSize, baseFormat, output);
+// }
 
 
 boolean ExtensionController::initialize(NXC_I2C_TYPE& i2c) {

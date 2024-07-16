@@ -137,64 +137,64 @@ uint8_t DJTurntableControllerBase::getNumTurntables() {
 	return 0;  // Just in-case
 }
 
-void DJTurntableControllerBase::printDebug(Print& output) {
-	const char fillCharacter = '_';
+// void DJTurntableControllerBase::printDebug(Print& output) {
+// 	const char fillCharacter = '_';
 
-	char buffer[45];
+// 	char buffer[45];
 
-	output.print("DJ:");
+// 	output.print("DJ:");
 
-	if (getNumTurntables() == 0) {
-		output.print(" No turntable found! |");
-	}
-	else if (left.connected()) {
-		printTurntable(output, left);
-		output.print(" |");
-	}
+// 	if (getNumTurntables() == 0) {
+// 		output.print(" No turntable found! |");
+// 	}
+// 	else if (left.connected()) {
+// 		printTurntable(output, left);
+// 		output.print(" |");
+// 	}
 
-	const char plusPrint = buttonPlus() ? '+' : fillCharacter;
-	const char minusPrint = buttonMinus() ? '-' : fillCharacter;
+// 	const char plusPrint = buttonPlus() ? '+' : fillCharacter;
+// 	const char minusPrint = buttonMinus() ? '-' : fillCharacter;
 
-	const char euphoriaPrint = buttonEuphoria() ? 'E' : fillCharacter;
+// 	const char euphoriaPrint = buttonEuphoria() ? 'E' : fillCharacter;
 
-	snprintf(buffer, sizeof(buffer),
-		" Joy:(%2u, %2u) | %c | %c%c | FX: %2u | Fade: %2u",
-		joyX(), joyY(),
-		euphoriaPrint,
-		minusPrint, plusPrint,
-		effectDial(), crossfadeSlider());
-	output.print(buffer);
+// 	snprintf(buffer, sizeof(buffer),
+// 		" Joy:(%2u, %2u) | %c | %c%c | FX: %2u | Fade: %2u",
+// 		joyX(), joyY(),
+// 		euphoriaPrint,
+// 		minusPrint, plusPrint,
+// 		effectDial(), crossfadeSlider());
+// 	output.print(buffer);
 
-	if (right.connected()) {
-		output.print(" |");
-		printTurntable(output, right);
-	}
-	output.println();
-}
+// 	if (right.connected()) {
+// 		output.print(" |");
+// 		printTurntable(output, right);
+// 	}
+// 	output.println();
+// }
 
-void DJTurntableControllerBase::printTurntable(Print& output, TurntableExpansion &table) const {
-	const char fillCharacter = '_';
+// void DJTurntableControllerBase::printTurntable(Print& output, TurntableExpansion &table) const {
+// 	const char fillCharacter = '_';
 
-	char idPrint = 'X';
-	if (table.side == TurntableConfig::Left) {
-		idPrint = 'L';
-	}
-	else if (table.side == TurntableConfig::Right) {
-		idPrint = 'R';
-	}
+// 	char idPrint = 'X';
+// 	if (table.side == TurntableConfig::Left) {
+// 		idPrint = 'L';
+// 	}
+// 	else if (table.side == TurntableConfig::Right) {
+// 		idPrint = 'R';
+// 	}
 
-	const char greenPrint = table.buttonGreen() ? 'G' : fillCharacter;
-	const char redPrint = table.buttonRed() ? 'R' : fillCharacter;
-	const char bluePrint = table.buttonBlue() ? 'B' : fillCharacter;
+// 	const char greenPrint = table.buttonGreen() ? 'G' : fillCharacter;
+// 	const char redPrint = table.buttonRed() ? 'R' : fillCharacter;
+// 	const char bluePrint = table.buttonBlue() ? 'B' : fillCharacter;
 
-	char buffer[15];
-	snprintf(buffer, sizeof(buffer),
-		" T%c:%3d %c%c%c",
-		idPrint,
-		table.turntable(),
-		greenPrint, redPrint, bluePrint);
-	output.print(buffer);
-}
+// 	char buffer[15];
+// 	snprintf(buffer, sizeof(buffer),
+// 		" T%c:%3d %c%c%c",
+// 		idPrint,
+// 		table.turntable(),
+// 		greenPrint, redPrint, bluePrint);
+// 	output.print(buffer);
+// }
 
 // Turntable Expansion Base
 boolean DJTurntableControllerBase::TurntableExpansion::connected() const {

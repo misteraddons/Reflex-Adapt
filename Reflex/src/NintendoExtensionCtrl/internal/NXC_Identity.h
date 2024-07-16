@@ -25,7 +25,7 @@
 
 #include <stdint.h>
 
-enum class ExtensionType {
+enum class ExtensionType : uint8_t {
 	NoController,
 	AnyController,
 	UnknownController,

@@ -1,75 +1,98 @@
-#ifndef REFLEX_SHARED_H_
-#define REFLEX_SHARED_H_
+#ifndef RZORD_SHARED_H_
+#define RZORD_SHARED_H_
 
-//Arduino Joystick Library
-#include "src/ArduinoJoystickLibrary/Joystick.h"
+//#define RZORD_ENABLE_AUTORESET
 
 //Send debug messages to serial port
 //#define ENABLE_SERIAL_DEBUG
 
 //maximum 6 controllers per arduino
-#define MAX_USB_STICKS 6
+#define MAX_USB_STICKS 2
 
-uint16_t sleepTime = 5000;//In micro seconds.
+//uint16_t sleepTime = 5000;//In micro seconds.
 
-Joystick_* usbStick[MAX_USB_STICKS];
+//Joystick_* usbStick[MAX_USB_STICKS];
 
-uint8_t totalUsb = 1;//how many controller outputs via usb.
+//uint8_t totalUsb = 1;//how many controller outputs via usb.
+
+const uint16_t version = 0x0100;
+const uint16_t MODE_ID_SNES     = version |  1; // NES/SNES
+const uint16_t MODE_ID_VB       = version |  2; // VirtualBoy
+const uint16_t MODE_ID_PCE      = version |  3; // PCEngine
+const uint16_t MODE_ID_NEOGEO   = version |  4; // NeoGeo
+const uint16_t MODE_ID_3DO      = version |  5; // 3DO
+const uint16_t MODE_ID_JAGUAR   = version |  6; // Jaguar
+const uint16_t MODE_ID_N64      = version |  7; // N64
+const uint16_t MODE_ID_GC       = version |  8; // GameCube
+const uint16_t MODE_ID_WII      = version |  9; // Wii
+const uint16_t MODE_ID_SMS      = version | 10; // MasterSystem
+const uint16_t MODE_ID_JPC      = version | 11; // JapanesePC
+
+const uint16_t MODE_ID_SATURN   = version | 12;  // MegaDrive/Saturn  todo: add multiple modes
+
+const uint16_t MODE_ID_PSX      = version | 13;  // RZMPsDS1
+
+const uint16_t MODE_ID_PSX2     = version | 14;  // ReflexPSGun       Guncon
+const uint16_t MODE_ID_PSX3     = version | 15;  // RZMPsNeGcon       NeGCon HID
+const uint16_t MODE_ID_PSX4     = version | 16;  // ReflexPSWheel     NeGCon MiSTer (wheel+paddle)
+const uint16_t MODE_ID_PSX5     = version | 17;  // MiSTer-A1 JogCon  JogCon MiSTer (spinner+paddle)
+const uint16_t MODE_ID_PSX6     = version | 18;  // RZMPSJogCon
 
 
 //strings in progmem
 #define PSTR_TO_F(s) reinterpret_cast<const __FlashStringHelper *> (s)
-const char PSTR_NA[] PROGMEM = "PLUG+RESET";
+const char PSTR_NA[] PROGMEM = "N/A";
 const char PSTR_NONE[] PROGMEM = "NONE";
 const char PSTR_DIGITAL[] PROGMEM = "DIGITAL";
 const char PSTR_PAD[] PROGMEM = "PAD";
+const char PSTR_MULTITAP[] PROGMEM = "MULTI-TAP";
 
 
-enum DeviceEnum {
-  REFLEX_NONE = 0,
+enum DeviceEnum : uint8_t {
+  RZORD_NONE = 0,
 #ifdef ENABLE_REFLEX_SATURN
-  REFLEX_SATURN, //1
+  RZORD_SATURN, //1
 #endif
 #ifdef ENABLE_REFLEX_SNES
-  REFLEX_SNES,   //2
+  RZORD_SNES,   //2
 #endif
 #ifdef ENABLE_REFLEX_PSX
-  REFLEX_PSX,    //3
+  RZORD_PSX,    //3
 #endif
 #ifdef ENABLE_REFLEX_PSX_JOG
-  REFLEX_PSX_JOG,//4
+  RZORD_PSX_JOG,//4
 #endif
 #ifdef ENABLE_REFLEX_PCE
-  REFLEX_PCE,    //5
+  RZORD_PCE,    //5
 #endif
 #ifdef ENABLE_REFLEX_NEOGEO
-  REFLEX_NEOGEO,  //6
+  RZORD_NEOGEO,  //6
 #endif
 #ifdef ENABLE_REFLEX_3DO
-  REFLEX_3DO,  //7
+  RZORD_3DO,  //7
 #endif
 #ifdef ENABLE_REFLEX_JAGUAR
-  REFLEX_JAGUAR,  //8
+  RZORD_JAGUAR,  //8
 #endif
 #ifdef ENABLE_REFLEX_N64
-  REFLEX_N64,  //9
+  RZORD_N64,  //9
 #endif
 #ifdef ENABLE_REFLEX_GAMECUBE
-  REFLEX_GAMECUBE,  //10
+  RZORD_GAMECUBE,  //10
 #endif
 #ifdef ENABLE_REFLEX_WII
-  REFLEX_WII,  //11
+  RZORD_WII,  //11
 #endif
 #ifdef ENABLE_REFLEX_SMS
-  REFLEX_SMS,  //12
+  RZORD_SMS,  //12
 #endif
 #ifdef ENABLE_REFLEX_JPC
-  REFLEX_JPC,  //13
+  RZORD_JPC,  //13
 #endif
-  REFLEX_LAST //this must be the last enum value
+  RZORD_LAST //this must be the last enum value
 };
 
-DeviceEnum deviceMode = REFLEX_NONE;
+DeviceEnum deviceMode = RZORD_NONE;
 
 #ifdef ENABLE_SERIAL_DEBUG
   #define dstart(spd) do {Serial.begin (spd); while (!Serial) {digitalWrite (LED_BUILTIN, (millis () / 500) % 2);}} while (0);
@@ -80,22 +103,6 @@ DeviceEnum deviceMode = REFLEX_NONE;
   #define debug(...)
   #define debugln(...)
 #endif
-
-//hat table angles. RLDU
-const uint8_t hatTable[] = {
-  JOYSTICK_HATSWITCH_RELEASE,JOYSTICK_HATSWITCH_RELEASE,JOYSTICK_HATSWITCH_RELEASE,JOYSTICK_HATSWITCH_RELEASE,JOYSTICK_HATSWITCH_RELEASE, //not used
-  3,  //0101 RD
-  1,  //0110 RU
-  2,  //0111 R
-  15, //not used
-  5,  //1001 LD
-  7,  //1010 LU
-  6,  //1011 L
-  JOYSTICK_HATSWITCH_RELEASE, //not used
-  4,  //1101 D
-  0,  //1110 U
-  JOYSTICK_HATSWITCH_RELEASE  //1111
-};
 
 #ifdef REFLEX_USE_OLED_DISPLAY
   #include "src/SSD1306Ascii/SSD1306Ascii.h"
@@ -149,8 +156,7 @@ const uint8_t hatTable[] = {
       char on;
       char off;
     };
-    
-    #define SPACEBAR ' '
+  
     #define UP_ON 34
     #define UP_OFF 35
     #define DOWN_ON 36
@@ -189,6 +195,50 @@ const uint8_t hatTable[] = {
     }
   #endif //ENABLE_REFLEX_PAD
 
+
 #endif //REFLEX_USE_OLED_DISPLAY
 
-#endif //REFLEX_SHARED_H_
+
+
+#ifdef RZORD_ENABLE_AUTORESET
+#include <avr/wdt.h>
+void resetDevice(){
+  //Set all used Leonardo pins as INPUT LOW.
+  //Comment if need to free space, not using a leonardo or not based on ATmega32U4
+  DDRB &= B00000001; //bits .1234567
+  PORTB &= B00000001;
+  DDRC &= B10111111; //bits ......6.
+  PORTC &= B10000000;
+  DDRD &= B00101100; //bits 01..4.67
+  PORTD &= B00101100;
+  DDRE &= B01000000; //bits ......6.
+  PORTE &= B01000000;
+  DDRF &= B00001100; //bits 01..4567
+  PORTF &= B00001100;
+
+  //use the watchdog to reset the arduino
+  bool ledmode = false;
+  wdt_enable(WDTO_4S);
+  while(1) {
+    //blink led fast to indicate that mode will change
+    digitalWrite(LED_BUILTIN, ledmode = !ledmode);
+    delay(90);
+  }
+}
+#endif
+//
+//void blinkLed() {
+//  #if REFLEX_VERSION == 2
+//    TXLED1;//OFF
+//    delay(500);
+//    TXLED0;//ON
+//    delay(500);
+//  #else
+//    digitalWrite(LED_BUILTIN, HIGH);
+//    delay(500);
+//    digitalWrite(LED_BUILTIN, LOW);
+//    delay(500);
+//  #endif
+//}
+
+#endif //RZORD_SHARED_H_

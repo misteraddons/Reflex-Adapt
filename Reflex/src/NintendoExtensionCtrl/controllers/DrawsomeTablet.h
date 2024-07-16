@@ -54,7 +54,7 @@ namespace NintendoExtensionCtrl {
 
 		boolean  penDetected() const;
 
-		void printDebug(Print& output = NXC_SERIAL_DEFAULT) const;
+		//void printDebug(Print& output = NXC_SERIAL_DEFAULT) const;
 	};
 }
 

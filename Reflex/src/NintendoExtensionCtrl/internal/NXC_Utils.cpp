@@ -40,59 +40,59 @@ namespace NintendoExtensionCtrl {
 		return true;
 	}
 
-	void printRaw(const uint8_t * dataIn, uint8_t dataSize, uint8_t baseFormat, Print& output) {
-		char padChar = ' ';
-		if (baseFormat == BIN || baseFormat == HEX) {
-			padChar = '0';
-		}
+	// void printRaw(const uint8_t * dataIn, uint8_t dataSize, uint8_t baseFormat, Print& output) {
+	// 	char padChar = ' ';
+	// 	if (baseFormat == BIN || baseFormat == HEX) {
+	// 		padChar = '0';
+	// 	}
 
-		// Calculate max # of spaces for the base
-		uint8_t maxInput = 0xFF;
-		uint8_t maxNPlaces = 0;
-		while (maxInput != 0) {
-			maxInput /= baseFormat;
-			maxNPlaces++;
-		}
+	// 	// Calculate max # of spaces for the base
+	// 	uint8_t maxInput = 0xFF;
+	// 	uint8_t maxNPlaces = 0;
+	// 	while (maxInput != 0) {
+	// 		maxInput /= baseFormat;
+	// 		maxNPlaces++;
+	// 	}
 
-		for (int i = 0; i < dataSize; i++) {
-			uint8_t dataOut = dataIn[i];
+	// 	for (int i = 0; i < dataSize; i++) {
+	// 		uint8_t dataOut = dataIn[i];
 
-			if (baseFormat == HEX) {
-				output.print("0x");  // Hex prefix
-			}
+	// 		if (baseFormat == HEX) {
+	// 			output.print("0x");  // Hex prefix
+	// 		}
 
-			// Calculate # of spaces that will be printed. Max - n = # to pad.
-			uint8_t nPlaces = 0;
-			uint8_t tempOut = dataOut;
-			do {
-				tempOut /= baseFormat;
-				nPlaces++;
-			} while (tempOut != 0);
+	// 		// Calculate # of spaces that will be printed. Max - n = # to pad.
+	// 		uint8_t nPlaces = 0;
+	// 		uint8_t tempOut = dataOut;
+	// 		do {
+	// 			tempOut /= baseFormat;
+	// 			nPlaces++;
+	// 		} while (tempOut != 0);
 
 
-			// Print pad characters
-			for (int padOut = 0; padOut < (maxNPlaces - nPlaces); padOut++) {
-				output.print(padChar);
-			}
+	// 		// Print pad characters
+	// 		for (int padOut = 0; padOut < (maxNPlaces - nPlaces); padOut++) {
+	// 			output.print(padChar);
+	// 		}
 
-			output.print(dataOut, baseFormat);
+	// 		output.print(dataOut, baseFormat);
 
-			if (i != dataSize - 1) {  // Print separators
-				output.print(" ");
-			}
-		}
-		output.println();
-	}
+	// 		if (i != dataSize - 1) {  // Print separators
+	// 			output.print(" ");
+	// 		}
+	// 	}
+	// 	output.println();
+	// }
 
-	void printRaw(uint8_t dataIn, uint8_t baseFormat, Print& output) {
-		printRaw(&dataIn, 1, baseFormat, output);
-	}
+	// void printRaw(uint8_t dataIn, uint8_t baseFormat, Print& output) {
+	// 	printRaw(&dataIn, 1, baseFormat, output);
+	// }
 
-	void printRepeat(char c, uint8_t nPrint, Print& output) {
-		for (int i = 0; i < nPrint; i++) {
-			output.print(c);
-		}
-	}
+	// void printRepeat(char c, uint8_t nPrint, Print& output) {
+	// 	for (int i = 0; i < nPrint; i++) {
+	// 		output.print(c);
+	// 	}
+	// }
 
 	RolloverChange::RolloverChange(uint8_t min, uint8_t max) :
 		minValue(min), maxValue(max) {}

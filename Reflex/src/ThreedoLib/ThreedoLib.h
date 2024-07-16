@@ -31,7 +31,7 @@
   #define THREEDO_MAX_CTRL 8 // Max is 8?
 #endif
 
-enum ThreedoDeviceType_Enum {
+enum ThreedoDeviceType_Enum : uint8_t {
   THREEDO_DEVICE_NONE = 0,
   THREEDO_DEVICE_NOTSUPPORTED,
   THREEDO_DEVICE_PAD

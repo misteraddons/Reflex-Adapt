@@ -133,61 +133,61 @@ boolean GuitarControllerBase::supportsTouchbar() {
 	return false;
 }
 
-void GuitarControllerBase::printDebug(Print& output) {
-	const char fillCharacter = '_';
+// void GuitarControllerBase::printDebug(Print& output) {
+// 	const char fillCharacter = '_';
 
-	char buffer[25];
+// 	char buffer[25];
 
-	output.print("Guitar: ");
+// 	output.print("Guitar: ");
 
-	// Strum + Fret Buttons
-	char strumPrint = fillCharacter;
-	if (strumUp()) {
-		strumPrint = '^';
-	}
-	else if (strumDown()) {  // Mutually exclusive
-		strumPrint = 'v';
-	}
+// 	// Strum + Fret Buttons
+// 	char strumPrint = fillCharacter;
+// 	if (strumUp()) {
+// 		strumPrint = '^';
+// 	}
+// 	else if (strumDown()) {  // Mutually exclusive
+// 		strumPrint = 'v';
+// 	}
 
-	const char greenPrint = fretGreen() ? 'G' : fillCharacter;
-	const char redPrint = fretRed() ? 'R' : fillCharacter;
-	const char yellowPrint = fretYellow() ? 'Y' : fillCharacter;
-	const char bluePrint = fretBlue() ? 'B' : fillCharacter;
-	const char orangePrint = fretOrange() ? 'O' : fillCharacter;
+// 	const char greenPrint = fretGreen() ? 'G' : fillCharacter;
+// 	const char redPrint = fretRed() ? 'R' : fillCharacter;
+// 	const char yellowPrint = fretYellow() ? 'Y' : fillCharacter;
+// 	const char bluePrint = fretBlue() ? 'B' : fillCharacter;
+// 	const char orangePrint = fretOrange() ? 'O' : fillCharacter;
 
-	snprintf(buffer, sizeof(buffer),
-		"%c | %c%c%c%c%c | W:%2u ",
-		strumPrint,
-		greenPrint, redPrint, yellowPrint, bluePrint, orangePrint,
-		whammyBar());
-	output.print(buffer);
-	buffer[0] = 0;
+// 	snprintf(buffer, sizeof(buffer),
+// 		"%c | %c%c%c%c%c | W:%2u ",
+// 		strumPrint,
+// 		greenPrint, redPrint, yellowPrint, bluePrint, orangePrint,
+// 		whammyBar());
+// 	output.print(buffer);
+// 	buffer[0] = 0;
 
-	// Touchbar, if World Controller
-	if (supportsTouchbar()) {
-		const char greenPrint = touchGreen() ? 'G' : fillCharacter;
-		const char redPrint = touchRed() ? 'R' : fillCharacter;
-		const char yellowPrint = touchYellow() ? 'Y' : fillCharacter;
-		const char bluePrint = touchBlue() ? 'B' : fillCharacter;
-		const char orangePrint = touchOrange() ? 'O' : fillCharacter;
+// 	// Touchbar, if World Controller
+// 	if (supportsTouchbar()) {
+// 		const char greenPrint = touchGreen() ? 'G' : fillCharacter;
+// 		const char redPrint = touchRed() ? 'R' : fillCharacter;
+// 		const char yellowPrint = touchYellow() ? 'Y' : fillCharacter;
+// 		const char bluePrint = touchBlue() ? 'B' : fillCharacter;
+// 		const char orangePrint = touchOrange() ? 'O' : fillCharacter;
 
-		snprintf(buffer, sizeof(buffer),
-			"Touch:%2u - %c%c%c%c%c | ",
-			touchbar(),
-			greenPrint, redPrint, yellowPrint, bluePrint, orangePrint);
-		output.print(buffer);
-		buffer[0] = 0;
-	}
+// 		snprintf(buffer, sizeof(buffer),
+// 			"Touch:%2u - %c%c%c%c%c | ",
+// 			touchbar(),
+// 			greenPrint, redPrint, yellowPrint, bluePrint, orangePrint);
+// 		output.print(buffer);
+// 		buffer[0] = 0;
+// 	}
 
-	// Joy + Plus/Minus
-	const char plusPrint = buttonPlus() ? '+' : fillCharacter;
-	const char minusPrint = buttonMinus() ? '-' : fillCharacter;
+// 	// Joy + Plus/Minus
+// 	const char plusPrint = buttonPlus() ? '+' : fillCharacter;
+// 	const char minusPrint = buttonMinus() ? '-' : fillCharacter;
 
-	snprintf(buffer, sizeof(buffer),
-		"%c%c | Joy:(%2u, %2u)",
-		minusPrint, plusPrint,
-		joyX(), joyY());
-	output.println(buffer);
-}
+// 	snprintf(buffer, sizeof(buffer),
+// 		"%c%c | Joy:(%2u, %2u)",
+// 		minusPrint, plusPrint,
+// 		joyX(), joyY());
+// 	output.println(buffer);
+// }
 
 }  // End "NintendoExtensionCtrl" namespace

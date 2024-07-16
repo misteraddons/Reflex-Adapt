@@ -334,101 +334,101 @@ boolean ClassicControllerBase::buttonHome() const {
 	return HRBIT(ButtonHome);
 }
 
-void ClassicControllerBase::printDebug(Print& output) const {
-	const char fillCharacter = '_';
+// void ClassicControllerBase::printDebug(Print& output) const {
+// 	const char fillCharacter = '_';
 
-	char buffer[68];
+// 	char buffer[68];
 
-	const char dpadLPrint = dpadLeft() ? '<' : fillCharacter;
-	const char dpadUPrint = dpadUp() ? '^' : fillCharacter;
-	const char dpadDPrint = dpadDown() ? 'v' : fillCharacter;
-	const char dpadRPrint = dpadRight() ? '>' : fillCharacter;
+// 	const char dpadLPrint = dpadLeft() ? '<' : fillCharacter;
+// 	const char dpadUPrint = dpadUp() ? '^' : fillCharacter;
+// 	const char dpadDPrint = dpadDown() ? 'v' : fillCharacter;
+// 	const char dpadRPrint = dpadRight() ? '>' : fillCharacter;
 
-	const char aButtonPrint = buttonA() ? 'A' : fillCharacter;
-	const char bButtonPrint = buttonB() ? 'B' : fillCharacter;
-	const char xButtonPrint = buttonX() ? 'X' : fillCharacter;
-	const char yButtonPrint = buttonY() ? 'Y' : fillCharacter;
+// 	const char aButtonPrint = buttonA() ? 'A' : fillCharacter;
+// 	const char bButtonPrint = buttonB() ? 'B' : fillCharacter;
+// 	const char xButtonPrint = buttonX() ? 'X' : fillCharacter;
+// 	const char yButtonPrint = buttonY() ? 'Y' : fillCharacter;
 
-	const char plusPrint = buttonPlus() ? '+' : fillCharacter;
-	const char minusPrint = buttonMinus() ? '-' : fillCharacter;
-	const char homePrint = buttonHome() ? 'H' : fillCharacter;
+// 	const char plusPrint = buttonPlus() ? '+' : fillCharacter;
+// 	const char minusPrint = buttonMinus() ? '-' : fillCharacter;
+// 	const char homePrint = buttonHome() ? 'H' : fillCharacter;
 
-	const char ltButtonPrint = buttonL() ? 'X' : fillCharacter;
-	const char rtButtonPrint = buttonR() ? 'X' : fillCharacter;
+// 	const char ltButtonPrint = buttonL() ? 'X' : fillCharacter;
+// 	const char rtButtonPrint = buttonR() ? 'X' : fillCharacter;
 
-	const char zlButtonPrint = buttonZL() ? 'L' : fillCharacter;
-	const char zrButtonPrint = buttonZR() ? 'R' : fillCharacter;
+// 	const char zlButtonPrint = buttonZL() ? 'L' : fillCharacter;
+// 	const char zrButtonPrint = buttonZR() ? 'R' : fillCharacter;
 
-	output.print("Classic ");
+// 	output.print("Classic ");
 
-	snprintf(buffer, sizeof(buffer),
-		"%c%c%c%c | %c%c%c | %c%c%c%c L:(%3u, %3u) R:(%3u, %3u) | LT:%3u%c RT:%3u%c Z:%c%c",
-		dpadLPrint, dpadUPrint, dpadDPrint, dpadRPrint,
-		minusPrint, homePrint, plusPrint,
-		aButtonPrint, bButtonPrint, xButtonPrint, yButtonPrint,
-		leftJoyX(), leftJoyY(), rightJoyX(), rightJoyY(),
-		triggerL(), ltButtonPrint, triggerR(), rtButtonPrint,
-		zlButtonPrint, zrButtonPrint);
+// 	snprintf(buffer, sizeof(buffer),
+// 		"%c%c%c%c | %c%c%c | %c%c%c%c L:(%3u, %3u) R:(%3u, %3u) | LT:%3u%c RT:%3u%c Z:%c%c",
+// 		dpadLPrint, dpadUPrint, dpadDPrint, dpadRPrint,
+// 		minusPrint, homePrint, plusPrint,
+// 		aButtonPrint, bButtonPrint, xButtonPrint, yButtonPrint,
+// 		leftJoyX(), leftJoyY(), rightJoyX(), rightJoyY(),
+// 		triggerL(), ltButtonPrint, triggerR(), rtButtonPrint,
+// 		zlButtonPrint, zrButtonPrint);
 	
-	output.print(buffer);
-	if (getHighRes()) output.print(" | (HR)");
+// 	output.print(buffer);
+// 	if (getHighRes()) output.print(" | (HR)");
 
-	output.println();
-}
+// 	output.println();
+// }
 
 
 // ######### Mini Controller Support #########
 
-void NESMiniControllerBase::printDebug(Print& output) const {
-	const char fillCharacter = '_';
+// void NESMiniControllerBase::printDebug(Print& output) const {
+// 	const char fillCharacter = '_';
 
-	output.print("NES ");
+// 	output.print("NES ");
 
-	output.print(dpadLeft() ? '<' : fillCharacter);
-	output.print(dpadUp() ? '^' : fillCharacter);
-	output.print(dpadDown() ? 'v' : fillCharacter);
-	output.print(dpadRight() ? '>' : fillCharacter);
-	output.print(" | ");
+// 	output.print(dpadLeft() ? '<' : fillCharacter);
+// 	output.print(dpadUp() ? '^' : fillCharacter);
+// 	output.print(dpadDown() ? 'v' : fillCharacter);
+// 	output.print(dpadRight() ? '>' : fillCharacter);
+// 	output.print(" | ");
 
-	buttonSelect() ? (void)output.print("SEL") : NintendoExtensionCtrl::printRepeat(fillCharacter, 3, output);
-	output.print(' ');
+// 	buttonSelect() ? (void)output.print("SEL") : NintendoExtensionCtrl::printRepeat(fillCharacter, 3, output);
+// 	output.print(' ');
 
-	buttonStart() ? (void)output.print("STR") : NintendoExtensionCtrl::printRepeat(fillCharacter, 3, output);
-	output.print(" | ");
+// 	buttonStart() ? (void)output.print("STR") : NintendoExtensionCtrl::printRepeat(fillCharacter, 3, output);
+// 	output.print(" | ");
 
-	output.print(buttonB() ? 'B' : fillCharacter);
-	output.print(buttonA() ? 'A' : fillCharacter);
+// 	output.print(buttonB() ? 'B' : fillCharacter);
+// 	output.print(buttonA() ? 'A' : fillCharacter);
 
-	output.println();
-}
+// 	output.println();
+// }
 
-void SNESMiniControllerBase::printDebug(Print& output) const {
-	const char fillCharacter = '_';
+// void SNESMiniControllerBase::printDebug(Print& output) const {
+// 	const char fillCharacter = '_';
 
-	output.print("SNES ");
+// 	output.print("SNES ");
 
-	output.print(dpadLeft() ? '<' : fillCharacter);
-	output.print(dpadUp() ? '^' : fillCharacter);
-	output.print(dpadDown() ? 'v' : fillCharacter);
-	output.print(dpadRight() ? '>' : fillCharacter);
-	output.print(" | ");
+// 	output.print(dpadLeft() ? '<' : fillCharacter);
+// 	output.print(dpadUp() ? '^' : fillCharacter);
+// 	output.print(dpadDown() ? 'v' : fillCharacter);
+// 	output.print(dpadRight() ? '>' : fillCharacter);
+// 	output.print(" | ");
 
-	buttonSelect() ? (void)output.print("SEL") : NintendoExtensionCtrl::printRepeat(fillCharacter, 3, output);
-	output.print(' ');
+// 	buttonSelect() ? (void)output.print("SEL") : NintendoExtensionCtrl::printRepeat(fillCharacter, 3, output);
+// 	output.print(' ');
 
-	buttonStart() ? (void)output.print("STR") : NintendoExtensionCtrl::printRepeat(fillCharacter, 3, output);
-	output.print(" | ");
+// 	buttonStart() ? (void)output.print("STR") : NintendoExtensionCtrl::printRepeat(fillCharacter, 3, output);
+// 	output.print(" | ");
 
-	output.print(buttonA() ? 'A' : fillCharacter);
-	output.print(buttonB() ? 'B' : fillCharacter);
-	output.print(buttonX() ? 'X' : fillCharacter);
-	output.print(buttonY() ? 'Y' : fillCharacter);
-	output.print(" | ");
+// 	output.print(buttonA() ? 'A' : fillCharacter);
+// 	output.print(buttonB() ? 'B' : fillCharacter);
+// 	output.print(buttonX() ? 'X' : fillCharacter);
+// 	output.print(buttonY() ? 'Y' : fillCharacter);
+// 	output.print(" | ");
 
-	output.print(buttonL() ? 'L' : fillCharacter);
-	output.print(buttonR() ? 'R' : fillCharacter);
+// 	output.print(buttonL() ? 'L' : fillCharacter);
+// 	output.print(buttonR() ? 'R' : fillCharacter);
 
-	output.println();
-}
+// 	output.println();
+// }
 
 }  // End "NintendoExtensionCtrl" namespace

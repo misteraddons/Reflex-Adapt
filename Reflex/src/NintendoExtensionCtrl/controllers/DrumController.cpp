@@ -157,62 +157,62 @@ uint8_t DrumControllerBase::velocityPedal() const {
 	return velocity(VelocityID::Pedal);
 }
 
-void DrumControllerBase::printDebug(Print& output) const {
-	const char fillCharacter = '_';
+// void DrumControllerBase::printDebug(Print& output) const {
+// 	const char fillCharacter = '_';
 	
-	char buffer[45];
+// 	char buffer[45];
 	
-	output.print("Drums: ");
+// 	output.print("Drums: ");
 
-	const char redPrint = drumRed() ? 'R' : fillCharacter;
-	const char bluePrint = drumBlue() ? 'B' : fillCharacter;
-	const char greenPrint = drumGreen() ? 'G' : fillCharacter;
+// 	const char redPrint = drumRed() ? 'R' : fillCharacter;
+// 	const char bluePrint = drumBlue() ? 'B' : fillCharacter;
+// 	const char greenPrint = drumGreen() ? 'G' : fillCharacter;
 
-	const char yellowPrint = cymbalYellow() ? 'Y' : fillCharacter;
-	const char orangePrint = cymbalOrange() ? 'O' : fillCharacter;
+// 	const char yellowPrint = cymbalYellow() ? 'Y' : fillCharacter;
+// 	const char orangePrint = cymbalOrange() ? 'O' : fillCharacter;
 
-	const char pedalPrint = bassPedal() ? 'P' : fillCharacter;
+// 	const char pedalPrint = bassPedal() ? 'P' : fillCharacter;
 
-	uint8_t velocityPrint = 0;
-	char velocityIDPrint = fillCharacter;
+// 	uint8_t velocityPrint = 0;
+// 	char velocityIDPrint = fillCharacter;
 
-	if (velocityAvailable()) {
-		velocityPrint = velocity();
+// 	if (velocityAvailable()) {
+// 		velocityPrint = velocity();
 
-		switch (velocityID()) {
-			case (VelocityID::None):
-				break;  // Keep as fillCharacter
-			case(VelocityID::Red):
-				velocityIDPrint = 'R';
-				break;
-			case(VelocityID::Blue):
-				velocityIDPrint = 'B';
-				break;
-			case(VelocityID::Green):
-				velocityIDPrint = 'G';
-				break;
-			case(VelocityID::Yellow):
-				velocityIDPrint = 'Y';
-				break;
-			case(VelocityID::Orange):
-				velocityIDPrint = 'O';
-				break;
-			case(VelocityID::Pedal):
-				velocityIDPrint = 'P';
-				break;
-		}
-	}
+// 		switch (velocityID()) {
+// 			case (VelocityID::None):
+// 				break;  // Keep as fillCharacter
+// 			case(VelocityID::Red):
+// 				velocityIDPrint = 'R';
+// 				break;
+// 			case(VelocityID::Blue):
+// 				velocityIDPrint = 'B';
+// 				break;
+// 			case(VelocityID::Green):
+// 				velocityIDPrint = 'G';
+// 				break;
+// 			case(VelocityID::Yellow):
+// 				velocityIDPrint = 'Y';
+// 				break;
+// 			case(VelocityID::Orange):
+// 				velocityIDPrint = 'O';
+// 				break;
+// 			case(VelocityID::Pedal):
+// 				velocityIDPrint = 'P';
+// 				break;
+// 		}
+// 	}
 
-	const char plusPrint = buttonPlus() ? '+' : fillCharacter;
-	const char minusPrint = buttonMinus() ? '-' : fillCharacter;
+// 	const char plusPrint = buttonPlus() ? '+' : fillCharacter;
+// 	const char minusPrint = buttonMinus() ? '-' : fillCharacter;
 
-	snprintf(buffer, sizeof(buffer),
-		"%c\\%c%c%c/%c %c | V:%1u for %c | %c%c | Joy:(%2u, %2u)",
-		yellowPrint, redPrint, bluePrint, greenPrint, orangePrint, pedalPrint,
-		velocityPrint, velocityIDPrint,
-		minusPrint, plusPrint,
-		joyX(), joyY());
-	output.println(buffer);
-}
+// 	snprintf(buffer, sizeof(buffer),
+// 		"%c\\%c%c%c/%c %c | V:%1u for %c | %c%c | Joy:(%2u, %2u)",
+// 		yellowPrint, redPrint, bluePrint, greenPrint, orangePrint, pedalPrint,
+// 		velocityPrint, velocityIDPrint,
+// 		minusPrint, plusPrint,
+// 		joyX(), joyY());
+// 	output.println(buffer);
+// }
 
 }  // End "NintendoExtensionCtrl" namespace

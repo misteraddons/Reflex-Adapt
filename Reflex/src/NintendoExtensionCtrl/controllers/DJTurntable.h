@@ -60,7 +60,7 @@ namespace NintendoExtensionCtrl {
 
 		ExtensionType getExpectedType() const;
 
-		enum class TurntableConfig {
+		enum class TurntableConfig : uint8_t {
 			BaseOnly,
 			Left,
 			Right,
@@ -84,7 +84,7 @@ namespace NintendoExtensionCtrl {
 		boolean buttonPlus() const;
 		boolean buttonMinus() const;
 
-		void printDebug(Print& output = NXC_SERIAL_DEFAULT);
+		// void printDebug(Print& output = NXC_SERIAL_DEFAULT);
 
 		TurntableConfig getTurntableConfig();
 		uint8_t getNumTurntables();
@@ -144,7 +144,7 @@ namespace NintendoExtensionCtrl {
 		};
 
 	private:
-		void printTurntable(Print& output, TurntableExpansion &table) const;
+		//void printTurntable(Print& output, TurntableExpansion &table) const;
 
 		TurntableConfig tableConfig = TurntableConfig::BaseOnly;
 	};

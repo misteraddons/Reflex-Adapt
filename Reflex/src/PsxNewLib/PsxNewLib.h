@@ -110,7 +110,7 @@ enum PsxButton {
  *
  * \sa getAnalogButton()
  */
-enum PsxAnalogButton {
+enum PsxAnalogButton : uint8_t {
 	PSAB_PAD_RIGHT  = 0,
 	PSAB_PAD_LEFT   = 1,
 	PSAB_PAD_UP     = 2,
@@ -186,7 +186,7 @@ static const byte poll[] = {0x01, 0x42, 0x00, 0xFF, 0xFF};
  *
  * \sa getControllerType
  */
-enum PsxControllerType {
+enum PsxControllerType : uint8_t {
 	PSCTRL_UNKNOWN = 0,			//!< No idea
 	PSCTRL_DUALSHOCK,			//!< DualShock or compatible
 	PSCTRL_DUALSHOCK2,			//!< DualShock2 or compatible
@@ -210,7 +210,7 @@ const byte PSCTRL_MAX = static_cast<byte> (PSCTRL_GUITHERO) + 1;
  *
  * \sa getProtocol
  */
-enum PsxControllerProtocol {
+enum PsxControllerProtocol : uint8_t {
 	PSPROTO_UNKNOWN = 0,		//!< No idea
 	PSPROTO_DIGITAL,			//!< Original controller (SCPH-1010) protocol (8 digital buttons + START + SELECT)
 	PSPROTO_DUALSHOCK,			//!< DualShock (has analog axes)
@@ -288,7 +288,7 @@ const byte NEGCON_I_II_BUTTON_THRESHOLD = 128U;
 const byte NEGCON_L_BUTTON_THRESHOLD = 240U;
 
 //! \brief Guncon read status
-enum GunconStatus {
+enum GunconStatus : uint8_t {
 	//! Guncon data is valid
 	GUNCON_OK,
 
@@ -310,7 +310,7 @@ enum GunconStatus {
 };
 
 //! \brief Jogcon rotation direction
-enum JogconDirection {
+enum JogconDirection : uint8_t {
 	JOGCON_DIR_NONE = 0x0,
 	JOGCON_DIR_CW = 0x1,
 	JOGCON_DIR_CCW = 0x2,
@@ -321,7 +321,7 @@ enum JogconDirection {
 };
 
 //! \brief Jogcon command
-enum JogconCommand {
+enum JogconCommand : uint8_t {
 	JOGCON_CMD_NONE = 0x0,
 	JOGCON_CMD_DROP_REVOLUTIONS = 0x80,
 	JOGCON_CMD_NEW_START = 0xC0,

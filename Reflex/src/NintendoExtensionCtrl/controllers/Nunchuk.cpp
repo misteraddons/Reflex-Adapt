@@ -80,21 +80,21 @@ float NunchukBase::pitchAngle() const {
 	return -atan2((float)accelY() - 511.0, (float)accelZ() - 511.0) * 180.0 / PI;
 }
 
-void NunchukBase::printDebug(Print& output) const {
-	// 59 characters, 1 terminating null, and 7 extra so the compiler stops
-	// complaining about not having enough buffer space for the full 16 bit
-	// values (5 characters each) that can fit in the type
-	char buffer[67];
+// void NunchukBase::printDebug(Print& output) const {
+// 	// 59 characters, 1 terminating null, and 7 extra so the compiler stops
+// 	// complaining about not having enough buffer space for the full 16 bit
+// 	// values (5 characters each) that can fit in the type
+// 	char buffer[67];
 
-	const char cPrint = buttonC() ? 'C' : '-';
-	const char zPrint = buttonZ() ? 'Z' : '-';
+// 	const char cPrint = buttonC() ? 'C' : '-';
+// 	const char zPrint = buttonZ() ? 'Z' : '-';
 
-	output.print("Nunchuk - ");
-	snprintf(buffer, sizeof(buffer),
-		"Joy:(%3u, %3u) | Accel XYZ:(%4u, %4u, %4u) | Buttons: %c%c",
-		joyX(), joyY(), accelX(), accelY(), accelZ(), cPrint, zPrint);
+// 	output.print("Nunchuk - ");
+// 	snprintf(buffer, sizeof(buffer),
+// 		"Joy:(%3u, %3u) | Accel XYZ:(%4u, %4u, %4u) | Buttons: %c%c",
+// 		joyX(), joyY(), accelX(), accelY(), accelZ(), cPrint, zPrint);
 
-	output.println(buffer);
-}
+// 	output.println(buffer);
+// }
 
 }  // End "NintendoExtensionCtrl" namespace

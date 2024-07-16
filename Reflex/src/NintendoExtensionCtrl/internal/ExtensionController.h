@@ -70,10 +70,10 @@ namespace NintendoExtensionCtrl {
 		size_t getRequestSize() const;
 		void setRequestSize(size_t size = MinRequestSize);
 
-		void printDebug(Print& output = NXC_SERIAL_DEFAULT) const;
-		void printDebugID(Print& output = NXC_SERIAL_DEFAULT) const;
-		void printDebugRaw(Print& output = NXC_SERIAL_DEFAULT) const;
-		void printDebugRaw(uint8_t baseFormat, Print& output = NXC_SERIAL_DEFAULT) const;
+		// void printDebug(Print& output = NXC_SERIAL_DEFAULT) const;
+		// void printDebugID(Print& output = NXC_SERIAL_DEFAULT) const;
+		// void printDebugRaw(Print& output = NXC_SERIAL_DEFAULT) const;
+		// void printDebugRaw(uint8_t baseFormat, Print& output = NXC_SERIAL_DEFAULT) const;
 
 		static const uint8_t MinRequestSize = 6;   // Smallest reporting mode (0x37)
 		static const uint8_t MaxRequestSize = ExtensionData::ControlDataSize;

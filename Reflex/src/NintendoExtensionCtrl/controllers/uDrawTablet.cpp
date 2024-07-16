@@ -63,22 +63,22 @@ boolean uDrawTabletBase::penDetected() const {
 	return penX() < 4095 && penY() < 4095;
 }
 
-void uDrawTabletBase::printDebug(Print& output) const {
-	// 59 characters, 1 terminating null, and 4 extra so the compiler stops
-	// complaining about not having enough buffer space for the full 16 bit
-	// values (5 characters each) that can fit in the type
-	char buffer[64];
+// void uDrawTabletBase::printDebug(Print& output) const {
+// 	// 59 characters, 1 terminating null, and 4 extra so the compiler stops
+// 	// complaining about not having enough buffer space for the full 16 bit
+// 	// values (5 characters each) that can fit in the type
+// 	char buffer[64];
 	
-	const char penPrint = penDetected() ? 'Y' : 'N';
-	const char lowerPrint = buttonLower() ? 'L' : '-';
-	const char upperPrint = buttonUpper() ? 'U' : '-';
+// 	const char penPrint = penDetected() ? 'Y' : 'N';
+// 	const char lowerPrint = buttonLower() ? 'L' : '-';
+// 	const char upperPrint = buttonUpper() ? 'U' : '-';
 
-	output.print("uDrawTablet - ");
-	snprintf(buffer, sizeof(buffer),
-		"Pen:(%4u, %4u) | Pressure:%3u | Pen Detect:%c | Buttons:%c%c",
-			penX(), penY(), penPressure(), penPrint, lowerPrint, upperPrint);
+// 	output.print("uDrawTablet - ");
+// 	snprintf(buffer, sizeof(buffer),
+// 		"Pen:(%4u, %4u) | Pressure:%3u | Pen Detect:%c | Buttons:%c%c",
+// 			penX(), penY(), penPressure(), penPrint, lowerPrint, upperPrint);
 
-	output.println(buffer);
-}
+// 	output.println(buffer);
+// }
 
 }  // End "NintendoExtensionCtrl" namespace

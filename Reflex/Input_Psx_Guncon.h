@@ -1,4 +1,18 @@
-const word maxMouseValue = 32767;
+/*******************************************************************************
+ * PlayStation (GUNCON) input module for RetroZord / Reflex-Adapt.
+ * By Matheus Fraguas (sonik-br)
+ * 
+ * Handles 1 input port.
+ *
+ * Uses PsxNewLib
+ * https://github.com/SukkoPera/PsxNewLib
+ *
+ * Uses a modified version of MPG
+ * https://github.com/sonik-br/MPG
+ *
+*/
+
+const uint16_t maxMouseValue = 1023;//32767;
 
 //min and max possible values
 //from document at http://problemkaputt.de/psx-spx.htm#controllerslightgunsnamcoguncon
@@ -8,45 +22,53 @@ const word maxMouseValue = 32767;
 //x is 72 to 450. with underscan x 71 to 453
 //y is 22 to 248. with underscan y is 13 to 254 (ntsc)
 
-const byte ANALOG_DEAD_ZONE = 25U;
+const uint8_t ANALOG_DEAD_ZONE = 25;
 
-const unsigned short int minPossibleX = 77;
-const unsigned short int maxPossibleX = 461;
-const unsigned short int minPossibleY = 25;
-const unsigned short int maxPossibleY = 295;
+const uint8_t minPossibleX = 77;
+const uint16_t maxPossibleX = 461;
+const uint8_t minPossibleY = 25;
+const uint16_t maxPossibleY = 295;
 
-const byte maxNoLightCount = 10;
+#if GUNCON_FORCE_MODE == 3
+  const uint8_t maxNoLightCount = 254;//80
+#else
+  const uint8_t maxNoLightCount = 10;
+#endif
 
-short calibrationStep = 0;
+uint8_t calibrationStep = 0;
 
-boolean enableReport = false;
-boolean enableJoystick = false;
-boolean joyOffScreenEdge = false; //what to do when pointing out of screen? false: center. true: bottom left (MAME standard)
+bool enableReport = false;
+bool enableJoystick = false;
+bool joyOffScreenEdge = false; //what to do when pointing out of screen? false: center. true: bottom left (MAME standard)
 
 // Minimum and maximum detected values. Varies from tv to tv.
 // Values will be detected when pointing at the screen.
-word minX = 1000;
-word maxX = 0;
-word minY = 1000;
-word maxY = 0;
+#if GUNCON_FORCE_MODE != 3
+  uint16_t minX = 1000;
+  uint16_t maxX = 0;
+  uint16_t minY = 1000;
+  uint16_t maxY = 0;
+#endif
 
-word offsetX = 0;
-word offsetY = 0;
+int8_t offsetX = 0;
+int8_t offsetY = 0;
 
-unsigned char noLightCount = 0;
+uint8_t noLightCount = 0;
 
 // Last successful read coordinates
-word lastX = 0;//-1;
-word lastY = 0;//-1;
+uint16_t lastX = 0;
+uint16_t lastY = 0;
 
-#ifdef ENABLE_PSX_MOUSE_OUTPUT
+#ifdef ENABLE_PSX_GUNCON_MOUSE
   Guncon1_* AbsMouse;
 #endif
 
-word convertRange(double gcMin, double gcMax, double value) {
-  double scale = maxMouseValue / (gcMax - gcMin);
+uint16_t convertRange(const uint16_t gcMin, const uint16_t gcMax, const uint16_t value) { return map(value, gcMin, gcMax, 0, maxMouseValue); }
+
+/*word convertRange(const double gcMin, const double gcMax, const double value) {
+  const double scale = maxMouseValue / (gcMax - gcMin);
   return (word)((value - gcMin) * scale);
-}
+}*/
 
 
 /*word convertRange(word gcMin, word gcMax, word value) {
@@ -55,39 +77,46 @@ word convertRange(double gcMin, double gcMax, double value) {
 }*/
 
 
-void moveToCoords(word x, word y) {
+void moveToCoords(uint16_t x, uint16_t y) {
+#ifdef ENABLE_PSX_GUNCON_MOUSE
   if (enableMouseMove) {
-    #ifdef ENABLE_PSX_MOUSE_OUTPUT
       AbsMouse->setXAxis(x);
       AbsMouse->setYAxis(y);
-    #endif
   }
+#endif
   
   if (enableJoystick) {
-    ((Guncon1_*)usbStick[0])->setXAxis(x);
-    ((Guncon1_*)usbStick[0])->setYAxis(y);
+//    ((Guncon1_*)usbStick[0])->setXAxis(x);
+//    ((Guncon1_*)usbStick[0])->setYAxis(y);
+    state[0].lx = x;
+    state[0].ly = y;
   }
 }
 
 void releaseAllButtons() { //guncon
-  uint8_t i;
+  //uint8_t i;
+#ifdef ENABLE_PSX_GUNCON_MOUSE
   if (enableMouseMove) {
-    #ifdef ENABLE_PSX_MOUSE_OUTPUT
-      for (i = 0; i < 3; i++)//MOUSE_LEFT, MOUSE_RIGHT, MOUSE_MIDDLE
-        AbsMouse->setButton(i, false);
+      //for (i = 0; i < 3; i++)//MOUSE_LEFT, MOUSE_RIGHT, MOUSE_MIDDLE
+      //  AbsMouse->setButton(i, false);
+      AbsMouse->setButtons(0);
       AbsMouse->sendState();
-    #endif
   }
+#endif
 
   if (enableJoystick) {
-    for (i = 0; i < 3; i++)
-      ((Guncon1_*)usbStick[0])->setButton(i, false);
-    usbStick[0]->sendState();
+    //for (i = 0; i < 3; i++)
+    //  ((Guncon1_*)usbStick[0])->setButton(i, false);
+    //((Guncon1_*)usbStick[0])->setButtons(0);
+    state[0].buttons = 0;
   }
 }
 
 void readGuncon() {
-  word x, y, convertedX, convertedY;
+  uint16_t x, y;
+  #if GUNCON_FORCE_MODE != 3
+    uint16_t convertedX, convertedY;
+  #endif
   const GunconStatus gcStatus = psx->getGunconCoordinates(x, y); //use coords from guncon
 
 /*
@@ -104,13 +133,18 @@ void readGuncon() {
   if (gcStatus == GUNCON_OK) {
     noLightCount = 0;
     // is inside possible range?
+#if GUNCON_FORCE_MODE == 3
+    {
+#else
     if (x >= minPossibleX && x <= maxPossibleX && y >= minPossibleY && y <= maxPossibleY) {
+#endif
       //x += offsetX;
       //y += offsetY;
       lastX = x;
       lastY = y;
 
       //got new min or max values?
+#if GUNCON_FORCE_MODE != 3
       if (x < minX)
         minX = x;
       else if (x > maxX)
@@ -120,15 +154,25 @@ void readGuncon() {
         minY = y;
       else if (y > maxY)
         maxY = y;
+#endif
 
+
+#if GUNCON_FORCE_MODE == 3
+      if (enableJoystick) {
+        moveToCoords(x + offsetX, y + offsetY);
+      }
+#else
       if (enableMouseMove || enableJoystick) {
         //convertedX = convertRange(minX, maxX, x);
         //convertedY = convertRange(minY, maxY, y);
         //moveToCoords(convertedX + offsetX, convertedY + offsetY);
+        
         convertedX = convertRange(minX + offsetX, maxX + offsetX, x);
         convertedY = convertRange(minY + offsetY, maxY + offsetY, y);
         moveToCoords(convertedX, convertedY);
       }
+#endif
+
     }
   }
   else if (gcStatus == GUNCON_NO_LIGHT) {
@@ -137,10 +181,14 @@ void readGuncon() {
     if (lastX != 0 && lastY != 0) {
       //convertedX = convertRange(minX, maxX, lastX);
       //convertedY = convertRange(minY, maxY, lastY);
+
+#if GUNCON_FORCE_MODE == 3
+      moveToCoords(lastX + offsetX, lastY + offsetY);
+#else
       convertedX = convertRange(minX + offsetX, maxX + offsetX, lastX);
       convertedY = convertRange(minY + offsetY, maxY + offsetY, lastY);
-
       moveToCoords(convertedX, convertedY);
+#endif
       //moveToCoords(convertedX + offsetX, convertedY + offsetY);
 
       noLightCount++;
@@ -152,22 +200,29 @@ void readGuncon() {
 
         //set it offscreen (bottom left). need to test
         //also release all buttons
+#ifdef ENABLE_PSX_GUNCON_MOUSE
         if (enableMouseMove) {
-          #ifdef ENABLE_PSX_MOUSE_OUTPUT
             AbsMouse->setXAxis(0);
             AbsMouse->setYAxis(maxMouseValue);
-          #endif
         }
+#endif
 
         //put joystick to the center position
         if (enableJoystick) {
+#if GUNCON_FORCE_MODE == 3
+          //((Guncon1_*)usbStick[0])->setXAxis(0);
+          //((Guncon1_*)usbStick[0])->setYAxis(0);
+          state[0].lx = 0;
+          state[0].ly = 0;
+#else
           if (joyOffScreenEdge) {
             ((Guncon1_*)usbStick[0])->setXAxis(0);
             ((Guncon1_*)usbStick[0])->setYAxis(maxMouseValue);
           } else {
-            ((Guncon1_*)usbStick[0])->setXAxis(16383);
-            ((Guncon1_*)usbStick[0])->setYAxis(16383);
+            ((Guncon1_*)usbStick[0])->setXAxis(maxMouseValue/2);//16383
+            ((Guncon1_*)usbStick[0])->setYAxis(maxMouseValue/2);
           }
+#endif
         }
 
         //releasing buttons breaks compatibility with time crisis style of reload
@@ -177,6 +232,10 @@ void readGuncon() {
     else if (psx->buttonPressed(PSB_CIRCLE) && psx->buttonPressed(PSB_START) && psx->buttonPressed(PSB_CROSS)) {//only when using guncon. dualshock wont work
       enableReport = false;
       releaseAllButtons();
+      #if defined REFLEX_USE_OLED_DISPLAY && defined ENABLE_PSX_GUNCON_OLED
+          setOledDisplay(true);
+          clearOledLineAndPrint(0, 2, F("OUTPUT DISABLED"));
+      #endif
       delay(1000);
     }
 
@@ -191,7 +250,7 @@ void analogDeadZone(byte& value) {
 }
 
 void readDualShock() {//dualshock as guncon.
-  word x, y;
+  uint16_t x, y;
   byte analogX = ANALOG_IDLE_VALUE;
   byte analogY = ANALOG_IDLE_VALUE;
   if (psx->getLeftAnalog(analogX, analogY)) { //use coords from analog controller
@@ -256,57 +315,94 @@ void handleButtons() { //guncon
     usbStick[0]->releaseButton(2);
   }*/
   
-  const bool triggerPressed = psx->buttonPressed(PSB_CIRCLE);
-  const bool aBtnPressed = psx->buttonPressed(PSB_START);
-  const bool bBtnPressed = psx->buttonPressed(PSB_CROSS);
+  uint8_t buttonData = 0;
+  bitWrite(buttonData, 0, psx->buttonPressed(PSB_CIRCLE)); //trigger
+  bitWrite(buttonData, 1, psx->buttonPressed(PSB_START)); //A
+  bitWrite(buttonData, 2, psx->buttonPressed(PSB_CROSS)); //B
 
-  #ifdef ENABLE_PSX_MOUSE_OUTPUT
-    AbsMouse->setButton(0, triggerPressed);//MOUSE_LEFT
+  #ifdef ENABLE_PSX_GUNCON_MOUSE
+    AbsMouse->setButtons(buttonData);
   #endif
-  ((Guncon1_*)usbStick[0])->setButton(0, triggerPressed);
-  
-  #ifdef ENABLE_PSX_MOUSE_OUTPUT
-    AbsMouse->setButton(1, aBtnPressed);//MOUSE_RIGHT
-  #endif
-  ((Guncon1_*)usbStick[0])->setButton(1, aBtnPressed);
-
-  #ifdef ENABLE_PSX_MOUSE_OUTPUT
-    AbsMouse->setButton(2, bBtnPressed);//MOUSE_MIDDLE
-  #endif
-  ((Guncon1_*)usbStick[0])->setButton(2, bBtnPressed);
+  //((Guncon1_*)usbStick[0])->setButtons(buttonData);
+  state[0].buttons = buttonData;
 }
 
 void runCalibration() {
+  bool changed = false;
+  setOledDisplay(true);
   if (calibrationStep == 1) { //calibrate x axis
-    if (psx->buttonJustPressed(PSB_START)) //A button press
+    if (psx->buttonJustPressed(PSB_START)){ //A button press
       offsetX--;
-    else if (psx->buttonJustPressed(PSB_CROSS)) //B button press
+      changed = true;
+    } else if (psx->buttonJustPressed(PSB_CROSS)){ //B button press
       offsetX++;
+      changed = true;
+    }
+
   } else if (calibrationStep == 2) { //calibrate y axis
-    if (psx->buttonJustPressed(PSB_START)) //A button press
+    if (psx->buttonJustPressed(PSB_START)) { //A button press
       offsetY--;
-    else if (psx->buttonJustPressed(PSB_CROSS)) //B button press
+      changed = true;
+    } else if (psx->buttonJustPressed(PSB_CROSS)) { //B button press
       offsetY++;
+      changed = true;
+    }
   } else if (calibrationStep == 3) { //exit calibration mode
     calibrationStep = 0;
+#if defined REFLEX_USE_OLED_DISPLAY && defined ENABLE_PSX_GUNCON_OLED
+    //todo optimize
+    /*display.setCursor(0, oledDisplayFirstRow + 2);
+    display.clearToEOL();
+    display.setCursor(0, oledDisplayFirstRow + 3);
+    display.clearToEOL();*/
+    display.clear(0, 127, oledDisplayFirstRow + 2, oledDisplayFirstRow + 3);
+#endif
     return;
   }
 
-  if (psx->buttonJustPressed(PSB_CIRCLE)) //trigger press
+  if (psx->buttonJustPressed(PSB_CIRCLE)) { //trigger press
     calibrationStep++;
-
-  word x, y;
+    changed = true;
+  }
+  uint16_t x, y;
   if (psx->getGunconCoordinates(x, y) == GUNCON_OK) {
     //moveToCoords(convertRange(minX, maxX, x + offsetX), convertRange(minY, maxY, y + offsetY));
+#if GUNCON_FORCE_MODE == 3
+    moveToCoords(x + offsetX, y + offsetY);
+#else
     moveToCoords(convertRange(minX + offsetX, maxX + offsetX, x), convertRange(minY + offsetY, maxY + offsetY, y));
+#endif
   }
 
+#if defined REFLEX_USE_OLED_DISPLAY && defined ENABLE_PSX_GUNCON_OLED
+  if (changed) {
+    /*display.setCursor(0, oledDisplayFirstRow + 3);
+    display.clearToEOL();
+    if (calibrationStep == 1) {
+      display.print(F("X "));
+      display.print(offsetX);
+    } else {
+      display.print(F("Y "));
+      display.print(offsetY);
+    }*/
+    if (calibrationStep == 1) {
+      clearOledLineAndPrint(0, 3, F("X "));
+      display.print(offsetX);
+    } else {
+      clearOledLineAndPrint(0, 3, F("Y "));
+      display.print(offsetY);
+    }
+    
+  }
+#endif
+
+#ifdef ENABLE_PSX_GUNCON_MOUSE
   if (enableMouseMove) {
-    #ifdef ENABLE_PSX_MOUSE_OUTPUT
       AbsMouse->sendState();
-    #endif
-  } else if (enableJoystick) {
-    usbStick[0]->sendState();
+  } else 
+#endif
+  if (enableJoystick) {
+    //usbStick[0]->sendState();
   }
 }
 
@@ -318,7 +414,7 @@ void loopGuncon() {
   
   if (!enableReport) {
     if (!enableMouseMove && !enableJoystick) { //will only configure here on the first time.
-      #if defined(GUNCON_FORCE_MODE) && GUNCON_FORCE_MODE >= 0 && GUNCON_FORCE_MODE < 3
+      #if defined(GUNCON_FORCE_MODE) && GUNCON_FORCE_MODE >= 0 && GUNCON_FORCE_MODE < 4
         enableReport = true;
         #if GUNCON_FORCE_MODE == 0
           enableMouseMove = true;
@@ -327,8 +423,17 @@ void loopGuncon() {
         #elif GUNCON_FORCE_MODE == 2
           enableJoystick = true;
           joyOffScreenEdge = true;
+        #elif GUNCON_FORCE_MODE == 3
+          enableJoystick = true;
+          enableReport = true;
+          #if defined REFLEX_USE_OLED_DISPLAY && defined ENABLE_PSX_GUNCON_OLED
+            /*display.setCursor(0, oledDisplayFirstRow + 1);
+            display.clearToEOL();
+            display.print(F("GUNCON"));*/
+            clearOledLineAndPrint(0, 1, F("GUNCON"));
+          #endif
         #endif
-      #else //GUNCON_FORCE_MODE
+      #else // GUNCON_FORCE_MODE
         if (psx->buttonJustPressed(PSB_CIRCLE)) { //trigger
           enableReport = true;
           enableMouseMove = true;
@@ -351,15 +456,37 @@ void loopGuncon() {
       #endif //GUNCON_FORCE_MODE
     } else if (psx->buttonJustPressed(PSB_CIRCLE) || psx->buttonJustPressed(PSB_START)) { //re-enable the configured report mode
       enableReport = true;
+#if defined REFLEX_USE_OLED_DISPLAY && defined ENABLE_PSX_GUNCON_OLED
+      //clear the "output disabled" message when reenabling output
+      display.setCursor(0, oledDisplayFirstRow + 2);
+      display.clearToEOL();
+#endif
       //delay(300);
       return;
     } else if (psx->buttonJustPressed(PSB_CROSS)) { //enter calibration mode
       enableReport = true;
       calibrationStep = 1;
+#if defined REFLEX_USE_OLED_DISPLAY && defined ENABLE_PSX_GUNCON_OLED
+    /*display.setCursor(0, oledDisplayFirstRow + 2);
+    display.clearToEOL();
+    display.print(F("CONFIG"));*/
+    clearOledLineAndPrint(0, 2, F("CONFIG"));
+
+    /*display.setCursor(0, oledDisplayFirstRow + 3);
+    display.clearToEOL();
+    display.print(F("X "));*/
+    clearOledLineAndPrint(0, 3, F("X "));
+    display.print(offsetX);
+#endif
       delay(300);
       return;
     }
-  }
+
+#if defined REFLEX_USE_OLED_DISPLAY && defined ENABLE_PSX_GUNCON_OLED
+      setOledDisplay(true);
+#endif
+
+  }//end if(!enableReport)
   
   if (enableReport) {
     handleButtons();
@@ -370,7 +497,7 @@ void loopGuncon() {
       break;
     case PSPROTO_DUALSHOCK:
     case PSPROTO_DUALSHOCK2:
-      readDualShock();
+      //readDualShock();
       /*
       //controller buttons
       usbStick[0]->setButton (0, psx->buttonPressed (PSB_SQUARE));
@@ -391,22 +518,38 @@ void loopGuncon() {
   
   //todo else
   if (enableReport) {
+#ifdef ENABLE_PSX_GUNCON_MOUSE
     if (enableMouseMove) {
-      #ifdef ENABLE_PSX_MOUSE_OUTPUT
         AbsMouse->sendState();
-      #endif
-    } else if (enableJoystick) {
-      usbStick[0]->sendState();
+    } else 
+#endif
+    if (enableJoystick) {
+      //usbStick[0]->sendState();
     }
   }
 }
 
 void gunconSetup() {
-  #ifdef ENABLE_PSX_MOUSE_OUTPUT
-    AbsMouse = new Guncon1_("RZordPsGun", JOYSTICK_DEFAULT_REPORT_ID, JOYSTICK_TYPE_MOUSE, 2);
-    AbsMouse->resetState();
-    AbsMouse->sendState();
-  #endif
 
-  usbStick[0] = new Guncon1_("RZordPsGun", JOYSTICK_DEFAULT_REPORT_ID + 1, JOYSTICK_TYPE_GAMEPAD, 2);
+  totalUsb = 1;//MAX_USB_STICKS;
+  hasLeftAnalogStick[0] = true;
+  
+//  #ifdef ENABLE_PSX_GUNCON_MOUSE
+//    AbsMouse = new Guncon1_("ReflexPSGun", JOYSTICK_DEFAULT_REPORT_ID, JOYSTICK_TYPE_MOUSE, 2);
+//    usbStick[0] = new Guncon1_("ReflexPSGun", JOYSTICK_DEFAULT_REPORT_ID + 1, JOYSTICK_TYPE_GAMEPAD, 2);
+//    AbsMouse->resetState();
+//    AbsMouse->sendState();
+//  #else
+//    usbStick[0] = new Guncon1_("ReflexPSGun", JOYSTICK_DEFAULT_REPORT_ID + 1, JOYSTICK_TYPE_GAMEPAD, 1);
+//  #endif
+//  
+//  usbStick[0]->resetState();
+//  usbStick[0]->sendState();
+}
+
+void gunconSetup2() {
+  //change hid mode
+  if (canChangeMode()) {
+    options.inputMode = INPUT_MODE_HID_GUNCON;
+  }  
 }

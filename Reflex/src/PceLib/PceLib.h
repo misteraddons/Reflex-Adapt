@@ -36,7 +36,7 @@
 
 #define TAP_PCE_PORTS 5
 
-enum PceDeviceType_Enum {
+enum PceDeviceType_Enum : uint8_t {
   PCE_DEVICE_NONE = 0,
   PCE_DEVICE_NOTSUPPORTED,
   PCE_DEVICE_PAD2,

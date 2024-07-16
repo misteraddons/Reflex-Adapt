@@ -1,15 +1,19 @@
 /*******************************************************************************
- * Reflex Adapt USB
- * PSX input module - JogCon support
+ * PlayStation (JOGCON) input module for RetroZord / Reflex-Adapt.
+ * By Matheus Fraguas (sonik-br)
+ * 
+ * Handles 1 input port.
  * 
  * Based on MiSTer-A1 JogCon (JogConUSB) by sorgelig.
  * https://github.com/MiSTer-devel/Retro-Controllers-USB-MiSTer/tree/master/JogConUSB
- * 
+ *
+ * Uses PsxNewLib
+ * https://github.com/SukkoPera/PsxNewLib
+ *
+ * Uses a modified version of MPG
+ * https://github.com/sonik-br/MPG
+ *
 */
-
-#ifdef ENABLE_PSX_JOGCON_MOUSE
-  MouseRel1_* RelMouse;
-#endif
 
 byte ff;
 byte mode;
@@ -255,19 +259,38 @@ bool handleJogconData()
         //for (int8_t i = 2; i < 14; i++)
         //  ((Jogcon1_*)usbStick[0])->setButton(i, bitRead(btn, i));
 
-        handleDpad(true);
-        ((Jogcon1_*)usbStick[0])->setButtons(newbtn & 0xFF0F); //buttons except dpad
+        handleDpad();
+        //((Jogcon1_*)usbStick[0])->setButtons(newbtn & 0xFF0F); //buttons except dpad
+        //state[outputIndex].buttons = newbtn & 0xFF0F;
+        state[0].buttons = 0
+          | (psx->buttonPressed(PSB_CROSS)    ? GAMEPAD_MASK_B1 : 0) // Generic: K1, Switch: B, Xbox: A
+          | (psx->buttonPressed(PSB_CIRCLE)   ? GAMEPAD_MASK_B2 : 0) // Generic: K2, Switch: A, Xbox: B
+          | (psx->buttonPressed(PSB_SQUARE)   ? GAMEPAD_MASK_B3 : 0) // Generic: P1, Switch: Y, Xbox: X
+          | (psx->buttonPressed(PSB_TRIANGLE) ? GAMEPAD_MASK_B4 : 0) // Generic: P2, Switch: X, Xbox: Y
+          | (psx->buttonPressed(PSB_L1)       ? GAMEPAD_MASK_L1 : 0) // Generic: P4, Switch: L, Xbox: LB
+          | (psx->buttonPressed(PSB_R1)       ? GAMEPAD_MASK_R1 : 0) // Generic: P3, Switch: R, Xbox: RB
+          | (psx->buttonPressed(PSB_L2)       ? GAMEPAD_MASK_L2 : 0) // Generic: K4, Switch: ZL, Xbox: LT (Digital)
+          | (psx->buttonPressed(PSB_R2)       ? GAMEPAD_MASK_R2 : 0) // Generic: K3, Switch: ZR, Xbox: RT (Digital)
+          | (psx->buttonPressed(PSB_SELECT)   ? GAMEPAD_MASK_S1 : 0) // Generic: Select, Switch: -, Xbox: View
+          | (psx->buttonPressed(PSB_START)    ? GAMEPAD_MASK_S2 : 0) // Generic: Start, Switch: +, Xbox: Menu
+          | (newbtn & 0x01                    ? GAMEPAD_MASK_L3 : 0) // All: Left Stick Click
+          | (newbtn & 0x02                    ? GAMEPAD_MASK_R3 : 0) // All: Right Stick Click
+        ;
 
         if(enableMouseMove) {
 #ifdef ENABLE_PSX_JOGCON_MOUSE
-          RelMouse->setXAxis(spinner);
-          RelMouse->sendState();
+          //RelMouse->setXAxis(spinner);
+          //RelMouse->sendState();
+          state[0].aux = spinner; //spinner
 #endif
         } else {
-          ((Jogcon1_*)usbStick[0])->setPaddle(paddle);
-          ((Jogcon1_*)usbStick[0])->setSpinner(spinner);          
+          hasLeftAnalogStick[0] = true;
+          //((Jogcon1_*)usbStick[0])->setPaddle(paddle);
+          //((Jogcon1_*)usbStick[0])->setSpinner(spinner);
+          state[0].lx = convertAnalog(paddle, false); //paddle
+          state[0].aux = spinner; //spinner
         }
-        usbStick[0]->sendState();
+        //usbStick[0]->sendState();
       }
     }
   }
@@ -291,25 +314,46 @@ void jogconSetup() {
   sp_max = SP_MAX/sp_div;
   sp_half = sp_max/2;
 
+  totalUsb = 1;//MAX_USB_STICKS;
+
   //enableMouseMove = haveController && psx->buttonPressed(PSB_SELECT);
 
-#ifdef ENABLE_PSX_JOGCON_MOUSE
-  if(enableMouseMove) {
-      RelMouse = new MouseRel1_("ReflexPSPSJogCon", JOYSTICK_DEFAULT_REPORT_ID, 2);
-      //RelMouse->begin (false);
-      RelMouse->resetState();//todo send?
-      RelMouse->sendState();
-    usbStick[0] = new Jogcon1_("ReflexPSPSJogCon", JOYSTICK_DEFAULT_REPORT_ID + 1, JOYSTICK_TYPE_GAMEPAD, 2);
-  } else
-#endif
-  {
-    usbStick[0] = new Jogcon1_("MiSTer-A1 JogCon", JOYSTICK_DEFAULT_REPORT_ID, JOYSTICK_TYPE_JOYSTICK, 1);
-  }
-  usbStick[0]->resetState();
-  usbStick[0]->sendState();
 
-#ifdef ENABLE_PSX_JOGCON_MOUSE
-  if (enableMouseMove)
-    delay(200);
-#endif
+//#ifdef ENABLE_PSX_JOGCON_MOUSE
+//  if(enableMouseMove) {
+//      RelMouse = new MouseRel1_("ReflexPSPSJogCon", JOYSTICK_DEFAULT_REPORT_ID, 2);
+//      //RelMouse->begin (false);
+//      RelMouse->resetState();//todo send?
+//      RelMouse->sendState();
+//    usbStick[0] = new Jogcon1_("ReflexPSPSJogCon", JOYSTICK_DEFAULT_REPORT_ID + 1, JOYSTICK_TYPE_GAMEPAD, 2);
+//  } else
+//#endif
+//  {
+//    usbStick[0] = new Jogcon1_("MiSTer-A1 JogCon", JOYSTICK_DEFAULT_REPORT_ID, JOYSTICK_TYPE_JOYSTICK, 1);
+//  }
+//  usbStick[0]->resetState();
+//  usbStick[0]->sendState();
+//
+//#ifdef ENABLE_PSX_JOGCON_MOUSE
+//  if (enableMouseMove)
+//    delay(200);
+//#endif
+}
+
+void jogconSetup2() {
+  //change hid mode
+  if (canChangeMode()) {
+    options.inputMode = INPUT_MODE_HID_JOGCON;
+    #ifdef ENABLE_PSX_JOGCON_MOUSE
+      if (enableMouseMove) {
+        options.inputMode = INPUT_MODE_HID_JOGCON_MOUSE;
+        totalUsb = 2; //mouse mode uses gamepad + mouse devices
+      }
+    #endif
+  }
+  
+  #ifdef ENABLE_PSX_JOGCON_MOUSE
+    if (enableMouseMove)
+      delay(200);
+  #endif
 }

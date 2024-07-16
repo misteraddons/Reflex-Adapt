@@ -8,6 +8,7 @@
  * edge (us).
  */
 const byte ATTN_DELAY = 50;
+//const byte ATTN_DELAY = 130; //taito's jet de go requires this
 
 // Set up the speed, data order and data mode
 static SPISettings spiSettings (250000, LSBFIRST, SPI_MODE3);

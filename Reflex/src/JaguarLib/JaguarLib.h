@@ -33,7 +33,7 @@
 //Debounce is optional.
 //#define JAG_DEBOUNCE 8 //milliseconds
 
-enum JagDeviceType_Enum {
+enum JagDeviceType_Enum : uint8_t {
   JAG_DEVICE_NONE = 0,
   JAG_DEVICE_NOTSUPPORTED,
   JAG_DEVICE_PAD

@@ -38,7 +38,7 @@
   #endif
 #endif
 
-enum SnesDeviceType_Enum {
+enum SnesDeviceType_Enum : uint8_t {
   SNES_DEVICE_NONE = 0,
   SNES_DEVICE_NOTSUPPORTED,
   SNES_DEVICE_NES,

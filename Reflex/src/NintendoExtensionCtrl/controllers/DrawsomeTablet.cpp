@@ -62,17 +62,17 @@ boolean DrawsomeTabletBase::penDetected() const {
 	return getControlBit(Maps::Pen_Detected);
 }
 
-void DrawsomeTabletBase::printDebug(Print& output) const {
-	char buffer[60];
+// void DrawsomeTabletBase::printDebug(Print& output) const {
+// 	char buffer[60];
 	
-	const char penPrint = penDetected() ? 'Y' : 'N';
+// 	const char penPrint = penDetected() ? 'Y' : 'N';
 
-	output.print("DrawsomeTablet - ");
-	snprintf(buffer, sizeof(buffer),
-		"Pen:(%6u, %6u) | Pressure:%4u | Pen Detect:%c",
-			penX(), penY(), penPressure(), penPrint);
+// 	output.print("DrawsomeTablet - ");
+// 	snprintf(buffer, sizeof(buffer),
+// 		"Pen:(%6u, %6u) | Pressure:%4u | Pen Detect:%c",
+// 			penX(), penY(), penPressure(), penPrint);
 
-	output.println(buffer);
-}
+// 	output.println(buffer);
+// }
 
 }  // End "NintendoExtensionCtrl" namespace

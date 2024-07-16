@@ -150,7 +150,7 @@ namespace NintendoExtensionCtrl {
 
 		boolean buttonHome() const;
 
-		void printDebug(Print& output = NXC_SERIAL_DEFAULT) const;
+		//void printDebug(Print& output = NXC_SERIAL_DEFAULT) const;
 
 	protected:
 		boolean highRes = false;  // 'high resolution' mode setting
@@ -166,14 +166,14 @@ namespace NintendoExtensionCtrl {
 	public:
 		using ClassicControllerBase::ClassicControllerBase;
 
-		void printDebug(Print& output = NXC_SERIAL_DEFAULT) const;
+		//void printDebug(Print& output = NXC_SERIAL_DEFAULT) const;
 	};
 
 	class SNESMiniControllerBase : public ClassicControllerBase {
 	public:
 		using ClassicControllerBase::ClassicControllerBase;
 
-		void printDebug(Print& output = NXC_SERIAL_DEFAULT) const;
+		//void printDebug(Print& output = NXC_SERIAL_DEFAULT) const;
 	};
 }
 

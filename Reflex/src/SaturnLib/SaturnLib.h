@@ -42,12 +42,12 @@
 #define SAT_ID_MEGA6 B11100001
 //#define SAT_ID_MEGAMOUSE B11100011
 
-enum DB9_TR_Enum {
+enum DB9_TR_Enum : uint8_t {
   DB9_TR_INPUT = 0,
   DB9_TR_OUTPUT
 };
 
-enum SatDeviceType_Enum {
+enum SatDeviceType_Enum : uint8_t {
   SAT_DEVICE_NONE = 0,
   SAT_DEVICE_NOTSUPPORTED,
   SAT_DEVICE_MEGA3,
@@ -73,7 +73,7 @@ enum SatDigital_Enum {
   SAT_L         = 0x8000
 };
 
-enum SatAnalog_Enum {
+enum SatAnalog_Enum : uint8_t {
   SAT_ANALOG_X = 0,
   SAT_ANALOG_Y,
   SAT_ANALOG_L,
