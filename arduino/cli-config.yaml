@@ -1,4 +1,5 @@
-additional_urls:
-  - https://github.com/Palatis/Arduino-Lufa/raw/master/package_arduino-lufa_index.json
+board_manager:
+  additional_urls:
+    - https://github.com/Palatis/Arduino-Lufa/raw/master/package_arduino-lufa_index.json
 directories:
   user: ./arduino
