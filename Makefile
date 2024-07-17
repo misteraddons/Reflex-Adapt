@@ -96,24 +96,24 @@ Combo25.FLAGS = -DENABLE_REFLEX_SNES -DSNES_ENABLE_VBOY -DENABLE_REFLEX_SATURN -
 Combo26.FLAGS = -DENABLE_REFLEX_SMS -DENABLE_REFLEX_SNES -DENABLE_REFLEX_SATURN -DENABLE_REFLEX_PSX -DENABLE_PSX_GENERAL_OLED -DENABLE_PSX_GUNCON_OLED -DGUNCON_SUPPORT
 
 
-PRJ_DIR = Reflex
+PRJ_DIR = ReflexMPG
 BUILD_DIR = build
 TARGET_DIR = firmware
 
 SRC = $(wildcard $(PRJ_DIR)/*.h $(PRJ_DIR)/*.c $(PRJ_DIR)/*.ino)
-CLI_OPT = -b misteraddons:avr:reflex --config-file arduino/cli-config.yaml $(PRJ_DIR)
+ARDUINO_CLI = arduino-cli --config-file arduino/cli-config.yaml
 
 TARGETS = $(addsuffix .hex, $(addprefix $(TARGET_DIR)/, $(TARGET_NAMES)))
 
-GCC_PATH := $(shell arduino-cli compile $(CLI_OPT) --show-properties | grep runtime.tools.avr-gcc.path= | sed "s/.*=//")
+GCC_PATH := $(shell arduino-cli compile $(CLI_OPT) $(PRJ_DIR) -b Arduino-LUFA:avr:leonardo --show-properties | grep runtime.tools.avr-gcc.path= | sed "s/.*=//")
 
 all: $(TARGETS) $(TARGET_DIR)/sizes.txt
 
-$(TARGET_DIR)/%.hex: $(SRC) | $(TARGET_DIR)
+$(TARGET_DIR)/%.hex: $(SRC) | $(TARGET_DIR) install-core
 	@[ "$($*.FLAGS)" ] || ( echo ">> $*.FLAGS is not set"; exit 1 )
-	arduino-cli compile $(CLI_OPT) --build-property "build.extra_flags={build.usb_flags} -DREFLEX_NO_DEFAULTS $($*.FLAGS)" -e --output-dir $(BUILD_DIR)/$*
-	cp $(BUILD_DIR)/$*/Reflex.ino.elf $(TARGET_DIR)/$*.elf
-	cp $(BUILD_DIR)/$*/Reflex.ino.hex $(TARGET_DIR)/$*.hex
+	$(ARDUINO_CLI) -b Arduino-LUFA:avr:leonardo compile $(PRJ_DIR) --build-property "build.extra_flags={build.usb_flags} -DREFLEX_NO_DEFAULTS $($*.FLAGS)" -e --output-dir $(BUILD_DIR)/$*
+	cp $(BUILD_DIR)/$*/ReflexMPG.ino.elf $(TARGET_DIR)/$*.elf
+	cp $(BUILD_DIR)/$*/ReflexMPG.ino.hex $(TARGET_DIR)/$*.hex
 
 $(TARGET_DIR)/sizes.txt: $(TARGETS)
 	@cd $(TARGET_DIR) && $(GCC_PATH)/bin/avr-size $(notdir $(subst .hex,.elf,$^)) 2>&1 > sizes.txt
@@ -129,4 +129,7 @@ clean:
 	rm -rf $(TARGET_DIR)
 	rm -rf $(BUILD_DIR)
 
-.PHONY: all clean $(TARGET_NAMES)
+install-core:
+	$(ARDUINO_CLI) core install Arduino-LUFA:avr
+
+.PHONY: all clean install-core $(TARGET_NAMES)
