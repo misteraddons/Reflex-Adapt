@@ -6,7 +6,7 @@ on:
   push:
     paths:
       - Makefile
-      - Reflex/**
+      - ReflexMPG/**
 
 jobs:
   build:
