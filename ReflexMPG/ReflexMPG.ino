@@ -35,7 +35,7 @@
 // #define SATLIB_ENABLE_SATTAP //support for 6p multitap
 
 // SNES config
-#define SNES_ENABLE_VBOY
+//#define SNES_ENABLE_VBOY
 //#define SNES_ENABLE_MULTITAP
 
 // PS1 Guncon config. ONLY MODE 3 IS IMPLEMENTED
@@ -53,7 +53,7 @@
 // Just comment the desired lines below
 //#define GUNCON_SUPPORT
 //#define JOGCON_SUPPORT
-#define NEGCON_SUPPORT
+//#define NEGCON_SUPPORT
 
 // Mouse output is used on guncon and jogcon modes.
 // Can be disabled if only using on MiSTer
@@ -62,9 +62,9 @@
 
 
 // Oled display can be used for detailed info
-#define ENABLE_PSX_GENERAL_OLED
+//#define ENABLE_PSX_GENERAL_OLED
 //#define ENABLE_PSX_GUNCON_OLED
-#define ENABLE_PSX_JOGCON_OLED
+//#define ENABLE_PSX_JOGCON_OLED
 
 //PCEngine config
 //#define PCE_ENABLE_MULTITAP
@@ -95,15 +95,15 @@
 
 #ifndef REFLEX_NO_DEFAULTS
 //  #define ENABLE_REFLEX_SATURN
-// #define ENABLE_REFLEX_SNES
-  #define ENABLE_REFLEX_PSX
+//  #define ENABLE_REFLEX_SNES
+//  #define ENABLE_REFLEX_PSX
 //  #define ENABLE_REFLEX_PSX_JOG //this is for jogcon forced specific mode. jogcon can still be used with ENABLE_REFLEX_PSX
 //  #define ENABLE_REFLEX_PCE
 //  #define ENABLE_REFLEX_NEOGEO
 //  #define ENABLE_REFLEX_3DO
 //  #define ENABLE_REFLEX_JAGUAR
-  #define ENABLE_REFLEX_N64
-  #define ENABLE_REFLEX_GAMECUBE
+//  #define ENABLE_REFLEX_N64
+//  #define ENABLE_REFLEX_GAMECUBE
 //  #define ENABLE_REFLEX_WII
 //  #define ENABLE_REFLEX_SMS
 //  #define ENABLE_REFLEX_JPC
