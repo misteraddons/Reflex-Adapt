@@ -40,7 +40,7 @@
 
 // PS1 Guncon config. ONLY MODE 3 IS IMPLEMENTED. For now it's required to force a mode if GUNCON_SUPPORT is enabled.
 // 0=Mouse, 1=Joy, 2=Joy OffScreenEdge (MiSTer), 3=Guncon Raw (MiSTer)
-#define GUNCON_FORCE_MODE 3
+//#define GUNCON_FORCE_MODE 3
 
 // PS1 NeGcon HID config
 // 0=Default, 1=MiSTer Wheel format with paddle
@@ -127,6 +127,28 @@
   #define REFLEX_USE_OLED_DISPLAY
 #elif REFLEX_VERSION == -1 || REFLEX_VERSION == 0
   #define REFLEX_USE_SINGLE_OLED
+#endif
+
+
+//some validation
+#if defined(ENABLE_REFLEX_LOGO) && !defined(REFLEX_USE_OLED_DISPLAY)
+  #error REFLEX_USE_OLED_DISPLAY must be enabled if using ENABLE_REFLEX_LOGO
+#endif
+
+#if defined(ENABLE_REFLEX_PAD) && !defined(REFLEX_USE_OLED_DISPLAY)
+  #error REFLEX_USE_OLED_DISPLAY must be enabled if using ENABLE_REFLEX_PAD
+#endif
+
+#if defined(ENABLE_REFLEX_PSX_JOG) && !defined(ENABLE_REFLEX_PSX)
+  #error ENABLE_REFLEX_PSX must be enabled if using ENABLE_REFLEX_PSX_JOG
+#endif
+
+#if defined(ENABLE_REFLEX_PSX_JOG) && !defined(JOGCON_SUPPORT)
+  #error JOGCON_SUPPORT must be enabled if using ENABLE_REFLEX_PSX_JOG
+#endif
+
+#if defined(ENABLE_REFLEX_PSX) && defined(GUNCON_SUPPORT) && (!defined(GUNCON_FORCE_MODE) || GUNCON_FORCE_MODE != 3)
+  #error GUNCON_FORCE_MODE must be enabled and set to 3 if using GUNCON_SUPPORT
 #endif
 
 #include "src/DigitalIO/DigitalIO.h"
@@ -308,7 +330,8 @@ void configureOutput(InputMode currentMode) {
           display.setCol(6*6);
           display.println("PSX JOGCON");
         } else
-#else //general psx mode
+#endif
+#if defined(ENABLE_REFLEX_PSX_JOG) || defined(ENABLE_REFLEX_PSX) //general psx mode, also jogcon mode
         {
           uint8_t psxchars = 9;
           #ifdef GUNCON_SUPPORT
