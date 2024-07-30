@@ -38,9 +38,9 @@
 //#define SNES_ENABLE_VBOY
 //#define SNES_ENABLE_MULTITAP
 
-// PS1 Guncon config. ONLY MODE 3 IS IMPLEMENTED
+// PS1 Guncon config. ONLY MODE 3 IS IMPLEMENTED. For now it's required to force a mode if GUNCON_SUPPORT is enabled.
 // 0=Mouse, 1=Joy, 2=Joy OffScreenEdge (MiSTer), 3=Guncon Raw (MiSTer)
-//#define GUNCON_FORCE_MODE 3
+#define GUNCON_FORCE_MODE 3
 
 // PS1 NeGcon HID config
 // 0=Default, 1=MiSTer Wheel format with paddle
