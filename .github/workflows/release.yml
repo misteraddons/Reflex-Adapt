@@ -45,12 +45,12 @@ jobs:
           cache-dependency-path: |
              mister/go.sum
       - name: Download Updater
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           path: updater
           name: reflex_updater
       - name: Download Firmware
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4.1.7
         with:
           name: firmware
           path: firmware
