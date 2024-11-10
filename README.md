@@ -32,3 +32,16 @@ Alternatively, manually add the following to your `downloader.ini` file on the S
 [misteraddons/reflexadapt]
 db_url = https://github.com/misteraddons/Reflex-Adapt/raw/main/reflexadapt.json.zip
 ```
+
+## Building Firmware on Linux
+1. Clone the repo and cd into the directory
+2. Install [Arduino-cli](https://arduino.github.io/arduino-cli/installation): Use brew or the install script.
+3. If you installed with the install script add to PATH
+4. Install arduino:avr core `arduino-cli core install arduino:avr`
+5. Install Arduino-LUFA:avr core `arduino-cli core install Arduino-LUFA:avr --additional-urls https://github.com/Palatis/Arduino-Lufa/raw/master/package_arduino-lufa_index.json`
+6. make all
+
+## Building reflex_updater
+1. install [Rust](https://www.rust-lang.org/tools/install)
+2. cd reflex_updater
+3. cargo run or cargo build
