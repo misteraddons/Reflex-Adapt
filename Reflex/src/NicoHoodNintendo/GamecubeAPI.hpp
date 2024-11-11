@@ -88,25 +88,7 @@ bool CGamecubeController::read(void)
     }
 
 
-    if (status.device == NINTENDO_DEVICE_GC_WIRED)
-    {
-        // Read the controller, abort if it fails.
-        // Additional information: If you press X + Y + Start on the controller for 3 seconds
-        // It will turn off unless you release the buttons. The recalibration is all done
-        // on the Gamecube side. If the controller resets origin will have different values for sure.
-        if (!gc_read(pin, &report, status.rumble))
-        {
-            reset();
-            return false;
-        }
-
-        // Check if controller reported that we read the origin values (check if it disconnected).
-        // The Gamecube would just request (instantly) the origin again, but we keep things simple.
-        if (report.origin) {
-            reset();
-            return false;
-        }
-    } else if (status.device == NINTENDO_DEVICE_GC_KEYBOARD)
+    if (status.device == NINTENDO_DEVICE_GC_KEYBOARD)
     {
         // Read the keyboard.
         // The keyboard will only report 3 key presses at a time.
@@ -117,6 +99,18 @@ bool CGamecubeController::read(void)
         // There are times where if you press more than 4 or more keys, it will start reporting
         // either { 0x01, 0x01, 0x01 } OR { 0x02, 0x02, 0x02 }
         if (!gc_read_keyboard(pin, &report))
+        {
+            reset();
+            return false;
+        }
+    } else
+    {
+        // Lets be optimistic if it's not a keyboard and try to read it. Supports Wavebird.
+        // Read the controller, abort if it fails.
+        // Additional information: If you press X + Y + Start on the controller for 3 seconds
+        // It will turn off unless you release the buttons. The recalibration is all done
+        // on the Gamecube side. If the controller resets origin will have different values for sure.
+        if (!gc_read(pin, &report, status.rumble))
         {
             reset();
             return false;
