@@ -11,3 +11,4 @@ firmware/MPGCombo8.hex,MPG Gen+Sat, NES+SNES+VB, PCE & Neo
 firmware/MPGCombo9.hex,MPG Gen+Sat, NES+SNES+VB & N64
 firmware/MPGCombo10.hex,MPG Gen+Sat, Neo, N64 & GC
 firmware/MPGCombo11.hex,MPG PSX, 3DO & Wii
+firmware/MPGCombo12.hex,MPG NES+SNES, Gen+Sat, Neo & GC
