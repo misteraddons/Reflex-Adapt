@@ -240,10 +240,10 @@ class ReflexInputGameCube : public RZInputModule {
               | (gcdata[i].report.y ? GAMEPAD_MASK_B3 : 0) // Generic: P1, Switch: Y, Xbox: X
               | (gcdata[i].report.x ? GAMEPAD_MASK_B4 : 0) // Generic: P2, Switch: X, Xbox: Y
               //| (L      ? GAMEPAD_MASK_L1 : 0) // Generic: P4, Switch: L, Xbox: LB
-              //| (gcdata[i].report.z      ? GAMEPAD_MASK_R1 : 0) // Generic: P3, Switch: R, Xbox: RB
+              | (gcdata[i].report.z      ? GAMEPAD_MASK_R1 : 0) // Generic: P3, Switch: R, Xbox: RB
               | (gcdata[i].report.left  > 50      ? GAMEPAD_MASK_L2 : 0) // Generic: K4, Switch: ZL, Xbox: LT (Digital)
               | (gcdata[i].report.right > 50      ? GAMEPAD_MASK_R2 : 0) // Generic: K3, Switch: ZR, Xbox: RT (Digital)
-              | (gcdata[i].report.z     ? GAMEPAD_MASK_S1 : 0) // Generic: Select, Switch: -, Xbox: View
+              //| (gcdata[i].report.z     ? GAMEPAD_MASK_S1 : 0) // Generic: Select, Switch: -, Xbox: View
               | (gcdata[i].report.start ? GAMEPAD_MASK_S2 : 0) // Generic: Start, Switch: +, Xbox: Menu
               //| (sc.digitalPressed(LCLICK) ? GAMEPAD_MASK_L3 : 0) // All: Left Stick Click
               //| (sc.digitalPressed(RCLICK) ? GAMEPAD_MASK_R3 : 0) // All: Right Stick Click
