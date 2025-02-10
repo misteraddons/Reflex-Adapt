@@ -2,7 +2,7 @@
 
 firmware/MPGCombo1.hex,MPG PSX+neGcon, N64 & GC
 firmware/MPGCombo2.hex,MPG NES+SNES+VB, SMS, JPC, Neo, N64 & GC
-firmware/MPGCombo3.hex,MPG NES+SNES+VB, PSX & N64
+firmware/MPGCombo3.hex,MPG NES+SNES+VB, PSX+neGcon & N64
 firmware/MPGCombo4.hex,MPG NES+SNES, PSX, Neo & N64
 firmware/MPGCombo5.hex,MPG NES+SNES+VB, PCE, Neo, N64 & GC
 firmware/MPGCombo6.hex,MPG NES+SNES, PCE, Neo, Jag & SMS
