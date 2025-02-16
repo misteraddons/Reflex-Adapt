@@ -173,6 +173,7 @@ fn wait_for_port(use_existing: bool) -> Result<Option<String>> {
 }
 
 struct ManifestEntry {
+    category: String,
     desc: String,
     path: PathBuf,
 }
@@ -199,14 +200,24 @@ fn read_manifest() -> Result<Vec<ManifestEntry>> {
     };
 
     let mut manifest = vec![];
+    let mut category = String::from("Unknown");
     for line_res in io::BufReader::new(file).lines() {
         let line = line_res?;
         if line.starts_with('#') {
             continue;
         }
 
+        if line.starts_with("category:") {
+            if let Some((_, cat)) = line.split_once("category:") {
+                category = cat.to_string();
+            } else {
+                category = "Unknown".to_string();
+            }
+        }
+
         if let Some((path, desc)) = line.split_once(',') {
             manifest.push(ManifestEntry {
+                category: String::from(category.clone()),
                 desc: String::from(desc),
                 path: root.join(path),
             });
@@ -217,8 +228,26 @@ fn read_manifest() -> Result<Vec<ManifestEntry>> {
 }
 
 fn main_interactive() -> Result<bool> {
-    let manifest = read_manifest().context("Reading manifest file")?;
+    let mut manifest = read_manifest().context("Reading manifest file")?;
+    let mut categories: Vec<_> = manifest.iter().map(|x| x.category.clone()).collect();
+    categories.dedup();
+
+    if categories.len() > 1 {
+        let selection = Select::with_theme(&selection_theme())
+            .items(&categories)
+            .with_prompt("Select MPG or Legacy Reflex Firmware")
+            .default(0)
+            .report(false)
+            .interact_opt()?;
+
+        if let Some(selection) = selection {
+            let category = categories[selection].clone();
+            manifest.retain(|y| y.category == *category);
+        }
+    }
+
     let names: Vec<_> = manifest.iter().map(|x| x.desc.clone()).collect();
+
     let selection = Select::with_theme(&selection_theme())
         .items(&names)
         .with_prompt("Select Reflex Firmware [ BACK (ESC) or q to cancel ]")
