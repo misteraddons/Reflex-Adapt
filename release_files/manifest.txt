@@ -1,14 +1,14 @@
 # reflex-updater manifest
 
-firmware/MPGCombo1.hex,Dinput/PS3 (1-2P) / Xinput (1P) / Switch (1-2P) Combo 1: PSX+neGcon, N64 & GC
-firmware/MPGCombo2.hex,Dinput/PS3 (1-2P) / Xinput (1P) / Switch (1-2P) Combo 2: NES+SNES+VB, SMS, JPC, Neo, N64 & GC
-firmware/MPGCombo3.hex,Dinput/PS3 (1-2P) / Xinput (1P) / Switch (1-2P) Combo 3: NES+SNES+VB, PSX+neGcon & N64
-firmware/MPGCombo4.hex,Dinput/PS3 (1-2P) / Xinput (1P) / Switch (1-2P) Combo 4: NES+SNES, PSX, Neo & N64
-firmware/MPGCombo5.hex,Dinput/PS3 (1-2P) / Xinput (1P) / Switch (1-2P) Combo 5: NES+SNES+VB, PCE, Neo, N64 & GC
-firmware/MPGCombo6.hex,Dinput/PS3 (1-2P) / Xinput (1P) / Switch (1-2P) Combo 6: NES+SNES, PCE, Neo, Jag & SMS
-firmware/MPGCombo7.hex,Dinput/PS3 (1-2P) / Xinput (1P) / Switch (1-2P) Combo 7: Gen+Sat, PSX, Neo & SMS
-firmware/MPGCombo8.hex,Dinput/PS3 (1-2P) / Xinput (1P) / Switch (1-2P) Combo 8: Gen+Sat, NES+SNES+VB, PCE & Neo
-firmware/MPGCombo9.hex,Dinput/PS3 (1-2P) / Xinput (1P) / Switch (1-2P) Combo 9: Gen+Sat, NES+SNES+VB & N64
-firmware/MPGCombo10.hex,Dinput/PS3 (1-2P) / Xinput (1P) / Switch (1-2P) Combo 10: Gen+Sat, Neo, N64 & GC
-firmware/MPGCombo11.hex,Dinput/PS3 (1-2P) / Xinput (1P) / Switch (1-2P) Combo 11: PSX, 3DO & Wii
-firmware/MPGCombo12.hex,Dinput/PS3 (1-2P) / Xinput (1P) / Switch (1-2P) Combo 12: NES+SNES, Gen+Sat, Neo & GC
+firmware/MPGCombo1.hex,Combo 1: PSX+neGcon, N64 & GC
+firmware/MPGCombo2.hex,Combo 2: NES+SNES+VB, SMS, JPC, Neo, N64 & GC
+firmware/MPGCombo3.hex,Combo 3: NES+SNES+VB, PSX+neGcon & N64
+firmware/MPGCombo4.hex,Combo 4: NES+SNES, PSX, Neo & N64
+firmware/MPGCombo5.hex,Combo 5: NES+SNES+VB, PCE, Neo, N64 & GC
+firmware/MPGCombo6.hex,Combo 6: NES+SNES, PCE, Neo, Jag & SMS
+firmware/MPGCombo7.hex,Combo 7: Gen+Sat, PSX, Neo & SMS
+firmware/MPGCombo8.hex,Combo 8: Gen+Sat, NES+SNES+VB, PCE & Neo
+firmware/MPGCombo9.hex,Combo 9: Gen+Sat, NES+SNES+VB & N64
+firmware/MPGCombo10.hex,Combo 10: Gen+Sat, Neo, N64 & GC
+firmware/MPGCombo11.hex,Combo 11: PSX, 3DO & Wii
+firmware/MPGCombo12.hex,Combo 12: NES+SNES, Gen+Sat, Neo & GC
