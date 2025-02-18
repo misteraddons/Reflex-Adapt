@@ -1,5 +1,5 @@
 # reflex-updater manifest
-
+category:MPG: Dinput (1-2P) / Xinput (1P) / Switch + PS3 (1-2P)
 firmware/MPGCombo1.hex,Combo 1: PSX+neGcon, N64 & GC
 firmware/MPGCombo2.hex,Combo 2: NES+SNES+VB, SMS, JPC, Neo, N64 & GC
 firmware/MPGCombo3.hex,Combo 3: NES+SNES+VB, PSX+neGcon & N64
