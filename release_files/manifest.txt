@@ -1,5 +1,5 @@
 # reflex-updater manifest
-
+category:Legacy: Dinput + PS3 (1-2P)
 firmware/Nintendo.hex,Dinput/PS3 (1-2P) Nintendo: NES+SNES+VB+Tap, N64, GC & Wii
 firmware/Non-Nintendo.hex,Dinput/PS3 (1-2P) Non-Nintendo: PCE, Neo, Gen+Sat, PSX+Gun & Jag
 firmware/Non-Nintendo-Sony.hex,Dinput/PS3 (1-2P) Non-Nintendo-Sony: JP-PC, SMS+Atari+C64, Gen+Sat, 3DO, PCE, Neo & Jag 
