@@ -2,7 +2,7 @@
 
 <a href="https://misteraddons.com/collections/parts/products/reflex-adapt"><img src="images/purchase.png" alt="Purchase Reflex Adapt" title="Purchase Reflex Adapt" width="200"></a>
 
-<a href="https://github.com/misteraddons/Reflex-Adapt/releases/download/v1.08/reflex-v1.08.zip"><img src="images/desktop-download.png" alt="Download Windows/Mac/Linux updater" title="Download Windows/Mac/Linux updater" width="140"></a>
+<a href="https://github.com/misteraddons/Reflex-Adapt/releases/download/v2.00/reflex-v2.00.zip"><img src="images/desktop-download.png" alt="Download Windows/Mac/Linux updater" title="Download Windows/Mac/Linux updater" width="140"></a>
 <a href="https://github.com/misteraddons/Reflex-Adapt/releases/latest/download/reflex_updater.sh"><img src="images/mister-download.png" alt="Download MiSTer updater" title="Download MiSTer updater" width="140"></a>
 
 
