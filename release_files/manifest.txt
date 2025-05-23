@@ -12,3 +12,4 @@ firmware/MPGCombo9.hex,Combo 9: Gen+Sat, NES+SNES+VB & N64
 firmware/MPGCombo10.hex,Combo 10: Gen+Sat, Neo, N64 & GC
 firmware/MPGCombo11.hex,Combo 11: PSX, 3DO & Wii
 firmware/MPGCombo12.hex,Combo 12: NES+SNES, Gen+Sat, Neo & GC
+firmware/MPGCombo13.hex,Combo 13: NES+SNES, PSX, Jaguar & Wii
