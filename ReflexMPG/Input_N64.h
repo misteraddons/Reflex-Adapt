@@ -278,6 +278,9 @@ static bool isReadSuccess[] = {false,false};
 //          #endif
           isReadSuccess[i] = n64->read() && n64->getData().status.device != NINTENDO_DEVICE_N64_NONE;
 
+	  if (isReadSuccess[i])
+  	    n64data[i] = n64->getData();
+
           if (isReadSuccess[i] && options.inputMode == INPUT_MODE_XINPUT) {
             n64->setRumble(rumble[i].left_power != 0x0 || rumble[i].right_power != 0x0);
           }
