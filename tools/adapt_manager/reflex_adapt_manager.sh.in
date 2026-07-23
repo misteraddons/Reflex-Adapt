@@ -1,0 +1,46 @@
+#!/bin/sh
+set -eu
+
+STATE_DIR="${REFLEX_ADAPT_MANAGER_HOME:-/media/fat/config/reflex-adapt-manager}"
+TMP_DIR="${TMPDIR:-/tmp}/reflex-adapt-manager-$$"
+PYTHON_FILE="$TMP_DIR/reflex_adapt_manager.py"
+CATALOG_FILE="$TMP_DIR/catalog.json"
+MAP_BUNDLE_FILE="$TMP_DIR/mister_maps.b64"
+CLEAR_SCREEN=1
+
+for arg in "$@"; do
+  case "$arg" in
+    --validate-catalog|--list-firmware|--status) CLEAR_SCREEN=0 ;;
+  esac
+done
+
+cleanup() {
+  rm -rf "$TMP_DIR"
+  printf '\033[0m'
+  if [ "$CLEAR_SCREEN" -eq 1 ]; then
+    # Clear the dialog background and return the shell prompt home.
+    printf '\033[2J\033[H'
+  fi
+}
+trap cleanup EXIT INT TERM
+
+mkdir -p "$TMP_DIR" "$STATE_DIR"
+sed -n '/^__REFLEX_MANAGER_PYTHON__$/,/^__REFLEX_MANAGER_CATALOG__$/p' "$0" |
+  sed '1d;$d' > "$PYTHON_FILE"
+sed -n '/^__REFLEX_MANAGER_CATALOG__$/,/^__REFLEX_MANAGER_MAPS__$/p' "$0" |
+  sed '1d;$d' > "$CATALOG_FILE"
+sed -n '/^__REFLEX_MANAGER_MAPS__$/,/^__REFLEX_MANAGER_END__$/p' "$0" |
+  sed '1d;$d' > "$MAP_BUNDLE_FILE"
+
+python3 "$PYTHON_FILE" --catalog "$CATALOG_FILE" --map-bundle "$MAP_BUNDLE_FILE" "$@"
+exit $?
+
+: <<'__REFLEX_MANAGER_PAYLOAD__'
+__REFLEX_MANAGER_PYTHON__
+{{REFLEX_ADAPT_MANAGER_PYTHON}}
+__REFLEX_MANAGER_CATALOG__
+{{REFLEX_ADAPT_MANAGER_CATALOG}}
+__REFLEX_MANAGER_MAPS__
+{{REFLEX_ADAPT_MANAGER_MAPS}}
+__REFLEX_MANAGER_END__
+__REFLEX_MANAGER_PAYLOAD__

@@ -1,0 +1,938 @@
+{
+  "schema_version": 1,
+  "manager_min_version": "0.1.0",
+  "catalog_url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt/main/tools/adapt_manager/catalog.json",
+  "products": [
+    {
+      "id": "classic2usb",
+      "display_name": "Reflex Adapt Classic2USB",
+      "backend": "rp2040-uf2",
+      "runtime_vid_pid": [
+        "16d0:1460"
+      ],
+      "release_feed": "https://api.github.com/repos/misteraddons/Reflex-Adapt/releases",
+      "settings_schema": 1,
+      "releases": []
+    },
+    {
+      "id": "adapt-v1-legacy",
+      "display_name": "Adapt V1 / Legacy",
+      "backend": "avr109",
+      "runtime_vid_pid": [
+        "16d0:127e"
+      ],
+      "bootloader_vid_pid": [
+        "2341:0036"
+      ],
+      "families": [
+        {
+          "id": "mpg",
+          "display_name": "MPG Firmware",
+          "description": "Current MPG firmware combinations for the 32u4 hardware."
+        },
+        {
+          "id": "legacy",
+          "display_name": "Legacy Firmware",
+          "description": "Original Adapt V1 firmware combinations."
+        }
+      ],
+      "releases": [
+        {
+          "family": "mpg",
+          "version": "2.01",
+          "tag": "v2.01",
+          "channel": "stable",
+          "recommended": true,
+          "notes": "Current stable MPG firmware set.",
+          "eeprom_schema": "legacy-unknown",
+          "artifacts": [
+            {
+              "id": "mpgcombo1",
+              "display_name": "MPGCombo1",
+              "description": "Combo 1: PSX+neGcon, N64 & GC",
+              "filename": "MPGCombo1.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.01/distribution/v2.01-vb-nso-abfix-pre8/firmware/MPGCombo1.hex",
+              "bytes": 76404,
+              "sha256": "078699971cf3d22bc62304495b86201fdf2ea59dff65f20b47921693df4fa634",
+              "channel": "stable"
+            },
+            {
+              "id": "mpgcombo2",
+              "display_name": "MPGCombo2",
+              "description": "Combo 2: NES+SNES+VB, SMS, JPC, Neo, N64 & GC",
+              "filename": "MPGCombo2.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.01/distribution/v2.01-vb-nso-abfix-pre8/firmware/MPGCombo2.hex",
+              "bytes": 75892,
+              "sha256": "6b691f525a8d70e6481a5243cf33f853cdaa4f8287b84790ca8e60d70a718daa",
+              "channel": "stable"
+            },
+            {
+              "id": "mpgcombo3",
+              "display_name": "MPGCombo3",
+              "description": "Combo 3: NES+SNES+VB, PSX+neGcon & N64",
+              "filename": "MPGCombo3.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.01/distribution/v2.01-vb-nso-abfix-pre8/firmware/MPGCombo3.hex",
+              "bytes": 77208,
+              "sha256": "529fdab218f7d750f83628ddd5f89c4e3f860b1287ab8962f62005e518850426",
+              "channel": "stable"
+            },
+            {
+              "id": "mpgcombo4",
+              "display_name": "MPGCombo4",
+              "description": "Combo 4: NES+SNES, PSX, Neo & N64",
+              "filename": "MPGCombo4.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.01/distribution/v2.01-vb-nso-abfix-pre8/firmware/MPGCombo4.hex",
+              "bytes": 75964,
+              "sha256": "f2554ef6028a31ad9662477894fcde28aa70173298417f61019fbad325ea4f64",
+              "channel": "stable"
+            },
+            {
+              "id": "mpgcombo5",
+              "display_name": "MPGCombo5",
+              "description": "Combo 5: NES+SNES+VB, PCE, Neo, N64 & GC",
+              "filename": "MPGCombo5.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.01/distribution/v2.01-vb-nso-abfix-pre8/firmware/MPGCombo5.hex",
+              "bytes": 78652,
+              "sha256": "657a8b4f199f2a0c1a1baeb8d2555b4bcc7e028e5251c2d54fad804525e1a40a",
+              "channel": "stable"
+            },
+            {
+              "id": "mpgcombo6",
+              "display_name": "MPGCombo6",
+              "description": "Combo 6: NES+SNES, PCE, Neo, Jag & SMS",
+              "filename": "MPGCombo6.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.01/distribution/v2.01-vb-nso-abfix-pre8/firmware/MPGCombo6.hex",
+              "bytes": 67404,
+              "sha256": "a64da71843b47141fc828abb82ba3a5afe0b1bda22fb1a933cbae2df63714846",
+              "channel": "stable"
+            },
+            {
+              "id": "mpgcombo7",
+              "display_name": "MPGCombo7",
+              "description": "Combo 7: Gen+Sat, PSX, Neo & SMS",
+              "filename": "MPGCombo7.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.01/distribution/v2.01-vb-nso-abfix-pre8/firmware/MPGCombo7.hex",
+              "bytes": 78388,
+              "sha256": "488e3e006d8bde4611e24ed575dc3a129de06fcd91270d808623d17a47291705",
+              "channel": "stable"
+            },
+            {
+              "id": "mpgcombo8",
+              "display_name": "MPGCombo8",
+              "description": "Combo 8: Gen+Sat, NES+SNES+VB, PCE & Neo",
+              "filename": "MPGCombo8.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.01/distribution/v2.01-vb-nso-abfix-pre8/firmware/MPGCombo8.hex",
+              "bytes": 75888,
+              "sha256": "2748d788369cbab7761776b53159cb5e5047ab70f5c5227215090148933e843d",
+              "channel": "stable"
+            },
+            {
+              "id": "mpgcombo9",
+              "display_name": "MPGCombo9",
+              "description": "Combo 9: Gen+Sat, NES+SNES+VB & N64",
+              "filename": "MPGCombo9.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.01/distribution/v2.01-vb-nso-abfix-pre8/firmware/MPGCombo9.hex",
+              "bytes": 76480,
+              "sha256": "8ac993be60c8955f89512273e33bcccfe12e0573ca7a0873a473296d8b2d07d4",
+              "channel": "stable"
+            },
+            {
+              "id": "mpgcombo10",
+              "display_name": "MPGCombo10",
+              "description": "Combo 10: Gen+Sat, Neo, N64 & GC",
+              "filename": "MPGCombo10.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.01/distribution/v2.01-vb-nso-abfix-pre8/firmware/MPGCombo10.hex",
+              "bytes": 78636,
+              "sha256": "cdce1d93647e099beed255458b7d74749b6a8a4ac493545d6ecfd89d3ef9c6cf",
+              "channel": "stable"
+            },
+            {
+              "id": "mpgcombo11",
+              "display_name": "MPGCombo11",
+              "description": "Combo 11: PSX, 3DO & Wii",
+              "filename": "MPGCombo11.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.01/distribution/v2.01-vb-nso-abfix-pre8/firmware/MPGCombo11.hex",
+              "bytes": 75372,
+              "sha256": "cffedd1f318346a7556797f2d0bcf7413374c2659679901329a9b9c18821abb3",
+              "channel": "stable"
+            },
+            {
+              "id": "mpgcombo12",
+              "display_name": "MPGCombo12",
+              "description": "Combo 12: NES+SNES, Gen+Sat, Neo & GC",
+              "filename": "MPGCombo12.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.01/distribution/v2.01-vb-nso-abfix-pre8/firmware/MPGCombo12.hex",
+              "bytes": 78620,
+              "sha256": "d8c4aec72c5317428978c39ee7c77a3f558d21d62239b9d55a6d1085ef6532fd",
+              "channel": "stable"
+            },
+            {
+              "id": "mpgcombo13",
+              "display_name": "MPGCombo13",
+              "description": "Combo 13: NES+SNES, PSX, Jaguar & Wii",
+              "filename": "MPGCombo13.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.01/distribution/v2.01-vb-nso-abfix-pre8/firmware/MPGCombo13.hex",
+              "bytes": 77956,
+              "sha256": "e7716db3def2ef12a3ff89189b6e7ab99ac7c344282b53a575d8ff0c756b6296",
+              "channel": "stable"
+            },
+            {
+              "id": "mpgvbnso",
+              "display_name": "MPGVBNSO",
+              "description": "VB NSO: NES+SNES+VB with VB right D-pad on right stick",
+              "filename": "MPGVBNSO.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.01/distribution/v2.01-vb-nso-abfix-pre8/firmware/MPGVBNSO.hex",
+              "bytes": 48808,
+              "sha256": "f68fcff48c19eccdb8ae41e36d0a6b8095edbc8e35c20357372bb79089a562b2",
+              "channel": "stable"
+            }
+          ]
+        },
+        {
+          "family": "mpg",
+          "version": "2.01-experimental",
+          "tag": "v2.01",
+          "channel": "experimental",
+          "recommended": false,
+          "notes": "Diagnostic firmware from the selected release; not recommended for normal use.",
+          "eeprom_schema": "legacy-unknown",
+          "artifacts": [
+            {
+              "id": "mpgpsx1200test",
+              "display_name": "MPGPSX1200Test",
+              "description": "PSX-1200 Test: PSX analog init retries for SCPH-1200",
+              "filename": "MPGPSX1200Test.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.01/distribution/v2.01-vb-nso-abfix-pre8/firmware/MPGPSX1200Test.hex",
+              "bytes": 54576,
+              "sha256": "6f48b06f8b546a2e54da64d1f292087c14900a6e9918cf7bb24e9cdf41c4c006",
+              "channel": "experimental"
+            }
+          ]
+        },
+        {
+          "family": "mpg",
+          "version": "2.00",
+          "tag": "v2.00",
+          "channel": "stable",
+          "recommended": false,
+          "notes": "Previous stable MPG firmware set.",
+          "eeprom_schema": "legacy-unknown",
+          "artifacts": [
+            {
+              "id": "mpgcombo1",
+              "display_name": "MPGCombo1",
+              "description": "MPG PSX+neGcon, N64 & GC",
+              "filename": "MPGCombo1.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.00/distribution/V2.0/firmware/MPGCombo1.hex",
+              "bytes": 77753,
+              "sha256": "3f47252dca3b38c43e59a3a5850ba00f41bfa50cec196eafcd07ce57f1104421",
+              "channel": "stable"
+            },
+            {
+              "id": "mpgcombo2",
+              "display_name": "MPGCombo2",
+              "description": "MPG NES+SNES+VB, SMS, JPC, Neo, N64 & GC",
+              "filename": "MPGCombo2.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.00/distribution/V2.0/firmware/MPGCombo2.hex",
+              "bytes": 77397,
+              "sha256": "e8b3b921ab27cbde94e991adddd1a841c2a10f3ceb8bae18f185a53812e06142",
+              "channel": "stable"
+            },
+            {
+              "id": "mpgcombo3",
+              "display_name": "MPGCombo3",
+              "description": "MPG NES+SNES+VB, PSX & N64",
+              "filename": "MPGCombo3.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.00/distribution/V2.0/firmware/MPGCombo3.hex",
+              "bytes": 78240,
+              "sha256": "87de508d63371d9f15dd8a6663f66f61697a40156a26b3899c4175c8f24884cb",
+              "channel": "stable"
+            },
+            {
+              "id": "mpgcombo4",
+              "display_name": "MPGCombo4",
+              "description": "MPG NES+SNES, PSX, Neo & N64",
+              "filename": "MPGCombo4.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.00/distribution/V2.0/firmware/MPGCombo4.hex",
+              "bytes": 76677,
+              "sha256": "d2efd51cdad534127f574c3f6ad2feb17c2abfcce001b9616955c46e39adb6f1",
+              "channel": "stable"
+            },
+            {
+              "id": "mpgcombo5",
+              "display_name": "MPGCombo5",
+              "description": "MPG NES+SNES+VB, PCE, Neo, N64 & GC",
+              "filename": "MPGCombo5.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.00/distribution/V2.0/firmware/MPGCombo5.hex",
+              "bytes": 80220,
+              "sha256": "a7a3e3fb57aa97a6f7780be939b4a8a3cc231d2e391cf5e3467cfbf903af4a92",
+              "channel": "stable"
+            },
+            {
+              "id": "mpgcombo6",
+              "display_name": "MPGCombo6",
+              "description": "MPG NES+SNES, PCE, Neo, Jag & SMS",
+              "filename": "MPGCombo6.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.00/distribution/V2.0/firmware/MPGCombo6.hex",
+              "bytes": 68589,
+              "sha256": "0c15831f8a23058cda9217ba9531df4175376c7fcccab2e0fa953e6c0741d112",
+              "channel": "stable"
+            },
+            {
+              "id": "mpgcombo7",
+              "display_name": "MPGCombo7",
+              "description": "MPG Gen+Sat, PSX, Neo & SMS",
+              "filename": "MPGCombo7.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.00/distribution/V2.0/firmware/MPGCombo7.hex",
+              "bytes": 79639,
+              "sha256": "1c37b4471eb59cb1b48ab3bc1033dc895c625d627e130467018e2ce2e4bfd517",
+              "channel": "stable"
+            },
+            {
+              "id": "mpgcombo8",
+              "display_name": "MPGCombo8",
+              "description": "MPG Gen+Sat, NES+SNES+VB, PCE & Neo",
+              "filename": "MPGCombo8.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.00/distribution/V2.0/firmware/MPGCombo8.hex",
+              "bytes": 77401,
+              "sha256": "1c09f0e9ab022b57c9ee6b7b539f3c907ff8b071732a74bd0bc2a5b45b25b33e",
+              "channel": "stable"
+            },
+            {
+              "id": "mpgcombo9",
+              "display_name": "MPGCombo9",
+              "description": "MPG Gen+Sat, NES+SNES+VB & N64",
+              "filename": "MPGCombo9.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.00/distribution/V2.0/firmware/MPGCombo9.hex",
+              "bytes": 77888,
+              "sha256": "584b61f2fd1f7b9b1be66e2bce184b8fc4aac2fb9c6ec590e85ce06d54eab601",
+              "channel": "stable"
+            },
+            {
+              "id": "mpgcombo10",
+              "display_name": "MPGCombo10",
+              "description": "MPG Gen+Sat, Neo, N64 & GC",
+              "filename": "MPGCombo10.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.00/distribution/V2.0/firmware/MPGCombo10.hex",
+              "bytes": 80424,
+              "sha256": "ce4881271ab70114c76b5681ebdcc5ce01b77ca74cc6d6bcb1f2c7b6acc5deb2",
+              "channel": "stable"
+            },
+            {
+              "id": "mpgcombo11",
+              "display_name": "MPGCombo11",
+              "description": "MPG PSX, GC & Wii",
+              "filename": "MPGCombo11.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v2.00/distribution/V2.0/firmware/MPGCombo11.hex",
+              "bytes": 76395,
+              "sha256": "b8dd1dd4edf4b1c0e9b00b3290a0efe1f327b7d54028b1ac0f7a6fd985d2cc99",
+              "channel": "stable"
+            }
+          ]
+        },
+        {
+          "family": "legacy",
+          "version": "1.11",
+          "tag": "v1.11",
+          "channel": "stable",
+          "recommended": true,
+          "notes": "Current stable Adapt V1 firmware set.",
+          "eeprom_schema": "legacy-unknown",
+          "artifacts": [
+            {
+              "id": "nintendo",
+              "display_name": "Nintendo",
+              "description": "Nintendo: NES+SNES+Tap, N64, GC & Wii",
+              "filename": "Nintendo.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Nintendo.hex",
+              "bytes": 69891,
+              "sha256": "90a47ec40d71552e10b7dca300c464e9abd31976fe829da50d6a8965138f9cba",
+              "channel": "stable"
+            },
+            {
+              "id": "non-nintendo",
+              "display_name": "Non-Nintendo",
+              "description": "Non-Nintendo: PCE, Neo, Gen+Sat, PSX+Gun & Jag",
+              "filename": "Non-Nintendo.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Non-Nintendo.hex",
+              "bytes": 80649,
+              "sha256": "34c76e248a797b64fea6bf978386a71c1d1a9d1e54ba5f5468c704e3f57ff723",
+              "channel": "stable"
+            },
+            {
+              "id": "non-nintendo-sony",
+              "display_name": "Non-Nintendo-Sony",
+              "description": "Non-Nintendo-Sony: JP-PC, SMS+Atari+C64, Gen+Sat, 3DO, PCE, Neo & Jag",
+              "filename": "Non-Nintendo-Sony.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Non-Nintendo-Sony.hex",
+              "bytes": 69968,
+              "sha256": "f6b8cd6bbc2bc44d07b51fb4671a406f1c39e5e1f3862e595843a8f72b156a2a",
+              "channel": "stable"
+            },
+            {
+              "id": "multitap",
+              "display_name": "Multitap",
+              "description": "Multitap: NES+SNES+Tap, Gen+Tap, Sat+Tap & PCE+Tap",
+              "filename": "Multitap.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Multitap.hex",
+              "bytes": 71216,
+              "sha256": "2b3aecbd271a35baf96e2f9198a9a8b17390af107fb3791bcb807af7826869fb",
+              "channel": "stable"
+            },
+            {
+              "id": "psx-jogcon",
+              "display_name": "PSX-JogCon",
+              "description": "PSX JogCon: PSX JogCon [4 modes: Wheel (Mode+R2), Paddle (Mode+L2), Spinner (Mode+L2+R2) & Fake Spinner (Mode+R1+L1)]",
+              "filename": "PSX-JogCon.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/PSX-JogCon.hex",
+              "bytes": 49113,
+              "sha256": "2c68a6234a2be6260b4d986ea9c146a342860b95b60dad80606253e69f7473c1",
+              "channel": "stable"
+            },
+            {
+              "id": "combo1",
+              "display_name": "Combo1",
+              "description": "Combo 1: NES+SNES, Gen+Sat & PSX+Gun+Jog",
+              "filename": "Combo1.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo1.hex",
+              "bytes": 80461,
+              "sha256": "bd4e11e2852eed651e41226be601b5340bf99a2eca1e2085f5527bad611983bd",
+              "channel": "stable"
+            },
+            {
+              "id": "combo2",
+              "display_name": "Combo2",
+              "description": "Combo 2: NES+SNES, Gen+Sat+Tap & PSX+Gun+neGcon",
+              "filename": "Combo2.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo2.hex",
+              "bytes": 74579,
+              "sha256": "f6f5b8bcd9341b2646698d412b542609eecd4b77fad046e68f8954c1748da8e2",
+              "channel": "stable"
+            },
+            {
+              "id": "combo3",
+              "display_name": "Combo3",
+              "description": "Combo 3: NES+SNES, Gen+Sat+Tap & PSX+Jog+neGcon",
+              "filename": "Combo3.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo3.hex",
+              "bytes": 79402,
+              "sha256": "74c9eb8a26f40bdd592dba33ad9b589de09eca0d4226f757b5712a6c1a7c290c",
+              "channel": "stable"
+            },
+            {
+              "id": "combo4",
+              "display_name": "Combo4",
+              "description": "Combo 4: NES+SNES, PCE, N64 & PSX+Gun+Jog+neGcon",
+              "filename": "Combo4.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo4.hex",
+              "bytes": 78989,
+              "sha256": "ccb2a43aac2b5ef4b508a7524e6d69bec1311ea1f9532fe067dba918209bb606",
+              "channel": "stable"
+            },
+            {
+              "id": "combo5",
+              "display_name": "Combo5",
+              "description": "Combo 5: NES+SNES, Neo, Jag, N64 & PSX+Gun+Jog+neGcon",
+              "filename": "Combo5.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo5.hex",
+              "bytes": 79152,
+              "sha256": "54a6012958d2bdd2c115960745116aa9472fcebed62ca95afac7f1ee8e3cb888",
+              "channel": "stable"
+            },
+            {
+              "id": "combo6",
+              "display_name": "Combo6",
+              "description": "Combo 6: NES+SNES, Neo, Wii & PSX+Gun+Jog+neGcon",
+              "filename": "Combo6.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo6.hex",
+              "bytes": 80506,
+              "sha256": "194852d520e8e067560ebf34a9eb9e046f1ae50063ae0f7cf671032cac20fb0e",
+              "channel": "stable"
+            },
+            {
+              "id": "combo7",
+              "display_name": "Combo7",
+              "description": "Combo 7: Gen+Sat, Neo & PSX+Gun+Jog+neGcon",
+              "filename": "Combo7.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo7.hex",
+              "bytes": 77160,
+              "sha256": "717999eab78433820f93535ac188fba06edd65959c764bdd00a3abb8b38573c3",
+              "channel": "stable"
+            },
+            {
+              "id": "combo8",
+              "display_name": "Combo8",
+              "description": "Combo 8: PCE, 3DO, Neo, Jag, N64, GC & Wii",
+              "filename": "Combo8.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo8.hex",
+              "bytes": 74754,
+              "sha256": "38c218769c3abc59d67dda74ba8bbae5710beae8f5192f9dc80bd0968d50145f",
+              "channel": "stable"
+            },
+            {
+              "id": "combo9",
+              "display_name": "Combo9",
+              "description": "Combo 9: NES+SNES, N64, GC, Wii & PSX+neGcon",
+              "filename": "Combo9.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo9.hex",
+              "bytes": 78842,
+              "sha256": "ea85b3203e00e74a0af21b3a19967874a9865c07e36741af2081807a967eeabd",
+              "channel": "stable"
+            },
+            {
+              "id": "combo10",
+              "display_name": "Combo10",
+              "description": "Combo 10: NES+SNES, N64, Wii & PSX+Jog",
+              "filename": "Combo10.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo10.hex",
+              "bytes": 77888,
+              "sha256": "f40f669a060ba55ca4ae6fd5b14b948a34cf5bd7677c1241919280ec6f8adf4d",
+              "channel": "stable"
+            },
+            {
+              "id": "combo11",
+              "display_name": "Combo11",
+              "description": "Combo 11: NES+SNES, N64, Wii & PSX+neGcon+Gun",
+              "filename": "Combo11.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo11.hex",
+              "bytes": 76203,
+              "sha256": "8a627e93fd403a1640346525fcae61eef476bfc7e7693719c3dfc63ccf8e07ab",
+              "channel": "stable"
+            },
+            {
+              "id": "combo12",
+              "display_name": "Combo12",
+              "description": "Combo 12: NES+SNES, N64, Gen+Sat & PSX",
+              "filename": "Combo12.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo12.hex",
+              "bytes": 73057,
+              "sha256": "c483aed311837c3e2b51e0201e524e3a8de1c18546660c7f7b79b1bc33c80d94",
+              "channel": "stable"
+            },
+            {
+              "id": "combo13",
+              "display_name": "Combo13",
+              "description": "Combo 13: Gen+Sat, PSX, N64 & Wii",
+              "filename": "Combo13.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo13.hex",
+              "bytes": 78354,
+              "sha256": "6d658e49688753be62ece433d2a7e9047668f3a57c821b380b50248e1b7c7d62",
+              "channel": "stable"
+            },
+            {
+              "id": "combo14",
+              "display_name": "Combo14",
+              "description": "Combo 14: NES+SNES, Gen+Sat, PSX & N64",
+              "filename": "Combo14.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo14.hex",
+              "bytes": 73057,
+              "sha256": "c483aed311837c3e2b51e0201e524e3a8de1c18546660c7f7b79b1bc33c80d94",
+              "channel": "stable"
+            },
+            {
+              "id": "combo15",
+              "display_name": "Combo15",
+              "description": "Combo 15: NES+SNES, Gen+Sat, PSX & GC",
+              "filename": "Combo15.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo15.hex",
+              "bytes": 75908,
+              "sha256": "5c1e252bd464558f569335ff732dcfd236a82ba655fbcd9425babcb03e89929e",
+              "channel": "stable"
+            },
+            {
+              "id": "combo16",
+              "display_name": "Combo16",
+              "description": "Combo 16: NES+SNES, N64, Wii & PSX+JogCon",
+              "filename": "Combo16.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo16.hex",
+              "bytes": 77565,
+              "sha256": "0076c4b7c523e1129819514c61a4eedef546ccd0d60e989449e172f0a275bcfc",
+              "channel": "stable"
+            },
+            {
+              "id": "combo17",
+              "display_name": "Combo17",
+              "description": "Combo 17: NES+SNES, Gen+Sat, PCE & PSX",
+              "filename": "Combo17.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo17.hex",
+              "bytes": 73208,
+              "sha256": "2b7b8f72d3682e54ad562262bf7d811fce01e1cfa7d2790232e6ce8ccaa3e9c7",
+              "channel": "stable"
+            },
+            {
+              "id": "combo18",
+              "display_name": "Combo18",
+              "description": "Combo 18: NES+SNES, N64, Wii & PSX+neGcon",
+              "filename": "Combo18.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo18.hex",
+              "bytes": 70058,
+              "sha256": "adc8907a3f6567041bdad640acc41a3a9253d013ce06cd0fe8fc65cee1c8f2ba",
+              "channel": "stable"
+            },
+            {
+              "id": "combo19",
+              "display_name": "Combo19",
+              "description": "Combo 19: NES+SNES, SMS+Atari+C64, JP-PC, Gen+Sat & PSX+neGcon",
+              "filename": "Combo19.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo19.hex",
+              "bytes": 73846,
+              "sha256": "db77f802c24e2b219fe5428bfa42167910556d61d0248192db03bf823e5ccfa4",
+              "channel": "stable"
+            },
+            {
+              "id": "combo20",
+              "display_name": "Combo20",
+              "description": "Combo 20: NES+SNES, Gen+Sat, N64 & Neo",
+              "filename": "Combo20.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo20.hex",
+              "bytes": 64073,
+              "sha256": "0ccb2ae195fee05022b65aff7ba02cd189da04edac8f56c16eac5da4eb90b999",
+              "channel": "stable"
+            },
+            {
+              "id": "combo21",
+              "display_name": "Combo21",
+              "description": "Combo 21: PSX+neGcon+Guncon+Jogcon, N64 & Wii",
+              "filename": "Combo21.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo21.hex",
+              "bytes": 77258,
+              "sha256": "f305399a1619842f47cf8d9e96a1ba650f68af248247b2ea8e5ef27887e9392a",
+              "channel": "stable"
+            },
+            {
+              "id": "combo22",
+              "display_name": "Combo22",
+              "description": "Combo 22: NES+SNES, Gen+Sat, N64 & SMS+Atari+C64",
+              "filename": "Combo22.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo22.hex",
+              "bytes": 64634,
+              "sha256": "4207c5607b012df6de98607b95e561953732337c667741ee98a8ddf0751767f3",
+              "channel": "stable"
+            },
+            {
+              "id": "combo23",
+              "display_name": "Combo23",
+              "description": "Combo 23: PCE, Gen+Sat, N64 & PSX",
+              "filename": "Combo23.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo23.hex",
+              "bytes": 72533,
+              "sha256": "0a6e45ad784ec5261a07731c34516af96a2bb41c1ec41eee75f899a929e87fb7",
+              "channel": "stable"
+            },
+            {
+              "id": "combo24",
+              "display_name": "Combo24",
+              "description": "Combo 24: NES+SNES, SMS+Atari+C64, Gen+Sat & PSX",
+              "filename": "Combo24.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo24.hex",
+              "bytes": 68966,
+              "sha256": "e02fcb9029ad880d7db2fd8482ac2d7c6268a9254bbba1f4775de6c8e0fe3158",
+              "channel": "stable"
+            },
+            {
+              "id": "combo25",
+              "display_name": "Combo25",
+              "description": "Combo 25: NES+SNES, Gen+Sat, Neo, GC & PSX",
+              "filename": "Combo25.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo25.hex",
+              "bytes": 78432,
+              "sha256": "33d7edd13fa6df8bb7489550a022ca03fe3f2328715ac14c428c1cc4fb097a55",
+              "channel": "stable"
+            },
+            {
+              "id": "combo26",
+              "display_name": "Combo26",
+              "description": "Combo 26: SMS+Atari+C64, NES+SNES, Gen+Sat & PSX+Gun",
+              "filename": "Combo26.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.11/distribution/v1.11/firmware/Combo26.hex",
+              "bytes": 76735,
+              "sha256": "5abbd66d214f245c9b55c1c4d91f61ef8ee08c93ba36230329cff7f706919173",
+              "channel": "stable"
+            }
+          ]
+        },
+        {
+          "family": "legacy",
+          "version": "1.10",
+          "tag": "v1.10",
+          "channel": "stable",
+          "recommended": false,
+          "notes": "Previous stable Adapt V1 firmware set.",
+          "eeprom_schema": "legacy-unknown",
+          "artifacts": [
+            {
+              "id": "nintendo",
+              "display_name": "Nintendo",
+              "description": "Nintendo: NES+SNES+Tap, N64, GC & Wii",
+              "filename": "Nintendo.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Nintendo.hex",
+              "bytes": 69891,
+              "sha256": "90a47ec40d71552e10b7dca300c464e9abd31976fe829da50d6a8965138f9cba",
+              "channel": "stable"
+            },
+            {
+              "id": "non-nintendo",
+              "display_name": "Non-Nintendo",
+              "description": "Non-Nintendo: PCE, Neo, Gen+Sat, PSX+Gun & Jag",
+              "filename": "Non-Nintendo.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Non-Nintendo.hex",
+              "bytes": 80649,
+              "sha256": "34c76e248a797b64fea6bf978386a71c1d1a9d1e54ba5f5468c704e3f57ff723",
+              "channel": "stable"
+            },
+            {
+              "id": "non-nintendo-sony",
+              "display_name": "Non-Nintendo-Sony",
+              "description": "Non-Nintendo-Sony: JP-PC, SMS+Atari+C64, Gen+Sat, 3DO, PCE, Neo & Jag",
+              "filename": "Non-Nintendo-Sony.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Non-Nintendo-Sony.hex",
+              "bytes": 69968,
+              "sha256": "f6b8cd6bbc2bc44d07b51fb4671a406f1c39e5e1f3862e595843a8f72b156a2a",
+              "channel": "stable"
+            },
+            {
+              "id": "multitap",
+              "display_name": "Multitap",
+              "description": "Multitap: NES+SNES+Tap, Gen+Tap, Sat+Tap & PCE+Tap",
+              "filename": "Multitap.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Multitap.hex",
+              "bytes": 71216,
+              "sha256": "2b3aecbd271a35baf96e2f9198a9a8b17390af107fb3791bcb807af7826869fb",
+              "channel": "stable"
+            },
+            {
+              "id": "psx-jogcon",
+              "display_name": "PSX-JogCon",
+              "description": "PSX JogCon: PSX JogCon [4 modes: Wheel (Mode+R2), Paddle (Mode+L2), Spinner (Mode+L2+R2) & Fake Spinner (Mode+R1+L1)]",
+              "filename": "PSX-JogCon.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/PSX-JogCon.hex",
+              "bytes": 49113,
+              "sha256": "2c68a6234a2be6260b4d986ea9c146a342860b95b60dad80606253e69f7473c1",
+              "channel": "stable"
+            },
+            {
+              "id": "combo1",
+              "display_name": "Combo1",
+              "description": "Combo 1: NES+SNES, Gen+Sat & PSX+Gun+Jog",
+              "filename": "Combo1.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Combo1.hex",
+              "bytes": 80461,
+              "sha256": "bd4e11e2852eed651e41226be601b5340bf99a2eca1e2085f5527bad611983bd",
+              "channel": "stable"
+            },
+            {
+              "id": "combo2",
+              "display_name": "Combo2",
+              "description": "Combo 2: NES+SNES, Gen+Sat+Tap & PSX+Gun+neGcon",
+              "filename": "Combo2.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Combo2.hex",
+              "bytes": 74579,
+              "sha256": "f6f5b8bcd9341b2646698d412b542609eecd4b77fad046e68f8954c1748da8e2",
+              "channel": "stable"
+            },
+            {
+              "id": "combo3",
+              "display_name": "Combo3",
+              "description": "Combo 3: NES+SNES, Gen+Sat+Tap & PSX+Jog+neGcon",
+              "filename": "Combo3.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Combo3.hex",
+              "bytes": 79402,
+              "sha256": "74c9eb8a26f40bdd592dba33ad9b589de09eca0d4226f757b5712a6c1a7c290c",
+              "channel": "stable"
+            },
+            {
+              "id": "combo4",
+              "display_name": "Combo4",
+              "description": "Combo 4: NES+SNES, PCE, N64 & PSX+Gun+Jog+neGcon",
+              "filename": "Combo4.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Combo4.hex",
+              "bytes": 78989,
+              "sha256": "ccb2a43aac2b5ef4b508a7524e6d69bec1311ea1f9532fe067dba918209bb606",
+              "channel": "stable"
+            },
+            {
+              "id": "combo5",
+              "display_name": "Combo5",
+              "description": "Combo 5: NES+SNES, Neo, Jag, N64 & PSX+Gun+Jog+neGcon",
+              "filename": "Combo5.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Combo5.hex",
+              "bytes": 79152,
+              "sha256": "54a6012958d2bdd2c115960745116aa9472fcebed62ca95afac7f1ee8e3cb888",
+              "channel": "stable"
+            },
+            {
+              "id": "combo6",
+              "display_name": "Combo6",
+              "description": "Combo 6: NES+SNES, Neo, Wii & PSX+Gun+Jog+neGcon",
+              "filename": "Combo6.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Combo6.hex",
+              "bytes": 80506,
+              "sha256": "194852d520e8e067560ebf34a9eb9e046f1ae50063ae0f7cf671032cac20fb0e",
+              "channel": "stable"
+            },
+            {
+              "id": "combo7",
+              "display_name": "Combo7",
+              "description": "Combo 7: Gen+Sat, Neo & PSX+Gun+Jog+neGcon",
+              "filename": "Combo7.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Combo7.hex",
+              "bytes": 77160,
+              "sha256": "717999eab78433820f93535ac188fba06edd65959c764bdd00a3abb8b38573c3",
+              "channel": "stable"
+            },
+            {
+              "id": "combo8",
+              "display_name": "Combo8",
+              "description": "Combo 8: PCE, 3DO, Neo, Jag, N64, GC & Wii",
+              "filename": "Combo8.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Combo8.hex",
+              "bytes": 74754,
+              "sha256": "38c218769c3abc59d67dda74ba8bbae5710beae8f5192f9dc80bd0968d50145f",
+              "channel": "stable"
+            },
+            {
+              "id": "combo9",
+              "display_name": "Combo9",
+              "description": "Combo 9: NES+SNES, N64, GC, Wii & PSX+neGcon",
+              "filename": "Combo9.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Combo9.hex",
+              "bytes": 78842,
+              "sha256": "ea85b3203e00e74a0af21b3a19967874a9865c07e36741af2081807a967eeabd",
+              "channel": "stable"
+            },
+            {
+              "id": "combo10",
+              "display_name": "Combo10",
+              "description": "Combo 10: NES+SNES, N64, Wii & PSX+Jog",
+              "filename": "Combo10.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Combo10.hex",
+              "bytes": 77888,
+              "sha256": "f40f669a060ba55ca4ae6fd5b14b948a34cf5bd7677c1241919280ec6f8adf4d",
+              "channel": "stable"
+            },
+            {
+              "id": "combo11",
+              "display_name": "Combo11",
+              "description": "Combo 11: NES+SNES, N64, Wii & PSX+neGcon+Gun",
+              "filename": "Combo11.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Combo11.hex",
+              "bytes": 76203,
+              "sha256": "8a627e93fd403a1640346525fcae61eef476bfc7e7693719c3dfc63ccf8e07ab",
+              "channel": "stable"
+            },
+            {
+              "id": "combo12",
+              "display_name": "Combo12",
+              "description": "Combo 12: NES+SNES, N64, Gen+Sat & PSX",
+              "filename": "Combo12.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Combo12.hex",
+              "bytes": 73057,
+              "sha256": "c483aed311837c3e2b51e0201e524e3a8de1c18546660c7f7b79b1bc33c80d94",
+              "channel": "stable"
+            },
+            {
+              "id": "combo13",
+              "display_name": "Combo13",
+              "description": "Combo 13: Gen+Sat, PSX, N64 & Wii",
+              "filename": "Combo13.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Combo13.hex",
+              "bytes": 78354,
+              "sha256": "6d658e49688753be62ece433d2a7e9047668f3a57c821b380b50248e1b7c7d62",
+              "channel": "stable"
+            },
+            {
+              "id": "combo14",
+              "display_name": "Combo14",
+              "description": "Combo 14: NES+SNES, Gen+Sat, PSX & N64",
+              "filename": "Combo14.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Combo14.hex",
+              "bytes": 73057,
+              "sha256": "c483aed311837c3e2b51e0201e524e3a8de1c18546660c7f7b79b1bc33c80d94",
+              "channel": "stable"
+            },
+            {
+              "id": "combo15",
+              "display_name": "Combo15",
+              "description": "Combo 15: NES+SNES, Gen+Sat, PSX & GC",
+              "filename": "Combo15.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Combo15.hex",
+              "bytes": 75908,
+              "sha256": "5c1e252bd464558f569335ff732dcfd236a82ba655fbcd9425babcb03e89929e",
+              "channel": "stable"
+            },
+            {
+              "id": "combo16",
+              "display_name": "Combo16",
+              "description": "Combo 16: NES+SNES, N64, Wii & PSX+JogCon",
+              "filename": "Combo16.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Combo16.hex",
+              "bytes": 77565,
+              "sha256": "0076c4b7c523e1129819514c61a4eedef546ccd0d60e989449e172f0a275bcfc",
+              "channel": "stable"
+            },
+            {
+              "id": "combo17",
+              "display_name": "Combo17",
+              "description": "Combo 17: NES+SNES, Gen+Sat, PCE & PSX",
+              "filename": "Combo17.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Combo17.hex",
+              "bytes": 73208,
+              "sha256": "2b7b8f72d3682e54ad562262bf7d811fce01e1cfa7d2790232e6ce8ccaa3e9c7",
+              "channel": "stable"
+            },
+            {
+              "id": "combo18",
+              "display_name": "Combo18",
+              "description": "Combo 18: NES+SNES, N64, Wii & PSX+neGcon",
+              "filename": "Combo18.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Combo18.hex",
+              "bytes": 70058,
+              "sha256": "adc8907a3f6567041bdad640acc41a3a9253d013ce06cd0fe8fc65cee1c8f2ba",
+              "channel": "stable"
+            },
+            {
+              "id": "combo19",
+              "display_name": "Combo19",
+              "description": "Combo 19: NES+SNES, SMS+Atari+C64, JP-PC, Gen+Sat & PSX+neGcon",
+              "filename": "Combo19.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Combo19.hex",
+              "bytes": 73846,
+              "sha256": "db77f802c24e2b219fe5428bfa42167910556d61d0248192db03bf823e5ccfa4",
+              "channel": "stable"
+            },
+            {
+              "id": "combo20",
+              "display_name": "Combo20",
+              "description": "Combo 20: NES+SNES, Gen+Sat, N64 & Neo",
+              "filename": "Combo20.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Combo20.hex",
+              "bytes": 64073,
+              "sha256": "0ccb2ae195fee05022b65aff7ba02cd189da04edac8f56c16eac5da4eb90b999",
+              "channel": "stable"
+            },
+            {
+              "id": "combo21",
+              "display_name": "Combo21",
+              "description": "Combo 21: PSX+neGcon+Guncon+Jogcon, N64 & Wii",
+              "filename": "Combo21.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Combo21.hex",
+              "bytes": 77258,
+              "sha256": "f305399a1619842f47cf8d9e96a1ba650f68af248247b2ea8e5ef27887e9392a",
+              "channel": "stable"
+            },
+            {
+              "id": "combo22",
+              "display_name": "Combo22",
+              "description": "Combo 21: NES+SNES, Gen+Sat, N64, SMS+Atari+C64",
+              "filename": "Combo22.hex",
+              "url": "https://raw.githubusercontent.com/misteraddons/Reflex-Adapt-Legacy/v1.10/distribution/v1.10/firmware/Combo22.hex",
+              "bytes": 64634,
+              "sha256": "4207c5607b012df6de98607b95e561953732337c667741ee98a8ddf0751767f3",
+              "channel": "stable"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "default_target": "classic2usb",
+  "targets": {
+    "classic2usb": {
+      "enabled": true,
+      "display_name": "Classic2USB",
+      "platformio_env": "classic2usb",
+      "default_out_dir": "dist/classic2usb_package",
+      "artifact_name": "classic2usb-release-package",
+      "firmware_artifact_stem": "ReflexClassic2USB",
+      "version_header": "firmware/firmware_build_info.h",
+      "uf2_source": "dist/classic2usb.uf2",
+      "hardware_compatibility": {
+        "policy": "all-published-revisions",
+        "product_family": "Classic2USB",
+        "mcu": "RP2040",
+        "flash": "2 MB",
+        "description": "All published Classic2USB RP2040 2 MB hardware revisions"
+      },
+      "validation_commands": [
+        ["{python}", "tools/run_release_checks.py"]
+      ],
+      "build_command": ["pio", "run", "-e", "{env}", "-t", "uf2"],
+      "manual_pdf": {
+        "source": "docs/classic2usb/Classic2USB.md",
+        "destination": "Classic2USB.pdf",
+        "script": "tools/render_manual_pdf.py",
+        "verify_render": true
+      },
+      "package_files": [
+        {
+          "source": "README.md",
+          "destination": "README.md"
+        },
+        {
+          "source": "docs/media/classic2usb/reflex-home-menu.png",
+          "destination": "docs/media/classic2usb/reflex-home-menu.png"
+        },
+        {
+          "source": "docs/media/classic2usb/quick-settings-psx.png",
+          "destination": "docs/media/classic2usb/quick-settings-psx.png"
+        },
+        {
+          "source": "docs/media/classic2usb/system-settings-menu.png",
+          "destination": "docs/media/classic2usb/system-settings-menu.png"
+        },
+        {
+          "source": "docs/media/classic2usb/system-settings-menu.mp4",
+          "destination": "docs/media/classic2usb/system-settings-menu.mp4"
+        },
+        {
+          "source": "docs/classic2usb/Classic2USB-Quick-Start.md",
+          "destination": "docs/classic2usb/Classic2USB-Quick-Start.md"
+        },
+        {
+          "source": "docs/classic2usb/Classic2USB.md",
+          "destination": "docs/classic2usb/Classic2USB.md"
+        },
+        {
+          "source": "docs/classic2usb/Classic2USB-Input-Reference.md",
+          "destination": "docs/classic2usb/Classic2USB-Input-Reference.md"
+        },
+        {
+          "source": "docs/NOTICE.md",
+          "destination": "docs/NOTICE.md"
+        },
+        {
+          "source": "tools/release_assets/adapt-manager/mister/Scripts/reflex_adapt_manager.sh",
+          "destination": "mister/Scripts/reflex_adapt_manager.sh"
+        },
+        {
+          "source": "tools/adapt_manager/reflex-adapt-manager.ini",
+          "destination": "mister/reflex-adapt-manager.ini"
+        },
+        {
+          "source": "tools/release_assets/classic2usb/mister/config/inputs/Jaguar_input_16d0_1460_ReflexJag_v3.map",
+          "destination": "mister/config/inputs/Jaguar_input_16d0_1460_ReflexJag_v3.map"
+        },
+        {
+          "source": "tools/release_assets/classic2usb/mister/config/inputs/N64_input_16d0_1460_ReflexN64_v3.map",
+          "destination": "mister/config/inputs/N64_input_16d0_1460_ReflexN64_v3.map"
+        },
+        {
+          "source": "tools/release_assets/classic2usb/mister/config/inputs/Saturn_input_16d0_1460_ReflexSat_v3.map",
+          "destination": "mister/config/inputs/Saturn_input_16d0_1460_ReflexSat_v3.map"
+        },
+        {
+          "source": "tools/release_assets/classic2usb/mister/config/inputs/VirtualBoy_input_16d0_1460_ReflexVboy_v3.map",
+          "destination": "mister/config/inputs/VirtualBoy_input_16d0_1460_ReflexVboy_v3.map"
+        }
+      ],
+      "feature_matrix": [
+        {
+          "area": "Input",
+          "feature": "Classic controller AUTO/manual modes",
+          "status": "Enabled",
+          "notes": "Retro controller families route through the unified Classic2USB input runtime."
+        },
+        {
+          "area": "Input",
+          "feature": "PSX/Joybus memory devices",
+          "status": "Enabled",
+          "notes": "PSX, N64, and Dreamcast card/VMU infrastructure is available through the serial memory-card protocol."
+        },
+        {
+          "area": "Input",
+          "feature": "2P Merge",
+          "status": "Enabled",
+          "notes": "Per-mode P2 ownership masks cover native buttons, subtype filtering, and Jaguar keypad extras."
+        },
+        {
+          "area": "Output",
+          "feature": "DInput/MiSTer",
+          "status": "Enabled",
+          "notes": "Primary management mode with HID, CDC serial, and MSC utility support."
+        },
+        {
+          "area": "Output",
+          "feature": "Windows XInput",
+          "status": "Enabled",
+          "notes": "XInput2P two-slot wired runtime; separate from Xbox 360 auth."
+        },
+        {
+          "area": "Output",
+          "feature": "Xbox 360",
+          "status": "Enabled",
+          "notes": "Dedicated single-controller OUTPUT_XINPUT path with XSM3 security authentication."
+        },
+        {
+          "area": "Output",
+          "feature": "PS3/PS4/XID/Switch/Keyboard",
+          "status": "Enabled",
+          "notes": "Shared USB output matrix; Classic2USB PS5 selections sanitize to PS4-compatible output."
+        },
+        {
+          "area": "Release",
+          "feature": "Source layout",
+          "status": "Clean",
+          "notes": "Package contents are limited to firmware, Adapt Manager, target docs, notices, and verified MiSTer map files."
+        },
+        {
+          "area": "Release",
+          "feature": "Packaging",
+          "status": "Enabled",
+          "notes": "Target-aware package generation includes UF2, Adapt Manager, flat target docs, Classic2USB.pdf, input reference, notices, and verified MiSTer map files."
+        }
+      ]
+    }
+  }
+}

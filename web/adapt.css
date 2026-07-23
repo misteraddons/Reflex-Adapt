@@ -1,0 +1,70 @@
+/*
+  Reflex Adapt dashboard adapter.
+  Keep Adapt's original shell intact; only fix shared-theme contrast.
+*/
+
+[data-reflex-ui] header h1 {
+  color: var(--brand-secondary);
+  font: 700 2rem/1.15 var(--font-display);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+:root[data-reflex-theme="light"] [data-reflex-ui],
+:root[data-reflex-theme="lab"] [data-reflex-ui],
+[data-reflex-ui][data-reflex-theme="light"],
+[data-reflex-ui][data-reflex-theme="lab"] {
+  --brand-secondary-soft: var(--brand-primary);
+  --success: #4f7300;
+  --warning: #725d00;
+}
+
+:root[data-reflex-theme="light"] [data-reflex-ui] header h1,
+:root[data-reflex-theme="lab"] [data-reflex-ui] header h1,
+[data-reflex-ui][data-reflex-theme="light"] header h1,
+[data-reflex-ui][data-reflex-theme="lab"] header h1 {
+  color: var(--brand-primary);
+}
+
+[data-reflex-ui] .rx-theme-toolbar {
+  margin-bottom: 24px;
+}
+
+[data-reflex-ui] .device-info-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+[data-reflex-ui] .device-info-grid .info-item {
+  overflow: hidden;
+}
+
+[data-reflex-ui] .device-info-grid .info-select {
+  display: block;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+[data-reflex-ui] .btn-secondary {
+  color: var(--text-primary);
+}
+
+[data-reflex-ui] .debug-tabs .debug-tab.active {
+  background: var(--brand-secondary);
+  color: var(--brand-primary-deep);
+  border-color: rgba(230, 255, 30, 0.55);
+}
+
+@media (max-width: 760px) {
+  [data-reflex-ui] .device-info-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  [data-reflex-ui] .device-info-grid {
+    grid-template-columns: 1fr;
+  }
+}

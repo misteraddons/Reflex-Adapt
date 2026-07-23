@@ -1,0 +1,114 @@
+; Maple Bus Output PIO Program
+; Based on sega-dreamcast/dreamcast-controller-usb-pico (MIT License)
+;
+; Maple Bus timing: 2Mbps, 500ns per bit (250ns per phase)
+; At 125MHz system clock, we need clkdiv ~31.25 for 4MHz (250ns per instruction)
+;
+; Protocol:
+; - Start sequence: A goes low, B toggles 4 times
+; - Data: alternating clock on A/B, data on the other line
+; - End sequence: both low, then both high, then A low, B high
+
+.program maple_out
+.side_set 2 opt
+
+.define public MASK_A 0x1
+.define public MASK_B 0x2
+.define public MASK_AB 0x3
+
+; Entry point - get bit count from FIFO
+.wrap_target
+maple_out_start:
+    out x, 32           side MASK_AB        ; Get total bit count, lines idle high
+
+; Start sequence: A low, B toggles 4 times
+start_sequence:
+    set pindirs, MASK_AB side MASK_AB [3]   ; Set both as outputs, both high
+    set y, 3            side MASK_B  [3]    ; A low, B high, loop counter = 3
+start_b_toggle_loop:
+    nop                 side 0       [3]    ; A low, B low
+    nop                 side MASK_B  [2]    ; A low, B high
+    jmp y--, start_b_toggle_loop            ; 4 toggles total
+    jmp x--, first_clock_a_data_b side MASK_AB  ; Both high, start data
+
+; First bit: clock on A, data on B
+first_clock_a_data_b:
+    out y, 1            side MASK_AB        ; Get data bit
+    jmp !y, clock_a_data_b_zero side MASK_AB
+    jmp first_clock_a_data_b_one side MASK_AB
+
+; Clock on A (A goes low), data on B
+clock_a_data_b:
+    out y, 1            side MASK_A  [0]    ; A high, B low (clock edge), get next bit
+    jmp !y clock_a_data_b_zero
+
+clock_a_data_b_one:
+    nop                 side MASK_AB [1]    ; A high, B high (data=1)
+first_clock_a_data_b_one:
+    jmp x-- clock_b_data_a side MASK_B [1]  ; A low, B high
+
+clock_a_data_b_zero:
+    nop                 side MASK_A  [1]    ; A high, B low (data=0)
+    jmp x-- clock_b_data_a side 0    [1]    ; A low, B low
+
+; Clock on B (B goes low), data on A
+clock_b_data_a:
+    out y, 1            side MASK_B  [0]    ; A low, B high (clock edge), get next bit
+    jmp !y clock_b_data_a_zero
+
+clock_b_data_a_one:
+    nop                 side MASK_AB [1]    ; A high, B high (data=1)
+    jmp x-- clock_a_data_b side MASK_A [1]  ; A high, B low
+    jmp end_sequence
+
+clock_b_data_a_zero:
+    nop                 side MASK_B  [1]    ; A low, B high (data=0)
+    jmp x-- clock_a_data_b side 0    [1]    ; A low, B low
+
+; End sequence
+end_sequence:
+    out y, 24           side MASK_A  [1]    ; Consume remaining bits, A high B low
+    nop                 side MASK_AB [3]    ; Both high
+    nop                 side MASK_A  [3]    ; A high, B low
+    nop                 side 0       [3]    ; Both low
+    nop                 side MASK_A  [3]    ; A high, B low
+    nop                 side 0       [3]    ; Both low
+    ; DreamPicoPort behavior: stall at end with A high/B low and let software
+    ; transition pins back to GPIO input after IRQ.
+    irq wait 0 rel      side MASK_A
+
+.wrap
+
+% c-sdk {
+static inline void maple_out_program_init(PIO pio, uint sm, uint offset, uint pin_a) {
+    // Configure pins
+    pio_gpio_init(pio, pin_a);
+    pio_gpio_init(pio, pin_a + 1);
+
+    // Set pins as outputs initially
+    pio_sm_set_consecutive_pindirs(pio, sm, pin_a, 2, true);
+
+    // Configure state machine
+    pio_sm_config c = maple_out_program_get_default_config(offset);
+
+    // Side-set on pins A and B
+    sm_config_set_sideset_pins(&c, pin_a);
+    sm_config_set_set_pins(&c, pin_a, 2);  // For set pindirs on both pins
+
+    // OUT shift: shift left (MSB first), autopull at 32 bits
+    sm_config_set_out_shift(&c, false, true, 32);
+
+    // Match DreamPicoPort Maple timing:
+    // clkdiv = (sys_khz * ((ns_per_bit / 3) * 2)) / DOUBLE_PHASE_TICKS / 1e6
+    // DreamPicoPort uses 480ns nominal Maple bit timing.
+    const uint32_t ns_per_bit = 480;
+    const uint32_t sys_khz = clock_get_hz(clk_sys) / 1000u;
+    const float double_phase_ticks = 4.0f;
+    const float clkdiv = (sys_khz * ((ns_per_bit / 3.0f) * 2.0f)) /
+                         double_phase_ticks / 1000000.0f;
+    sm_config_set_clkdiv(&c, clkdiv);
+
+    // Initialize and enable
+    pio_sm_init(pio, sm, offset, &c);
+}
+%}

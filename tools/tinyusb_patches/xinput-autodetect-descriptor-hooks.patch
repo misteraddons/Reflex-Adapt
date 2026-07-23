@@ -1,0 +1,71 @@
+diff --git a/third_party/Adafruit_TinyUSB_Arduino/src/arduino/Adafruit_USBD_Device.cpp b/third_party/Adafruit_TinyUSB_Arduino/src/arduino/Adafruit_USBD_Device.cpp
+--- a/third_party/Adafruit_TinyUSB_Arduino/src/arduino/Adafruit_USBD_Device.cpp
++++ b/third_party/Adafruit_TinyUSB_Arduino/src/arduino/Adafruit_USBD_Device.cpp
+@@ -363,11 +363,19 @@ uint16_t const *Adafruit_USBD_Device::descriptor_string_cb(uint8_t index,
+ // TinyUSB stack callbacks
+ //--------------------------------------------------------------------+
+ 
++// Hook function pointers for descriptor overrides (used by XInput/AUTO detect).
++uint8_t const* (*tud_descriptor_device_hook)(void) = nullptr;
++uint8_t const* (*tud_descriptor_configuration_hook)(uint8_t index) = nullptr;
++uint16_t const* (*tud_descriptor_string_hook)(uint8_t index, uint16_t langid) = nullptr;
++
+ extern "C" {
+ 
+ // Invoked when received GET DEVICE DESCRIPTOR
+ // Application return pointer to descriptor
+ uint8_t const *tud_descriptor_device_cb(void) {
++  if (tud_descriptor_device_hook) {
++    return tud_descriptor_device_hook();
++  }
+   return (uint8_t const *)&TinyUSBDevice._desc_device;
+ }
+ 
+@@ -375,6 +383,9 @@ uint8_t const *tud_descriptor_device_cb(void) {
+ // Application return pointer to descriptor, whose contents must exist long
+ // enough for transfer to complete
+ uint8_t const* tud_descriptor_configuration_cb(uint8_t index) {
++    if (tud_descriptor_configuration_hook) {
++      return tud_descriptor_configuration_hook(index);
++    }
+     return TinyUSBDevice._desc_cfg;
+ }
+ 
+@@ -397,8 +408,18 @@ TU_ATTR_WEAK uint16_t const* get_ms_os_10_string_ptr(void) { return NULL; }
+ // OS 1.0 Descriptors.
+ // https://docs.microsoft.com/en-us/windows-hardware/drivers/usbcon/microsoft-defined-usb-descriptors
+ uint16_t const *tud_descriptor_string_cb(uint8_t index, uint16_t langid) {
+-   if (index == 0xEE)
+-     return get_ms_os_10_string_ptr();
++  if (index == STRID_MANUFACTURER) {
++    string_manufacturer_read_cb();
++  }
++
++  if (tud_descriptor_string_hook) {
++    return tud_descriptor_string_hook(index, langid);
++  }
++
++  if (index == 0xEE) {
++    return get_ms_os_10_string_ptr();
++  }
++
+   return TinyUSBDevice.descriptor_string_cb(index, langid);
+ }
+ 
+diff --git a/third_party/Adafruit_TinyUSB_Arduino/src/device/usbd.c b/third_party/Adafruit_TinyUSB_Arduino/src/device/usbd.c
+--- a/third_party/Adafruit_TinyUSB_Arduino/src/device/usbd.c
++++ b/third_party/Adafruit_TinyUSB_Arduino/src/device/usbd.c
+@@ -1200,6 +1200,13 @@ static bool process_get_descriptor(uint8_t rhport, tusb_control_request_t const
+     {
+       TU_LOG_USBD(" String[%u]\r\n", desc_index);
+ 
++      if (desc_index == 0xEE) {
++        extern void tud_string_0xee_requested_cb(void) TU_ATTR_WEAK;
++        if (tud_string_0xee_requested_cb) {
++          tud_string_0xee_requested_cb();
++        }
++      }
++
+       // String Descriptor always uses the desc set from user
+       uint8_t const* desc_str = (uint8_t const*) tud_descriptor_string_cb(desc_index, tu_le16toh(p_request->wIndex));
+       TU_VERIFY(desc_str);
