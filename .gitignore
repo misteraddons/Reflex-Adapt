@@ -1,0 +1,47 @@
+# Editor and agent-local state
+.vscode/
+.idea/
+.history/
+.vs/
+.claude/
+.cursor/
+.windsurf/
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+*.suo
+*.user
+*.userprefs
+*.env
+
+# Python caches and local logs
+__pycache__/
+*.py[cod]
+*.log
+*.tmp
+.tmp_*/
+
+# Generated firmware and release artifacts
+*.uf2
+*.elf
+*.hex
+*.map
+!tools/release_assets/classic2usb/mister/config/
+!tools/release_assets/classic2usb/mister/config/inputs/
+!tools/release_assets/classic2usb/mister/config/inputs/*.map
+.pio/
+build/
+dist/
+artifacts/
+/output/
+
+# Private authentication material
+*.pem
+*.p12
+*.pfx
+*.key
+serial.txt
+sig.bin
+firmware/output/auth/ps4/*
+!firmware/output/auth/ps4/.gitkeep
+third_party/firmware_libraries/MapleLib/maple_private.pio.h

@@ -1,0 +1,52 @@
+.program joybus_long_write
+
+.define T1 10
+.define T2 20
+.define T3 10
+
+; One TX FIFO word carries one byte plus a stop marker:
+;   bits 31..24: payload byte, inverted for open-drain pindirs
+;   bit 23: inverted stop marker (0 = final byte, 1 = continue)
+;
+; This follows joybus-pio's proven one-byte transaction model. DMA keeps the
+; 35-byte N64 accessory write continuously fed while the PIO owns turnaround.
+
+public read:
+    set pindirs, 0
+read_loop:
+    wait 0 pin 0 [T1 + T2 / 2 - 1]
+    in pins, 1
+    wait 1 pin 0
+    jmp read_loop
+
+write_stop_bit:
+    nop [T3 - 6]
+    set pindirs, 1 [T1 - 1]
+    set pindirs, 0 [T2 - 2]
+    jmp read
+
+public write:
+    set y, 1
+    set pindirs, 0
+.wrap_target
+write_loop:
+    set pindirs, 0
+    pull ifempty block
+    out x, 1
+    jmp !osre write_bit
+    jmp x!=y write_stop_bit
+    pull ifempty block
+    out x, 1
+    jmp write_bit_fast
+write_bit:
+    nop [3]
+write_bit_fast:
+    nop [T3 - 9]
+    set pindirs, 1 [T1 - 2]
+    jmp !x write_one
+    nop [T2 - 3]
+    jmp write_loop
+write_one:
+    set pindirs, 0 [T2 - 3]
+    jmp write_loop
+.wrap

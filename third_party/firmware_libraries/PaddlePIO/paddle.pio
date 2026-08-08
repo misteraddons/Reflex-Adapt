@@ -1,0 +1,91 @@
+; Atari Paddle PIO timing program
+; Measures time for pin to transition from LOW to HIGH
+; Used for RC timing measurement of paddle position
+;
+; The PIO will:
+; 1. Drive pin LOW (discharge)
+; 2. Wait specified discharge time
+; 3. Switch to input (high-Z)
+; 4. Count cycles until pin goes HIGH
+; 5. Push count to FIFO
+;
+; Clock runs at 125MHz = 8ns per cycle
+; Max count before timeout: 65535 cycles = ~524us
+
+.program paddle_timing
+
+    ; Wait for trigger from CPU (any value in TX FIFO)
+    pull block
+
+    ; Drive pin LOW for discharge
+    set pindirs, 1      ; Set as output
+    set pins, 0         ; Drive LOW
+
+    ; Discharge delay (use OSR as counter)
+    mov x, osr          ; Use pulled value as discharge delay
+discharge_loop:
+    jmp x-- discharge_loop [1]
+
+    ; Switch to input (high-Z) and start counting
+    set pindirs, 0      ; Set as input
+    mov x, ~null        ; Set X to all 1s (65535)
+
+    ; Count cycles until pin goes HIGH or timeout
+count_loop:
+    jmp pin high_detected   ; Jump if pin is HIGH
+    jmp x-- count_loop      ; Decrement and loop
+
+    ; Timeout - X is 0, push 0 (inverted = max time)
+    push
+    jmp start_over
+
+high_detected:
+    ; Push X value (remaining count - lower = more time elapsed)
+    mov isr, x
+    push
+
+start_over:
+    ; Loop back to wait for next trigger
+.wrap_target
+    jmp 0               ; Jump back to beginning
+.wrap
+
+% c-sdk {
+#include "hardware/clocks.h"
+
+static inline void paddle_timing_program_init(PIO pio, uint sm, uint offset, uint pin) {
+    pio_sm_config c = paddle_timing_program_get_default_config(offset);
+
+    // Set the pin as both SET and IN
+    sm_config_set_set_pins(&c, pin, 1);
+    sm_config_set_in_pins(&c, pin);
+    sm_config_set_jmp_pin(&c, pin);
+
+    // Initialize pin
+    pio_gpio_init(pio, pin);
+    gpio_set_pulls(pin, false, false);  // No pulls - external circuit provides voltage
+
+    // Clock divider - run at full speed (125MHz = 8ns per cycle)
+    sm_config_set_clkdiv(&c, 1.0f);
+
+    // Configure shift registers
+    sm_config_set_in_shift(&c, false, false, 32);  // Shift left, no autopush
+    sm_config_set_out_shift(&c, true, false, 32);  // Shift right, no autopull
+
+    // Initialize and enable state machine
+    pio_sm_init(pio, sm, offset, &c);
+    pio_sm_set_enabled(pio, sm, true);
+}
+
+// Read paddle timing - returns cycle count (lower = faster = lower resistance)
+// discharge_cycles: number of cycles to hold pin LOW (recommend 100-500)
+// Returns: remaining X count (65535 = instant, 0 = timeout)
+static inline uint32_t paddle_timing_read(PIO pio, uint sm, uint32_t discharge_cycles) {
+    // Send discharge delay to trigger measurement
+    pio_sm_put_blocking(pio, sm, discharge_cycles);
+
+    // Wait for result
+    return pio_sm_get_blocking(pio, sm);
+}
+
+%}

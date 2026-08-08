@@ -1,0 +1,85 @@
+; Maple Bus PIO Program
+; Based on protocol documentation from mc.pp.se/dc/maplewire.html
+;
+; The Maple Bus uses two wires (A and B) that alternate as clock/data:
+; - Phase 1: A is clock (transitions), B is data
+; - Phase 2: B is clock (transitions), A is data
+;
+; Idle state: Both lines HIGH
+; Start sequence: A goes LOW, B toggles 4 times
+; Data: Alternating clock/data phases
+; End sequence: Both lines LOW briefly, then return to HIGH
+
+.program maple_out
+; Output program - sends data on Maple Bus
+; Pin 0 = SDCKA, Pin 1 = SDCKB (set as out and sideset)
+; OSR contains data to send (MSB first)
+; X = bit count
+
+.side_set 2 opt
+
+public start:
+    ; Start sequence: A LOW, B toggles
+    set pins, 0b01     side 0b01    ; A=1, B=0 (idle)
+    nop                side 0b11 [3] ; Both high
+    nop                side 0b10 [3] ; A low, start sequence
+    nop                side 0b11 [3] ; B toggle 1
+    nop                side 0b10 [3]
+    nop                side 0b11 [3] ; B toggle 2
+    nop                side 0b10 [3]
+    nop                side 0b11 [3] ; B toggle 3
+    nop                side 0b10 [3]
+    nop                side 0b11 [3] ; B toggle 4
+
+data_loop:
+    ; Phase 1: Clock on A, data on B
+    out pins, 1        side 0b10 [3] ; Data on B, A low (clock)
+    nop                side 0b11 [3] ; A high (clock edge)
+    ; Phase 2: Clock on B, data on A
+    out pins, 1        side 0b01 [3] ; Data on A, B low (clock)
+    nop                side 0b11 [3] ; B high (clock edge)
+    jmp x-- data_loop
+
+end_sequence:
+    ; End: both low briefly, then high
+    nop                side 0b00 [3]
+    nop                side 0b11
+    irq wait 0                        ; Signal completion
+
+.program maple_in
+; Input program - receives data from Maple Bus
+; Pin 0 = SDCKA (also jmp pin), Pin 1 = SDCKB
+; ISR accumulates received bits
+
+public start:
+    wait 0 pin 0                      ; Wait for A to go low (start sequence)
+
+wait_start:
+    set y, 7                          ; Count 4 toggle pairs (8 edges)
+wait_toggle:
+    wait 1 pin 1                      ; Wait for B high
+    wait 0 pin 1                      ; Wait for B low
+    jmp y-- wait_toggle
+    irq nowait 0                      ; Signal start detected
+
+data_loop:
+    ; Phase 1: Sample B when A transitions
+    wait 0 pin 0                      ; Wait for A low (clock)
+    in pins, 1                        ; Sample B
+    wait 1 pin 0                      ; Wait for A high
+
+    ; Phase 2: Sample A when B transitions
+    wait 0 pin 1                      ; Wait for B low (clock)
+    mov osr, pins                     ; Get pins
+    out null, 1                       ; Discard B
+    in osr, 1                         ; Get A into ISR
+    wait 1 pin 1                      ; Wait for B high
+
+    ; Check for end sequence (both low)
+    mov x, pins
+    jmp !x end_detected
+    jmp data_loop
+
+end_detected:
+    push                              ; Push any remaining data
+    irq wait 1                        ; Signal completion
