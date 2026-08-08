@@ -1,0 +1,9 @@
+#pragma once
+
+#include <stdint.h>
+
+enum : uint8_t {
+  INPUT_AUTODETECT_TIMING_VALID = 0x01,
+  INPUT_AUTODETECT_TIMING_PASSIVE = 0x02,
+  INPUT_AUTODETECT_TIMING_HOTSWAP = 0x04,
+};

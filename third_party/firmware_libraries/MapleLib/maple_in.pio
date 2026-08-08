@@ -1,0 +1,94 @@
+; Maple Bus Input PIO Program
+; Pin 0 = SDCKA, Pin 1 = SDCKB.
+;
+; This follows the proven DreamPicoPort start-sequence detector:
+; - Wait for A low
+; - Count exactly 4 B low/high toggles while A remains low
+; - Reject malformed starts and continue waiting
+
+.program maple_in
+
+wait_start:
+    mov y, ~null
+
+b_toggle_loop:
+    jmp pin check_toggle_count      ; If A went high, verify toggle count
+    mov osr, pins                   ; Capture A/B into OSR
+    out x, 2                        ; x bit0=A, bit1=B
+    jmp x-- b_toggle_loop           ; Stay until B is low (x==0)
+    wait 1 pin 1                    ; Wait B high again
+    jmp pin wait_start              ; A rose too early: restart
+    jmp y-- b_toggle_loop           ; Count this toggle and continue
+
+check_toggle_count:
+    mov y, ~y                       ; Convert negative count to positive
+    set x, 4
+    jmp x!=y wait_start             ; Need exactly 4 toggles
+    wait 0 pin 0                    ; Align to first A-low data phase
+
+.wrap_target
+data_loop:
+    ; Wait for either:
+    ; - A low first: normal data bit (sample B)
+    ; - B high->low first: begin end-sequence path
+    set y, 1
+end_detect_b_toggle:
+    mov osr, pins
+    out x, 1                        ; x = A
+    jmp !x sample_b_from_osr        ; A low first => sample B data bit
+    out x, 1                        ; x = B
+    jmp !y end_detect_b_to_low
+end_detect_b_to_high:
+    jmp !x end_detect_b_toggle      ; Keep waiting for B high
+    jmp y-- end_detect_b_toggle     ; Saw B high, now wait for B low
+end_detect_b_to_low:
+    jmp x-- end_detect_b_toggle     ; Keep waiting for B low
+
+end_detected:
+    in null, 24                     ; Flush to word boundary (CRC byte is last 8 bits)
+    irq wait 0 rel                  ; Signal frame complete
+
+sample_b_from_osr:
+    in osr, 1                       ; Sample B while A is low
+
+sample_a:
+    wait 1 pin 1
+    wait 0 pin 1
+    in pins, 1                      ; Sample A while B is low
+    wait 1 pin 0
+.wrap
+
+% c-sdk {
+static inline void maple_in_program_init(PIO pio, uint sm, uint offset, uint pin_a) {
+    // Configure pins as inputs with pull-ups
+    pio_gpio_init(pio, pin_a);
+    pio_gpio_init(pio, pin_a + 1);
+
+    gpio_pull_up(pin_a);
+    gpio_pull_up(pin_a + 1);
+
+    // Set pins as inputs
+    pio_sm_set_consecutive_pindirs(pio, sm, pin_a, 2, false);
+
+    // Configure state machine
+    pio_sm_config c = maple_in_program_get_default_config(offset);
+
+    // JMP pin is A (pin_a)
+    sm_config_set_jmp_pin(&c, pin_a);
+
+    // IN pins start at pin_a
+    sm_config_set_in_pins(&c, pin_a);
+
+    // IN shift: shift left, autopush at 32 bits
+    sm_config_set_in_shift(&c, false, true, 32);
+
+    // OUT shift for reading pins
+    sm_config_set_out_shift(&c, true, false, 32);
+
+    // Sample fast enough to catch Maple edges.
+    sm_config_set_clkdiv(&c, 1.0f);
+
+    // Initialize
+    pio_sm_init(pio, sm, offset, &c);
+}
+%}
