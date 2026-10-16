@@ -31,7 +31,7 @@ def descriptor(uf2: Path, version: str) -> dict[str, object]:
     tag = f"v{version}"
     return {
         "schema_version": 1,
-        "manager_min_version": "0.1.0",
+        "manager_min_version": "0.5.0",
         "products": [{
             "id": "classic2usb",
             "display_name": "Reflex Adapt Classic2USB",

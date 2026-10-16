@@ -13,13 +13,12 @@ ROOT = Path(__file__).resolve().parents[2]
 SOURCE_DIR = ROOT / "tools" / "adapt_manager"
 
 
-def render(
+def render_text(
     template: Path,
     python_source: Path,
     catalog: Path,
-    output: Path,
     map_bundle: Path | None = None,
-) -> None:
+) -> str:
     text = template.read_text(encoding="utf-8")
     python_marker = "{{REFLEX_ADAPT_MANAGER_PYTHON}}"
     catalog_marker = "{{REFLEX_ADAPT_MANAGER_CATALOG}}"
@@ -31,8 +30,19 @@ def render(
     text = text.replace(python_marker, python_source.read_text(encoding="utf-8").rstrip())
     text = text.replace(catalog_marker, catalog.read_text(encoding="utf-8").rstrip())
     text = text.replace(maps_marker, "\n".join(textwrap.wrap(encoded_maps, width=76)))
+    return text.rstrip() + "\n"
+
+
+def render(
+    template: Path,
+    python_source: Path,
+    catalog: Path,
+    output: Path,
+    map_bundle: Path | None = None,
+) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(text.rstrip() + "\n", encoding="utf-8", newline="\n")
+    output.write_text(render_text(template, python_source, catalog, map_bundle),
+                      encoding="utf-8", newline="\n")
 
 
 def main() -> int:

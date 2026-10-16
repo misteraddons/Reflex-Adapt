@@ -2,7 +2,11 @@
 set -eu
 
 STATE_DIR="${REFLEX_ADAPT_MANAGER_HOME:-/media/fat/config/reflex-adapt-manager}"
-TMP_DIR="${TMPDIR:-/tmp}/reflex-adapt-manager-$$"
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "Adapt Manager needs Python 3. Update your MiSTer Linux installation." >&2
+  exit 1
+fi
+TMP_DIR=$(mktemp -d "${TMPDIR:-/tmp}/reflex-adapt-manager.XXXXXX")
 PYTHON_FILE="$TMP_DIR/reflex_adapt_manager.py"
 CATALOG_FILE="$TMP_DIR/catalog.json"
 MAP_BUNDLE_FILE="$TMP_DIR/mister_maps.b64"
@@ -22,7 +26,9 @@ cleanup() {
     printf '\033[2J\033[H'
   fi
 }
-trap cleanup EXIT INT TERM
+trap cleanup EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
 
 mkdir -p "$TMP_DIR" "$STATE_DIR"
 sed -n '/^__REFLEX_MANAGER_PYTHON__$/,/^__REFLEX_MANAGER_CATALOG__$/p' "$0" |

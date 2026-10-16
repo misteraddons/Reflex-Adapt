@@ -11,7 +11,9 @@ There is no separate Classic2USB updater or Legacy updater.
 
 ## Supported Products
 
-- Classic2USB and future RP2040 Adapt targets use verified UF2 downloads.
+- Classic2USB and future RP2040 Adapt targets use hash-verified and structurally
+  validated UF2 downloads. The Manager rejects non-RP2040 images and images
+  that overlap preserved EEPROM/auth/mapping flash.
 - Adapt V1 / Legacy uses the 32u4 Caterina backend.
 - Adapt V1 / Legacy requires an explicit choice between **MPG Firmware** and
   **Legacy Firmware**. Their shared bootloader identity cannot safely determine
@@ -19,7 +21,7 @@ There is no separate Classic2USB updater or Legacy updater.
 
 | Product | Firmware source | MiSTer maps | Management |
 |---------|-----------------|-------------|------------|
-| Classic2USB | Verified Reflex Adapt GitHub release descriptors and UF2 assets | Four official core-specific maps | Firmware, rollback, recovery, and serial settings |
+| Classic2USB | Verified Reflex Adapt GitHub release descriptors and UF2 assets | Ten official core-specific maps | Firmware, rollback, recovery, and serial settings |
 | Adapt V1 / Legacy | Exact-tag, size, and SHA256-verified assets from `Reflex-Adapt-Legacy` | Complete 346-file Legacy set | MPG or Legacy firmware selection plus MiSTer USB support |
 
 Classic2USB firmware becomes installable when its GitHub release includes the
@@ -39,10 +41,13 @@ file, then run MiSTer Downloader. Classic2USB also exposes the same entry as
 `ADAPTDL.INI` on its DInput utility drive. Launch
 `Scripts/reflex_adapt_manager.sh` from MiSTer's Scripts menu.
 
-At startup, the manager disables the two superseded Reflex Adapt Downloader
-database entries when their section names and URLs exactly match the retired
-databases. Other sections and modified URLs are left untouched, and changed
-files receive a `.reflex-adapt-manager.bak` backup.
+At startup, the manager disables the superseded `misteraddons/reflexadapt`
+Downloader database entry when its section name and URL exactly match the
+retired database. `misteraddons/reflex-adapt-legacy` remains the maintained
+Adapt V1 / Legacy feed: the manager leaves it active and restores a section
+that Manager 0.4.0 commented out, unless the same section is already active.
+Other sections and modified URLs are left untouched, and changed files receive
+a `.reflex-adapt-manager.bak` backup.
 
 The manager scans attached USB hardware and checks the published firmware
 catalog before displaying its menu. Use the arrow keys and Enter to navigate;
@@ -54,10 +59,13 @@ modes. Firmware-version checks, automatic BOOTSEL entry, settings management,
 and the `ADAPTDL.INI` bootstrap work in those modes.
 Console output modes do not expose CDC and must be changed to DInput before
 using the manager. A Classic2USB already in BOOTSEL remains available for
-firmware recovery.
+firmware recovery. BOOTSEL cannot identify the product, so recovery requires
+the user to select and explicitly confirm the exact mount and USB path.
+Runtime-triggered updates correlate the serial device, BOOTSEL block device,
+and rebooted runtime through their USB topology.
 
 The manager provides firmware installation, previous stable releases,
-rollback, an offline download cache, install receipts, device discovery, and
+rollback, an offline download and catalog cache, install receipts, device discovery, and
 Classic2USB serial settings. Its compact, checksummed map bundle contains the
 official Classic2USB maps and the complete Adapt V1 / Legacy map set. Installing
 missing maps preserves existing files. Restoring official maps is a separate
@@ -67,7 +75,11 @@ For Adapt V1 / Legacy it also configures MiSTer's 1 ms USB polling, composite
 HID quirk, and `no_merge_vidpid` settings. Original MiSTer configuration files
 receive a `.reflex-adapt-manager.bak` backup.
 
-Adapt V1 EEPROM is preserved during firmware installation. The manager warns
+RP2040 receipts start as pending after the copy and become verified only after
+the same USB device reboots and reports the selected version. If the output mode
+does not expose management serial, history records the result as unverified
+instead of claiming success. Adapt V1 flash is read back and verified while its
+EEPROM is preserved during firmware installation. The manager warns
 before a recorded downgrade because older firmware may require an EEPROM reset.
 
 ## Maintainer Commands
@@ -83,7 +95,10 @@ python tools/test_adapt_manager.py
 Catalog and map-bundle generation require a sibling `Reflex-Adapt-Legacy`
 checkout by default. Use `--legacy-repo` to select another checkout. MiSTer
 Downloader installs only the manager script; map installation remains an
-explicit manager action so Downloader cannot overwrite user mappings.
+explicit manager action so Downloader cannot overwrite user mappings. The
+Classic2USB map actions are Install missing, Restore official (backs up changed
+files) and Remove all (moves every Classic2USB map, custom ones included, into
+`config/inputs/classic2usb_removed_<date>`).
 
 ## System Organization
 
@@ -122,7 +137,7 @@ The repository sources are organized as follows:
 | `tools/adapt_manager/mister_maps.bin` | Generated compressed map bundle |
 | `tools/adapt_manager/reflex-adapt-manager.ini` | Single MiSTer Downloader entry |
 | `tools/release_assets/adapt-manager/` | Generated self-contained MiSTer script |
-| `tools/release_assets/classic2usb/mister/config/inputs/` | Four Classic2USB map sources and manual package copies |
+| `tools/release_assets/classic2usb/mister/config/inputs/` | Ten Classic2USB map sources and manual package copies |
 | `tools/release_targets.json` | Classic2USB release-package composition |
 | `firmware/output/auth/` | Classic2USB MSC `DEVICE.TXT` and `ADAPTDL.INI` assets |
 | `Reflex-Adapt-Legacy/mister/config/inputs/` | Source archive for the 346 Legacy maps |

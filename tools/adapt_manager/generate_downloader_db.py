@@ -36,7 +36,7 @@ def build_database() -> dict[str, object]:
             "hash": md5(source),
             "size": source.stat().st_size,
             "url": f"{RAW_ROOT}/{source_text}",
-            "overwrite": False,
+            "overwrite": True,
         }
     return {
         "db_id": DB_ID,
